@@ -1,13 +1,13 @@
 import React from 'react'
-// import * as d3 from 'd3'
+import * as d3 from 'd3'
 import {withFauxDOM} from 'react-faux-dom'
-import { select } from 'd3-selection';
+// import { select } from 'd3-selection';
 
 class ScatterPlot extends React.Component {
 
     componentDidMount () {
     const faux = this.props.connectFauxDOM('div', 'chart')
-    select(faux)
+    d3.select(faux)
       .append('div')
       .html('Hello World!')
     this.props.animateFauxDOM(800)
