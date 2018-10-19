@@ -1,22 +1,141 @@
 import React from 'react'
 import * as d3 from 'd3'
+import {lasso} from 'd3-lasso'
 import {withFauxDOM} from 'react-faux-dom'
-// import { select } from 'd3-selection';
 
 class ScatterPlot extends React.Component {
 
-    componentDidMount () {
+  componentDidMount () {
+    console.log(this.props.dataPoints);
+    
     const faux = this.props.connectFauxDOM('div', 'chart')
-    d3.select(faux)
-      .append('div')
-      .html('Hello World!')
-    this.props.animateFauxDOM(800)
+
+      var margin = {top: 20, right: 20, bottom: 30, left: 40},
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+ 
+      var svg = d3.select(faux).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  
+    //   svg.append("rect")
+    //   .attr('class','lassoable')
+    //   .attr("width",width)
+    //   .attr("height",height)
+    //   .style("opacity",0);
+    
+    // // Lasso functions to execute while lassoing
+    // var lasso_start = function() {
+    //   lasso.items()
+    //     .attr("r",3.5) // reset size
+    //     .style("fill",null) // clear all of the fills
+    //     .classed({"not_possible":true,"selected":false}); // style as not possible
+    // };
+    
+    // var lasso_draw = function() {
+    //   // Style the possible dots
+    //   lasso.items().filter(function(d) {return d.possible===true})
+    //     .classed({"not_possible":false,"possible":true});
+    
+    //   // Style the not possible dot
+    //   lasso.items().filter(function(d) {return d.possible===false})
+    //     .classed({"not_possible":true,"possible":false});
+    // };
+    
+    // var lasso_end = function() {
+    //   // Reset the color of all dots
+    //   lasso.items()
+    //      .style("fill", "green");
+    
+    //   // Style the selected dots
+    //   lasso.items().filter(function(d) {return d.selected===true})
+    //     .classed({"not_possible":false,"possible":false})
+    //     .attr("r",7);
+    
+    //   // Reset the style of the not selected dots
+    //   lasso.items().filter(function(d) {return d.selected===false})
+    //     .classed({"not_possible":false,"possible":false})
+    //     .attr("r",3.5);
+    
+    // };
+    
+    
+    // // Define the lasso
+    // var lasso = lasso()
+    //       .closePathDistance(75) // max distance for the lasso loop to be closed
+    //       .closePathSelect(true) // can items be selected by closing the path?
+    //       .hoverSelect(true) // can items by selected by hovering over them?
+    //       .on("start",lasso_start) // lasso start function
+    //       .on("draw",lasso_draw) // lasso draw function
+    //       .on("end",lasso_end); // lasso end function
+    
+      var x = d3.scaleLinear()
+          .range([0, width]);
+      
+      var y = d3.scaleLinear()
+          .range([height, 0]);
+            
+      var xAxis = d3.axisBottom(x);
+
+      var yAxis = d3.axisLeft(y);
+
+    
+      var data= this.props.dataPoints;
+      var labels= this.props.labels;
+
+      x.domain(d3.extent(data, function(d) { return d.x; })).nice();
+      y.domain(d3.extent(data, function(d) { return d.y; })).nice();
+
+      svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis)
+    .append("text")
+      .attr("class", "label")
+      .attr("x", width)
+      .attr("y", -6)
+      .style("text-anchor", "end")
+      .text("Sepal Width (cm)");
+
+      svg.append("g")
+          .attr("class", "y axis")
+          .call(yAxis)
+        .append("text")
+          .attr("class", "label")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 6)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Sepal Length (cm)")
+
+        var dot_g = svg.append('g')
+          .attr('class','lassoable');
+      
+        dot_g.selectAll(".dot")
+            .data(data)
+          .enter().append("circle")
+            .attr("id",function(d,i) {return "dot_" + i;}) // added
+            .attr("class", "dot")
+            .attr("r", 3.5)
+            .attr("cx", function(d) { return x(d.x); })
+            .attr("cy", function(d) { return y(d.y); })
+            .style("fill",  "red");      
+
+        // lasso.items(d3.selectAll(".dot"));
+
+        // lasso.area(svg.selectAll('.lassoable'));
+        // // Init the lasso on the svg:g that contains the dots
+        // svg.call(lasso);
+
+        this.props.animateFauxDOM(800)
   }
 
   render () {
     return (
       <div>
-        <h2>Here is some fancy data:</h2>
+        <h2>ScatterPlot</h2>
         <div className='renderedD3'>
           {this.props.chart}
         </div>

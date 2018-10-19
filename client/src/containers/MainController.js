@@ -10,6 +10,10 @@ class MainController extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            selectedLabels : {
+                x: 'x',
+                y: 'y'
+            },
             data : {
                 dataPoints : [
                     {
@@ -64,7 +68,7 @@ class MainController extends Component {
                     ]}>
                         <div> Y Bar plots </div>
                         <div> Y dropzones  </div>
-                        <ScatterPlot dataPoints={this.state.dataPoints} /> 
+                        <ScatterPlot dataPoints={this.state.data.dataPoints} labels={this.state.selectedLabels} /> 
                     </PanelGroup>                    
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
                         {size: 200, minSize:50, resize: "dynamic"},
