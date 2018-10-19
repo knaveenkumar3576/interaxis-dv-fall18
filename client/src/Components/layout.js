@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import Transition from './transition';
+import MainData from './Transition';
 
 class Layout extends Component {
     render() {
         return (
             <div>
-                <Transition />
+                <MainData />
             </div>
         );
     }

@@ -4,18 +4,37 @@ import { max, range } from 'd3-array';
 // import { axisBottom, axisLeft } from 'd3-axis';
 import { transition } from 'd3-transition';
 import { select } from 'd3-selection';
+import { csv } from 'd3-request'
+import * as d3 from 'd3';
+import data from '../data/Census Data.csv';
 
-class Transition extends Component {
+class MainData extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-
+            data: []
         };
+    }
+
+    componentWillMount() {
+        let self = this
+        
     }
 
     componentDidMount() {
         //Width and heig
+        d3.csv(data).then((data) => {
+            this.setState({
+                data: data
+            });
+            console.log("Data: ");
+            console.log(data);
+            return data;
+        });
+
+        this.setState({hello: "World"});
+        console.log("State: " + this.state.data)
         var node = this.node;
         var w = 600;
         var h = 250;
@@ -93,7 +112,8 @@ class Transition extends Component {
                     5, 10, 13, 19, 21, 25, 22, 18, 15, 13];
 
                 //Update all rects
-                transition(select(node).selectAll("rect"))
+                select(node)
+                    .selectAll("rect")
                     .data(dataset)
                     .transition()								// <-- This makes it a smooth transition!
                     .attr("y", function (d) {
@@ -134,4 +154,4 @@ class Transition extends Component {
 
 };
 
-export default Transition;
+export default MainData;
