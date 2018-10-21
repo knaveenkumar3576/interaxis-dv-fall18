@@ -10,16 +10,23 @@ class ScatterPlot extends React.Component {
     
     const faux = this.props.connectFauxDOM('div', 'chart')
 
-      var margin = {top: 20, right: 20, bottom: 30, left: 40},
-      width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+      var margin = {top: 30, right: 30, bottom: 100, left: 100},
+      width = 600 - margin.left - margin.right,
+      height = 600 - margin.top - margin.bottom;
  
       var svg = d3.select(faux).append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .append("g")
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-  
+
+      var tooltip = d3.select(faux).append("div")
+      .attr("class", "tooltip")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+      .text("tooltip")
+      .style("opacity", 0.5)
+      .style("background-color", "#4DC9DD");
+
     //   svg.append("rect")
     //   .attr('class','lassoable')
     //   .attr("width",width)
@@ -81,12 +88,12 @@ class ScatterPlot extends React.Component {
 
       var yAxis = d3.axisLeft(y);
 
-    
       var data= this.props.dataPoints;
       var labels= this.props.labels;
+      console.log(labels);
 
-      x.domain(d3.extent(data, function(d) { return d.x; })).nice();
-      y.domain(d3.extent(data, function(d) { return d.y; })).nice();
+      x.domain(d3.extent(data, function(d) { return d[labels.x]; })).nice();
+      y.domain(d3.extent(data, function(d) { return d[labels.y]; })).nice();
 
       svg.append("g")
       .attr("class", "x axis")
@@ -119,9 +126,26 @@ class ScatterPlot extends React.Component {
             .attr("id",function(d,i) {return "dot_" + i;}) // added
             .attr("class", "dot")
             .attr("r", 3.5)
-            .attr("cx", function(d) { return x(d.x); })
-            .attr("cy", function(d) { return y(d.y); })
-            .style("fill",  "red");      
+            .attr("cx", function(d) { return x(d[labels.x]); })
+            .attr("cy", function(d) { return y(d[labels.y]); })
+            .style("fill",  "red")    
+          .on("mouseover", function(d) {
+              console.log("mouseover");
+
+              tooltip.transition()
+                  .duration(200)
+                  .style("opacity", .9);
+              tooltip.html(d["name"] + "<br/> (" + d[labels.x] 
+              + ", " + d[labels.y] + ")")
+                  .style("left", (d3.event.pageX + 5) + "px")
+                  .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(d) {
+              console.log("mouseout");
+              tooltip.transition()
+                  .duration(500)
+                  .style("opacity", 0);
+          });
 
         // lasso.items(d3.selectAll(".dot"));
 

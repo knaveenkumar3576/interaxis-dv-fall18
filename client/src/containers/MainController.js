@@ -10,35 +10,41 @@ class MainController extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            // update the features selected from the drop down here
             selectedLabels : {
                 x: 'x',
-                y: 'y'
+                y: 'z'
             },
             data : {
                 dataPoints : [
                     {
                         x : 1,
                         y : 2,
+                        z : 8,
                         name : "Point 1"
                     },
                     {
                         x : 5,
                         y : 5,
+                        z : 1,
                         name : "Point 2"
                     },
                     {
                         x : 1,
                         y : 5,
+                        z : 8,
                         name : "Point 3"
                     },
                     {
                         x : 1,
                         y : 1,
+                        z : 7,
                         name : "Point 4"
                     },
                     {
                         x : 4,
                         y : 3,
+                        z : 2,
                         name : "Point 5"
                     },
                 ]
