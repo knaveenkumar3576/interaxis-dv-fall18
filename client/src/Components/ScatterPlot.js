@@ -6,11 +6,12 @@ import {withFauxDOM} from 'react-faux-dom';
 
 class ScatterPlot extends React.Component {
 
-  constructor(props) {
+  constructor(props) { 
     super(props);
   }
 
   componentDidMount () {
+    const that = this.props;
     console.log(this.props.dataPoints);
     console.log(this.props.detailViewCallback);
     console.log(typeof(this.props.detailViewCallback));
@@ -138,9 +139,7 @@ class ScatterPlot extends React.Component {
             .attr("draggable", "true")
             .style("fill",  "red")  
             .on("mouseover", function(d) {
-
-              // this.props.detailViewCallback(d);
-
+              that.detailViewCallback(d);
               console.log("mouseover");
 
               tooltip.transition()
