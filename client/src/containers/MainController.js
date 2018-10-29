@@ -1,8 +1,11 @@
-import React,{Component} from 'react'
+import React,{ Component } from 'react';
+import PropTypes from 'prop-types';
 import PanelGroup from 'react-panelgroup'
 
 import ScatterPlot from '../Components/ScatterPlot';
 import BarChart from '../Components/BarChart';
+import DropZone from '../Components/DropZone';
+import DataPointDetail from '../Components/DataPointDetail';
 import Wrap from '../hoc/Wrap';
 
 class MainController extends Component {
@@ -48,7 +51,31 @@ class MainController extends Component {
                         name : "Point 5"
                     },
                 ]
-            }
+            },
+            dataPointDetails: {
+                Asian: "14",
+                Black: "8",
+                Carpool: "9.9",
+                CensusId: "6037",
+                FamilyWork: "0.2",
+                Hispanic: "48.2",
+                Income: "56196.0",
+                IncomeErr: "270.0",
+                IncomePerCap: "28337",
+                IncomePerCapErr: "113",
+                MeanCommute: "30",
+                Men: "4945351",
+                Native: "0.2",
+                Office: "24.6",
+                OtherTransp: "2.3",
+                Pacific: "0.2",
+                Poverty: "18.2",
+                PrivateWork: "79",
+                Production: "12.8",
+                Professional: "35.7",
+                PublicWork: "11.5"
+            },
+            currDataPoint: null
         };
     }
 
@@ -58,6 +85,14 @@ class MainController extends Component {
 
     componentDidMount(){
         console.log("componentDidMount");
+    }
+
+    // callback to show detail view
+    scatterOnMouseOverCallback(dataPoint) {
+        // update the props of DataPointDetail
+        console.log("Datapoint callback!");
+        console.log(dataPoint);
+        this.setState({ currDataPoint: dataPoint});
     }
 
     render() {
@@ -78,14 +113,22 @@ class MainController extends Component {
                         <div> Y dropzones  
 
                         </div>
-                        <ScatterPlot dataPoints={this.state.data.dataPoints} labels={this.state.selectedLabels} /> 
+                        <ScatterPlot 
+                                dataPoints={this.state.data.dataPoints} 
+                                labels={this.state.selectedLabels} 
+                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} />
+
+                        <DropZone position = { "xMin" } /> 
+                        <DropZone position = { "xMax" } />
                     </PanelGroup>                    
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
                         {size: 200, minSize:50, resize: "dynamic"},
                         {minSize:100, resize: "stretch"},
                     ]}>
                         <div> Filters </div>
-                        <div> X dropzones  </div>
+                        <div> 
+                            <p>X dropzones</p>
+                        </div>
                     </PanelGroup>                    
 
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
@@ -99,7 +142,9 @@ class MainController extends Component {
                             </p>
                             <BarChart height={ 250 } width={ 800 } barWidth = { 10 } />
                         </div>
-                    </PanelGroup>                    
+                    </PanelGroup>
+
+                    <DataPointDetail dataPointDetails = {this.state.currDataPoint}  />
 
                 </PanelGroup>
                 

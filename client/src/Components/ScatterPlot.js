@@ -1,12 +1,19 @@
-import React from 'react'
-import * as d3 from 'd3'
-import {lasso} from 'd3-lasso'
-import {withFauxDOM} from 'react-faux-dom'
+import React from 'react';
+import PropTypes from 'prop-types';
+import * as d3 from 'd3';
+import {lasso} from 'd3-lasso';
+import {withFauxDOM} from 'react-faux-dom';
 
 class ScatterPlot extends React.Component {
 
+  constructor(props) {
+    super(props);
+  }
+
   componentDidMount () {
     console.log(this.props.dataPoints);
+    console.log(this.props.detailViewCallback);
+    console.log(typeof(this.props.detailViewCallback));
     
     const faux = this.props.connectFauxDOM('div', 'chart')
 
@@ -15,17 +22,17 @@ class ScatterPlot extends React.Component {
       height = 600 - margin.top - margin.bottom;
  
       var svg = d3.select(faux).append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var tooltip = d3.select(faux).append("div")
-      .attr("class", "tooltip")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-      .text("tooltip")
-      .style("opacity", 0.5)
-      .style("background-color", "#4DC9DD");
+                      .attr("class", "tooltip")
+                      .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+                      .text("tooltip")
+                      .style("opacity", 0.5)
+                      .style("background-color", "#4DC9DD");
 
     //   svg.append("rect")
     //   .attr('class','lassoable')
@@ -96,22 +103,22 @@ class ScatterPlot extends React.Component {
       y.domain(d3.extent(data, function(d) { return d[labels.y]; })).nice();
 
       svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .append("text")
-      .attr("class", "label")
-      .attr("x", width)
-      .attr("y", -6)
-      .style("text-anchor", "end")
-      .text("Sepal Width (cm)");
+          .attr("class", "x axis")
+          .attr("transform", "translate(0," + height + ")")
+          .call(xAxis)
+          .append("text")
+          .attr("class", "label")
+          .attr("x", width)
+          .attr("y", -6)
+          .style("text-anchor", "end")
+          .text("Sepal Width (cm)");
 
       svg.append("g")
           .attr("class", "y axis")
           .call(yAxis)
-        .append("text")
+          .append("text")
           .attr("class", "label")
-          .attr("transform", "rotate(-90)")
+          .attr("trasnsform", "rotate(-90)")
           .attr("y", 6)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
@@ -122,14 +129,18 @@ class ScatterPlot extends React.Component {
       
         dot_g.selectAll(".dot")
             .data(data)
-          .enter().append("circle")
+            .enter().append("circle")
             .attr("id",function(d,i) {return "dot_" + i;}) // added
             .attr("class", "dot")
             .attr("r", 3.5)
             .attr("cx", function(d) { return x(d[labels.x]); })
             .attr("cy", function(d) { return y(d[labels.y]); })
-            .style("fill",  "red")    
-          .on("mouseover", function(d) {
+            .attr("draggable", "true")
+            .style("fill",  "red")  
+            .on("mouseover", function(d) {
+
+              // this.props.detailViewCallback(d);
+
               console.log("mouseover");
 
               tooltip.transition()
@@ -139,13 +150,16 @@ class ScatterPlot extends React.Component {
               + ", " + d[labels.y] + ")")
                   .style("left", (d3.event.pageX + 5) + "px")
                   .style("top", (d3.event.pageY - 28) + "px");
-          })
-          .on("mouseout", function(d) {
-              console.log("mouseout");
-              tooltip.transition()
-                  .duration(500)
-                  .style("opacity", 0);
-          });
+            })
+            .on("mouseout", function(d) {
+                console.log("mouseout");
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            })
+            .on("dragstart", function(d) {
+              console.log("Dragging the circle... ");
+            });
 
         // lasso.items(d3.selectAll(".dot"));
 
@@ -170,6 +184,10 @@ class ScatterPlot extends React.Component {
 
 ScatterPlot.defaultProps = {
   chart: 'loading'
+}
+
+ScatterPlot.propTypes = {
+  detailViewCallback: PropTypes.func
 }
 
 export default withFauxDOM(ScatterPlot)

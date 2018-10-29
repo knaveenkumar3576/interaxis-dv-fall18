@@ -28,20 +28,25 @@ class DataPointDetail extends React.Component {
 
         let dataPointsArray = []
 
-        Object.keys(self.props.dataPointDetails).forEach((key) => {
-            let attribute = {
-                key: key,
-                value: self.props.dataPointDetails[key]
-            };
-            dataPointsArray.push(attribute)
-        })
+        if (this.props.dataPointDetails) {
+            Object.keys(self.props.dataPointDetails).forEach((key) => {
+                let attribute = {
+                    key: key,
+                    value: self.props.dataPointDetails[key]
+                };
+                dataPointsArray.push(attribute)
+            })
 
-        console.log("Dp array: ");
-        console.log(dataPointsArray)
+            console.log("Dp array: ");
+            console.log(dataPointsArray)
 
-        return ( 
-            <ListItems data={dataPointsArray} dataPointName={"Name"}/>
-        )
+            return ( 
+                <ListItems data={dataPointsArray} dataPointName={"Name"}/>
+            )
+        }
+        else {
+            return ("");
+        }
     }
 }
 
