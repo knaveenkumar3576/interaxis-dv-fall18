@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import PanelGroup from 'react-panelgroup'
+import * as Papa from 'papaparse';
 
 import ScatterPlot from '../Components/ScatterPlot';
 import BarChart from '../Components/BarChart';
@@ -9,50 +10,55 @@ import DataPointDetail from '../Components/DataPointDetail';
 import Wrap from '../hoc/Wrap';
 import SaveUtil from "../Components/SaveUtil";
 
+const KEYS_TO_BE_USED = {
+    sample: ['x', 'y', 'z'],
+    census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment']
+}
+
 class MainController extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+            dataset: '',
+
             // update the features selected from the drop down here
             selectedLabels: {
                 x: 'x',
                 y: 'z'
             },
-            data: {
-                dataPoints: [
-                    {
-                        x: 1,
-                        y: 2,
-                        z: 8,
-                        name: "Point 1"
-                    },
-                    {
-                        x: 5,
-                        y: 5,
-                        z: 1,
-                        name: "Point 2"
-                    },
-                    {
-                        x: 1,
-                        y: 5,
-                        z: 8,
-                        name: "Point 3"
-                    },
-                    {
-                        x: 1,
-                        y: 1,
-                        z: 7,
-                        name: "Point 4"
-                    },
-                    {
-                        x: 4,
-                        y: 3,
-                        z: 2,
-                        name: "Point 5"
-                    },
-                ]
-            },
+            dataPoints: [
+                {
+                    x: 1,
+                    y: 2,
+                    z: 8,
+                    name: "Point 1"
+                },
+                {
+                    x: 5,
+                    y: 5,
+                    z: 1,
+                    name: "Point 2"
+                },
+                {
+                    x: 1,
+                    y: 5,
+                    z: 8,
+                    name: "Point 3"
+                },
+                {
+                    x: 1,
+                    y: 1,
+                    z: 7,
+                    name: "Point 4"
+                },
+                {
+                    x: 4,
+                    y: 3,
+                    z: 2,
+                    name: "Point 5"
+                },
+            ],
             dataPointDetails: {
                 Asian: "14",
                 Black: "8",
@@ -84,6 +90,37 @@ class MainController extends Component {
 
     componentWillMount() {
         console.log("componentWillMount");
+        let csvFilePath = require("../data/census.csv");
+
+        Papa.parse(csvFilePath, {
+            header: true,
+            download: true,
+            skipEmptyLines: true,
+            complete: this.processAndNormalizeData
+        });
+
+    }
+
+    processAndNormalizeData = (result) => {
+        console.log("updateDatadata");
+        console.log(result.data);
+
+        this.setState({dataset: 'census'}, () => {
+            let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
+            let resultdataPoints = result.data;
+            keysToNormalize.forEach(key => {
+                let max = Math.max.apply(null, resultdataPoints.map(d => d[key]));
+                let min = Math.min.apply(null, resultdataPoints.map(d => d[key]));
+                resultdataPoints.forEach(point => {
+                    point[key] = (point[key] - min) / (max - min);
+                })
+            });
+
+            console.log(resultdataPoints);
+            this.setState({dataPoints: resultdataPoints});
+
+        });
+
     }
 
     componentDidMount() {
@@ -116,10 +153,12 @@ class MainController extends Component {
                         <div> Y dropzones
 
                         </div>
+
                         <ScatterPlot
-                            dataPoints={this.state.data.dataPoints}
+                            dataPoints={this.state.dataPoints}
                             labels={this.state.selectedLabels}
-                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}/>
+                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                        />
 
                         <DropZone position={"xMin"}/>
                         <DropZone position={"xMax"}/>
