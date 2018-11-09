@@ -1,0 +1,28 @@
+.filter-container {
+    height: 100%;
+    width: 100%;
+}
+
+.filter-form {
+    height: 100%;
+    width: 100%;
+}
+
+.filter-form {
+    height: 100%;
+    width: 100%;
+}
+
+.form-row {
+    margin-left: 15px !important;
+}
+
+.drop-down-btn {
+    width: 160px !important;
+}
+
+.bottom-column {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
