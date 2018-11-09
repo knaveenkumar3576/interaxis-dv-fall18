@@ -20,7 +20,7 @@ class MainController extends Component {
             },
             data : {
                 dataPoints : [
-                    {
+                    {   
                         x : 1,
                         y : 2,
                         z : 8,

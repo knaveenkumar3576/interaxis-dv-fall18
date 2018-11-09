@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { scaleLinear, scaleBand } from 'd3-scale';
 import { max, range } from 'd3-array';
 // import { axisBottom, axisLeft } from 'd3-axis';
-import { transition } from 'd3-transition';
 import { select } from 'd3-selection';
 import { csv } from 'd3-request'
 import * as d3 from 'd3';

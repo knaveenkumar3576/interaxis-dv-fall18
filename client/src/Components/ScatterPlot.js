@@ -159,6 +159,8 @@ class ScatterPlot extends React.Component {
             })
             .on("dragstart", function(d) {
               console.log("Dragging the circle... ");
+              d3.event.dataTransfer.setData("data", JSON.stringify(d));
+              console.log(d3.event.dataTransfer.getData("data"));
             });
 
         // lasso.items(d3.selectAll(".dot"));
