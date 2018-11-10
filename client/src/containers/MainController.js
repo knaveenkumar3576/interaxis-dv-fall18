@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import PanelGroup from 'react-panelgroup'
 import * as Papa from 'papaparse';
 
+import Header from './Header';
 import ScatterPlot from '../Components/ScatterPlot';
 import BarChart from '../Components/BarChart';
 import DropZone from '../Components/DropZone';
@@ -13,7 +14,7 @@ import SaveUtil from "../Components/SaveUtil";
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
     census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment']
-}
+};
 
 class MainController extends Component {
 
@@ -21,7 +22,11 @@ class MainController extends Component {
         super(props);
         this.state = {
             dataset: '',
-
+            currentVersion: '',
+            versions: [],
+            columns: [],
+            xAttribute: 'Choose X Attribute',
+            yAttribute: 'Choose Y Attribute',
             // update the features selected from the drop down here
             selectedLabels: {
                 x: 'x',
@@ -82,9 +87,7 @@ class MainController extends Component {
                 Professional: "35.7",
                 PublicWork: "11.5"
             },
-            currDataPoint: null,
-            xAttributes: [{name: 'testx1'}, {name: 'testx2'}],
-            yAttributes: [{name: 'testy1'}, {name: 'testy2'}],
+            currDataPoint: null
         };
     }
 
@@ -105,7 +108,7 @@ class MainController extends Component {
         console.log("updateDatadata");
         console.log(result.data);
 
-        this.setState({dataset: 'census'}, () => {
+        this.setState({dataset: 'census', columns: KEYS_TO_BE_USED['census']}, () => {
             let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
             let resultdataPoints = result.data;
             keysToNormalize.forEach(key => {
@@ -121,7 +124,7 @@ class MainController extends Component {
 
         });
 
-    }
+    };
 
     componentDidMount() {
         console.log("componentDidMount");
@@ -135,11 +138,21 @@ class MainController extends Component {
         this.setState({currDataPoint: dataPoint});
     }
 
+    onDataSetChangedCallback(dataset) {
+        this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]});
+    }
+
+    onVersionChangedCallback(versions, currentVersion) {
+        this.setState({versions: versions, currentVersion: currentVersion});
+    }
+
     render() {
         console.log("render");
 
         return (
             <Wrap>
+                <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
+                        onVersionChanged={this.onVersionChangedCallback.bind(this)}/>
                 <PanelGroup direction="column" borderColor="grey">
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
                         {size: 200, minSize: 0, resize: "dynamic"},
@@ -164,12 +177,16 @@ class MainController extends Component {
                         <DropZone position={"xMax"}/>
                     </PanelGroup>
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 200, minSize: 50, resize: "dynamic"},
+                        {size: 300, minSize: 200, resize: "dynamic"},
                         {minSize: 100, resize: "stretch"},
                     ]}>
-                        <div>
-                            <SaveUtil xAttributes={this.state.xAttributes} yAttributes={this.state.yAttributes}/></div>
-                        <div>
+                        <div className={'save-util-panel'}>
+                            {this.state.dataset !== '' ?
+                                <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                          xAttribute={this.state.xAttribute} yAttribute={this.state.yAttribute}
+                                          currentVersion={this.state.currentVersion}/> : null}
+                        </div>
+                        <div className={'save-util-panel'}>
                             <p>X dropzones</p>
                         </div>
                     </PanelGroup>
