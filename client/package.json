@@ -21,6 +21,7 @@
     "react-bootstrap-multiselect": "^2.4.1",
     "react-dom": "^16.5.2",
     "react-faux-dom": "^4.2.0",
+    "react-grid-layout": "^0.16.6",
     "react-panelgroup": "^1.0.7",
     "react-scripts": "1.1.5"
   },
