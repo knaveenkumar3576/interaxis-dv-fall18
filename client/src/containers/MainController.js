@@ -194,6 +194,7 @@ class MainController extends Component {
                             addDataPointCallback={this.removeDataPointFromScatterCallback} 
                             removeDataPointCallback = {this.addDataPointFromScatterCallback} 
                         />
+                        
                         <DropZone 
                             position={"xMax"}
                             addDataPointCallback={this.removeDataPointFromScatterCallback} 
