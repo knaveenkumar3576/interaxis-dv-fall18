@@ -13,7 +13,7 @@ class Header extends React.Component {
         }
 
         this.state = {
-            data: dataset[1].name,
+            data: dataset[0].name,
             dataset: dataset,
             version: '',
             versions: []

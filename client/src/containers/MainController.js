@@ -16,6 +16,12 @@ const KEYS_TO_BE_USED = {
     census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment']
 };
 
+const DEFAULT_FILTERS = {
+    sample: ['x', 'y'],
+    census: ['Men', 'Women']
+};
+
+
 class MainController extends Component {
 
     constructor(props) {
@@ -28,6 +34,7 @@ class MainController extends Component {
             xAttribute: 'Choose X Attribute',
             yAttribute: 'Choose Y Attribute',
             // update the features selected from the drop down here
+<<<<<<< HEAD
 
             selectedLabels : {
                 x: 'Men',
@@ -36,6 +43,13 @@ class MainController extends Component {
             
             dataPoints : [],
 
+=======
+            dataPoints: [],
+            selectedLabels: {
+                x: '',
+                y: ''
+            },
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
             dataPointDetails: {
                 Asian: "14",
                 Black: "8",
@@ -63,16 +77,27 @@ class MainController extends Component {
         };
     }
 
-    // componentWillMount(){
+    componentWillMount(){
+        // this.onDataSetChangedCallback("sample");
 
-    // }
+    }
 
     componentDidMount(){
         console.log("componentDidMount");
+<<<<<<< HEAD
+=======
+        this.setState({
+            xAxisWidth: this.refs.middleBottom.clientWidth,
+            xAxisHeight: this.refs.middleBottom.clientHeight - 10,
+            leftBarWidth: this.refs.leftBar.clientWidth,
+            leftBarHeight: this.refs.leftBar.clientHeight
+        });
+        this.onDataSetChangedCallback("sample");
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
     }
 
     changeData = () => {
-        let csvFilePath = require("../data/census.csv");
+        let csvFilePath = require("../data/" + this.state.dataset + ".csv");
 
         Papa.parse(csvFilePath, {
             header: true,
@@ -83,6 +108,7 @@ class MainController extends Component {
 
     }    
 
+<<<<<<< HEAD
     changeLabels = () => {
         let labels = {
             x: 'Income',
@@ -93,10 +119,13 @@ class MainController extends Component {
          });
     }    
 
+=======
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
     processAndNormalizeData = (result) => {
         console.log("updateDatadata");
         console.log(result.data);
 
+<<<<<<< HEAD
         this.setState({dataset: 'census', columns: KEYS_TO_BE_USED['census']}, () => {
             let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
             let resultdataPoints = result.data;
@@ -112,6 +141,20 @@ class MainController extends Component {
                 dataPoints : resultdataPoints,
              });
 
+=======
+        let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
+        let resultdataPoints = result.data;
+        keysToNormalize.forEach(key => {
+            let max = Math.max.apply(null, resultdataPoints.map(d => d[key]));
+            let min = Math.min.apply(null, resultdataPoints.map(d => d[key]));
+            resultdataPoints.forEach(point => {
+                point[key] = (point[key] - min) / (max - min);
+            })
+        });
+        console.log(resultdataPoints);
+        this.setState({
+            dataPoints: resultdataPoints,
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
         });
 
     };
@@ -124,12 +167,25 @@ class MainController extends Component {
         this.setState({currDataPoint: dataPoint});
     }
 
+<<<<<<< HEAD
     addPointToScatterCallback(dataPoint, position) {
         console.log("Add data point - Data Point: ");
         console.log(dataPoint);
         console.log("Position: " + position);
         /* TODO: Add data point to scatter plot */
         /* TODO: Send return value to DropZone if success or failure */
+=======
+    onDataSetChangedCallback(dataset) {
+        this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]}, () => {
+            this.changeData();
+            this.setState({
+                selectedLabels: {
+                    x: DEFAULT_FILTERS[dataset][0],
+                    y: DEFAULT_FILTERS[dataset][1]
+                }
+            });
+        })
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
     }
 
     removePointFromScatterCallback(dataPoint, position) {
@@ -186,6 +242,7 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div key="b">
+<<<<<<< HEAD
                         <div style={{height: '75%'}}>
                             <button onClick={this.changeData}>Upload Census data</button>
                             <button onClick={this.changeLabels}>Change data</button>
@@ -228,6 +285,16 @@ class MainController extends Component {
                         </div>
                         <div className={'save-util-panel'}>
                             <p>X dropzones</p>
+=======
+                        <div style={{height: '70%'}}>
+                            {this.state.dataset !== '' ?
+                            <ScatterPlot
+                                dataPoints={this.state.dataPoints}
+                                labels={this.state.selectedLabels}
+                                detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                            /> : null
+                            }
+>>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
