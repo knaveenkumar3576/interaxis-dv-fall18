@@ -19,6 +19,12 @@ const KEYS_TO_BE_USED = {
     census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment']
 };
 
+const DEFAULT_FILTERS = {
+    sample: ['x', 'y'],
+    census: ['Men', 'Women']
+};
+
+
 class MainController extends Component {
 
     constructor(props) {
@@ -35,14 +41,11 @@ class MainController extends Component {
             rightBarWidth: 0,
             rightBarHeight: 0,
             // update the features selected from the drop down here
-
-            selectedLabels: {
-                x: 'Choose X Attribute',
-                y: 'Choose Y Attribute'
-            },
-
             dataPoints: [],
-
+            selectedLabels: {
+                x: '',
+                y: ''
+            },
             dataPointDetails: {
                 Asian: "14",
                 Black: "8",
@@ -70,9 +73,10 @@ class MainController extends Component {
         };
     }
 
-    // componentWillMount(){
+    componentWillMount(){
+        // this.onDataSetChangedCallback("sample");
 
-    // }
+    }
 
     componentDidMount() {
         console.log("componentDidMount");
@@ -82,10 +86,11 @@ class MainController extends Component {
             leftBarWidth: this.refs.leftBar.clientWidth,
             leftBarHeight: this.refs.leftBar.clientHeight
         });
+        this.onDataSetChangedCallback("sample");
     }
 
     changeData = () => {
-        let csvFilePath = require("../data/census.csv");
+        let csvFilePath = require("../data/" + this.state.dataset + ".csv");
 
         Papa.parse(csvFilePath, {
             header: true,
@@ -96,35 +101,22 @@ class MainController extends Component {
 
     }
 
-    changeLabels = () => {
-        let labels = {
-            x: 'Income',
-            y: 'TotalPop'
-        };
-        this.setState({
-            selectedLabels: labels
-        });
-    }
-
     processAndNormalizeData = (result) => {
         console.log("updateDatadata");
         console.log(result.data);
 
-        this.setState({dataset: 'census', columns: KEYS_TO_BE_USED['census']}, () => {
-            let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
-            let resultdataPoints = result.data;
-            keysToNormalize.forEach(key => {
-                let max = Math.max.apply(null, resultdataPoints.map(d => d[key]));
-                let min = Math.min.apply(null, resultdataPoints.map(d => d[key]));
-                resultdataPoints.forEach(point => {
-                    point[key] = (point[key] - min) / (max - min);
-                })
-            });
-            console.log(resultdataPoints);
-            this.setState({
-                dataPoints: resultdataPoints,
-            });
-
+        let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
+        let resultdataPoints = result.data;
+        keysToNormalize.forEach(key => {
+            let max = Math.max.apply(null, resultdataPoints.map(d => d[key]));
+            let min = Math.min.apply(null, resultdataPoints.map(d => d[key]));
+            resultdataPoints.forEach(point => {
+                point[key] = (point[key] - min) / (max - min);
+            })
+        });
+        console.log(resultdataPoints);
+        this.setState({
+            dataPoints: resultdataPoints,
         });
 
     };
@@ -138,7 +130,15 @@ class MainController extends Component {
     }
 
     onDataSetChangedCallback(dataset) {
-        this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]});
+        this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]}, () => {
+            this.changeData();
+            this.setState({
+                selectedLabels: {
+                    x: DEFAULT_FILTERS[dataset][0],
+                    y: DEFAULT_FILTERS[dataset][1]
+                }
+            });
+        })
     }
 
     onVersionChangedCallback(versions, currentVersion) {
@@ -201,14 +201,13 @@ class MainController extends Component {
                     </div>
                     <div key="b">
                         <div style={{height: '70%'}}>
-                            <button onClick={this.changeData}>Upload Census data</button>
-                            <button onClick={this.changeLabels}>Change data</button>
-
+                            {this.state.dataset !== '' ?
                             <ScatterPlot
                                 dataPoints={this.state.dataPoints}
                                 labels={this.state.selectedLabels}
                                 detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
-                            />
+                            /> : null
+                            }
                         </div>
                         <div ref={'middleBottom'} style={{height: '30%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
