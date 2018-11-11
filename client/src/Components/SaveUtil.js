@@ -39,12 +39,14 @@ class SaveUtil extends React.Component {
         this.setState({
             xAttribute: e
         });
+        this.props.onXChange(e);
     }
 
     handleYChange(e) {
         this.setState({
             yAttribute: e
         });
+        this.props.onYChange(e);
     }
 
     handleSubmit(e) {

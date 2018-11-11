@@ -28,8 +28,6 @@ class MainController extends Component {
             currentVersion: '',
             versions: [],
             columns: [],
-            xAttribute: 'Choose X Attribute',
-            yAttribute: 'Choose Y Attribute',
             xAxisWidth: 0,
             xAxisHeight: 0,
             leftBarWidth: 0,
@@ -39,8 +37,8 @@ class MainController extends Component {
             // update the features selected from the drop down here
 
             selectedLabels: {
-                x: 'Men',
-                y: 'Women'
+                x: 'Choose X Attribute',
+                y: 'Choose Y Attribute'
             },
 
             dataPoints: [],
@@ -147,6 +145,20 @@ class MainController extends Component {
         this.setState({versions: versions, currentVersion: currentVersion});
     }
 
+    onXAttributeChangedCallback(x) {
+        let y = this.state.selectedLabels.y;
+        this.setState({
+            selectedLabels: {x: x, y: y}
+        });
+    }
+
+    onYAttributeChangedCallback(y) {
+        let x = this.state.selectedLabels.x;
+        this.setState({
+            selectedLabels: {x: x, y: y}
+        });
+    }
+
     render() {
         let columnLayout = [
             {i: 'a', x: 0, y: 0, w: 3, h: 1, static: true},
@@ -179,8 +191,11 @@ class MainController extends Component {
                             <div className={'save-util-panel'}>
                                 {this.state.dataset !== '' ?
                                     <SaveUtil columns={this.state.columns} versions={this.state.versions}
-                                              xAttribute={this.state.xAttribute} yAttribute={this.state.yAttribute}
-                                              currentVersion={this.state.currentVersion}/> : null}
+                                              xAttribute={this.state.selectedLabels.x}
+                                              yAttribute={this.state.selectedLabels.y}
+                                              currentVersion={this.state.currentVersion}
+                                              onXChange={this.onXAttributeChangedCallback.bind(this)}
+                                              onYChange={this.onYAttributeChangedCallback.bind(this)}/> : null}
                             </div>
                         </div>
                     </div>
