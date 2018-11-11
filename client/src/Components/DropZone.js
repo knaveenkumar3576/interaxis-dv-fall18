@@ -54,7 +54,7 @@ class DropZone extends React.Component {
                 circles.enter(circles)
                     .append('circle')
                     .attr('r', function (d) {
-                        return 10
+                        return 7
                     }).merge(circles)
                     .attr('cx', function (d) {
                         return d.x

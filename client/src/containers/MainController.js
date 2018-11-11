@@ -138,6 +138,22 @@ class MainController extends Component {
         this.setState({currDataPoint: dataPoint});
     }
 
+    addPointToScatterCallback(dataPoint, position) {
+        console.log("Add data point - Data Point: ");
+        console.log(dataPoint);
+        console.log("Position: " + position);
+        /* TODO: Add data point to scatter plot */
+        /* TODO: Send return value to DropZone if success or failure */
+    }
+
+    removePointFromScatterCallback(dataPoint, position) {
+        console.log("Remove data point - Data Point: ");
+        console.log(dataPoint);
+        console.log("Position: " + position);
+        /* TODO: Remove data point from scatter plot */
+        /* TODO: Send return value to DropZone if success or failure */
+    }
+
     onDataSetChangedCallback(dataset) {
         this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]});
     }
@@ -173,8 +189,16 @@ class MainController extends Component {
                             detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                         />
 
-                        <DropZone position={"xMin"}/>
-                        <DropZone position={"xMax"}/>
+                        <DropZone 
+                            position={"xMin"}
+                            addDataPointCallback={this.removeDataPointFromScatterCallback} 
+                            removeDataPointCallback = {this.addDataPointFromScatterCallback} 
+                        />
+                        <DropZone 
+                            position={"xMax"}
+                            addDataPointCallback={this.removeDataPointFromScatterCallback} 
+                            removeDataPointCallback = {this.addDataPointFromScatterCallback} 
+                        />
                     </PanelGroup>
                     <PanelGroup direction="row" borderColor="grey" panelWidths={[
                         {size: 300, minSize: 200, resize: "dynamic"},
