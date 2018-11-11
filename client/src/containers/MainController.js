@@ -173,21 +173,23 @@ class MainController extends Component {
                             rowHeight={window.innerHeight - 50}
                             width={window.innerWidth}>
                     <div key="a">
-                        <div style={{height: '15%'}}>
+                        <div style={{height: '10%'}}>
                             <div className={'pull-right'}
-                                 style={{height: '100%', width: '30%'}}>a
+                                 style={{height: '100%', width: '30%'}}>
+                                <DropZone position={"yMax"}/>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
                             <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth} barWidth={25}
                                       id={'leftBarChart'}/>
                         </div>
-                        <div style={{height: '15%'}}>
+                        <div style={{height: '10%'}}>
                             <div className={'pull-right'}
-                                 style={{height: '100%', width: '30%'}}>a
+                                 style={{height: '100%', width: '30%'}}>
+                                <DropZone position={"yMin"}/>
                             </div>
                         </div>
-                        <div style={{height: '15%'}}>
+                        <div style={{height: '25%', position: 'relative'}}>
                             <div className={'save-util-panel'}>
                                 {this.state.dataset !== '' ?
                                     <SaveUtil columns={this.state.columns} versions={this.state.versions}
@@ -200,7 +202,7 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div key="b">
-                        <div style={{height: '70%'}}>
+                        <div style={{height: '75%'}}>
                             <button onClick={this.changeData}>Upload Census data</button>
                             <button onClick={this.changeLabels}>Change data</button>
 
@@ -210,7 +212,7 @@ class MainController extends Component {
                                 detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                             />
                         </div>
-                        <div ref={'middleBottom'} style={{height: '30%'}}>
+                        <div ref={'middleBottom'} style={{height: '25%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
                     </div>
