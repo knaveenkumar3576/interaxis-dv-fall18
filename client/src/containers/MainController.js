@@ -153,21 +153,40 @@ class MainController extends Component {
             <Wrap>
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
                         onVersionChanged={this.onVersionChangedCallback.bind(this)}/>
-                <PanelGroup direction="column" borderColor="grey">
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 200, minSize: 0, resize: "dynamic"},
-                        {size: 50, minSize: 0, resize: "dynamic"},
-                        {size: 100, minSize: 50, resize: "stretch"}
-                    ]}>
-                        <div>
-                            <p> Y Bar plots </p>
-                            <BarChart height={600} width={250} barWidth={25}/>
+                <GridLayout className="layout grid-layout" layout={columnLayout} cols={12}
+                            rowHeight={window.innerHeight - 50}
+                            width={window.innerWidth}>
+                    <div key="a">
+                        <div style={{height: '10%'}}>
+                            <div className={'pull-right'}
+                                 style={{height: '100%', width: '30%'}}>
+                                <DropZone position={"yMax"}/>
+                            </div>
                         </div>
-                        <div> Y dropzones
-
+                        <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
+                            <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth} barWidth={25}
+                                      id={'leftBarChart'}/>
                         </div>
-
-                        <div>
+                        <div style={{height: '10%'}}>
+                            <div className={'pull-right'}
+                                 style={{height: '100%', width: '30%'}}>
+                                <DropZone position={"yMin"}/>
+                            </div>
+                        </div>
+                        <div style={{height: '25%', position: 'relative'}}>
+                            <div className={'save-util-panel'}>
+                                {this.state.dataset !== '' ?
+                                    <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                              xAttribute={this.state.selectedLabels.x}
+                                              yAttribute={this.state.selectedLabels.y}
+                                              currentVersion={this.state.currentVersion}
+                                              onXChange={this.onXAttributeChangedCallback.bind(this)}
+                                              onYChange={this.onYAttributeChangedCallback.bind(this)}/> : null}
+                            </div>
+                        </div>
+                    </div>
+                    <div key="b">
+                        <div style={{height: '75%'}}>
                             <button onClick={this.changeData}>Upload Census data</button>
                             <button onClick={this.changeLabels}>Change data</button>
                             
@@ -210,18 +229,8 @@ class MainController extends Component {
                         <div className={'save-util-panel'}>
                             <p>X dropzones</p>
                         </div>
-                    </PanelGroup>
-
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 200, minSize: 50, resize: "dynamic"},
-                        {size: 100, minSize: 50, resize: "dynamic"}
-                    ]}>
-                        <div> Extra Filters</div>
-                        <div>
-                            <p>
-                                X Bar Plots
-                            </p>
-                            <BarChart height={250} width={800} barWidth={10}/>
+                        <div ref={'middleBottom'} style={{height: '25%'}}>
+                            <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
                     </PanelGroup>
 

@@ -126,26 +126,34 @@ class SaveUtil extends React.Component {
         return (
             <div className='filter-container'>
                 <form className={'filter-form'} onSubmit={this.handleSubmit}>
-                    <PanelGroup panelWidths={[
-                        {size: 120, resize: 'fixed'},
-                        {minSize: 180, resize: 'fixed'}
-                    ]}>
-                        <div className={'row'}>
-                            <h4><label style={{margin: '10px 0 0 20px'}}>X Attribute:</label></h4>
-                            <h4><label style={{margin: '20px 0 0 20px'}}>Y Attribute:</label></h4>
-                        </div>
-                        <div className={'row'}>
-                            <DropdownButton className={'drop-down-btn'} bsStyle='primary' title={this.state.xAttribute}
-                                            id={'xAttribute'}>{xAttributes}</DropdownButton>
-                            <DropdownButton className={'drop-down-btn'} bsStyle='primary'
-                                            title={this.state.yAttribute}
-                                            id={'yAttribute'}>{yAttributes}</DropdownButton>
-                        </div>
-                    </PanelGroup>
+                    <div align="center" style={{margin: '10px 0 0 0'}}>
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' title={this.state.xAttribute}
+                                        id={'xAttribute'}>{xAttributes}</DropdownButton>
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary'
+                                        title={this.state.yAttribute}
+                                        id={'yAttribute'}>{yAttributes}</DropdownButton>
+                    </div>
+
+                    {/*<PanelGroup panelWidths={[*/}
+                    {/*{size: 120, resize: 'fixed'},*/}
+                    {/*{minSize: 180, resize: 'fixed'}*/}
+                    {/*]}>*/}
+                    {/*<div className={'row'}>*/}
+                    {/*<h4><label style={{margin: '3px 0 0 20px'}}>X Attribute:</label></h4>*/}
+                    {/*<h4><label style={{margin: '10px 0 0 20px'}}>Y Attribute:</label></h4>*/}
+                    {/*</div>*/}
+                    {/*<div className={'row'}>*/}
+                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary' title={this.state.xAttribute}*/}
+                    {/*id={'xAttribute'}>{xAttributes}</DropdownButton>*/}
+                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary'*/}
+                    {/*title={this.state.yAttribute}*/}
+                    {/*id={'yAttribute'}>{yAttributes}</DropdownButton>*/}
+                    {/*</div>*/}
+                    {/*</PanelGroup>*/}
                     <br/>
 
                     <div className={'row bottom-column'}>
-                        <div align="center">
+                        <div style={{margin: '0 0 0 20%'}}>
                             <Button bsStyle="success" style={{margin: '0 15px 0 0'}} type="submit">Save</Button>
                             <Button bsStyle="warning" onClick={this.onStartFresh.bind(this)}>Start Fresh</Button>
                             {/*<Multiselect data={this.state.versions} multiple/>*/}
@@ -153,22 +161,6 @@ class SaveUtil extends React.Component {
 
                     </div>
                 </form>
-                {/*<section className='display-item'>*/}
-                {/*<div className="wrapper">*/}
-                {/*<ul>*/}
-                {/*{this.state.versions.map((item) => {*/}
-                {/*return (*/}
-                {/*<li key={item.id}>*/}
-                {/*<h3>{item.title}</h3>*/}
-                {/*<p>brought by: {item.user}*/}
-                {/*<button onClick={() => this.removeItem(item.id)}>Remove Item</button>*/}
-                {/*</p>*/}
-                {/*</li>*/}
-                {/*)*/}
-                {/*})}*/}
-                {/*</ul>*/}
-                {/*</div>*/}
-                {/*</section>*/}
             </div>
         );
     }
