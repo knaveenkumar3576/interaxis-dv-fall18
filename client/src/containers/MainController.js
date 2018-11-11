@@ -28,42 +28,14 @@ class MainController extends Component {
             xAttribute: 'Choose X Attribute',
             yAttribute: 'Choose Y Attribute',
             // update the features selected from the drop down here
-            selectedLabels: {
-                x: 'x',
-                y: 'z'
+
+            selectedLabels : {
+                x: 'Men',
+                y: 'Women'
             },
-            dataPoints: [
-                {
-                    x: 1,
-                    y: 2,
-                    z: 8,
-                    name: "Point 1"
-                },
-                {
-                    x: 5,
-                    y: 5,
-                    z: 1,
-                    name: "Point 2"
-                },
-                {
-                    x: 1,
-                    y: 5,
-                    z: 8,
-                    name: "Point 3"
-                },
-                {
-                    x: 1,
-                    y: 1,
-                    z: 7,
-                    name: "Point 4"
-                },
-                {
-                    x: 4,
-                    y: 3,
-                    z: 2,
-                    name: "Point 5"
-                },
-            ],
+            
+            dataPoints : [],
+
             dataPointDetails: {
                 Asian: "14",
                 Black: "8",
@@ -91,8 +63,15 @@ class MainController extends Component {
         };
     }
 
-    componentWillMount() {
-        console.log("componentWillMount");
+    // componentWillMount(){
+
+    // }
+
+    componentDidMount(){
+        console.log("componentDidMount");
+    }
+
+    changeData = () => {
         let csvFilePath = require("../data/census.csv");
 
         Papa.parse(csvFilePath, {
@@ -102,7 +81,17 @@ class MainController extends Component {
             complete: this.processAndNormalizeData
         });
 
-    }
+    }    
+
+    changeLabels = () => {
+        let labels = {
+            x: 'Income',
+            y: 'TotalPop'
+        };
+        this.setState({ 
+            selectedLabels: labels
+         });
+    }    
 
     processAndNormalizeData = (result) => {
         console.log("updateDatadata");
@@ -118,17 +107,14 @@ class MainController extends Component {
                     point[key] = (point[key] - min) / (max - min);
                 })
             });
-
-            console.log(resultdataPoints);
-            this.setState({dataPoints: resultdataPoints});
+            console.log(resultdataPoints);        
+            this.setState({ 
+                dataPoints : resultdataPoints,
+             });
 
         });
 
     };
-
-    componentDidMount() {
-        console.log("componentDidMount");
-    }
 
     // callback to show detail view
     scatterOnMouseOverCallback(dataPoint) {
@@ -163,8 +149,6 @@ class MainController extends Component {
     }
 
     render() {
-        console.log("render");
-
         return (
             <Wrap>
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
@@ -183,11 +167,23 @@ class MainController extends Component {
 
                         </div>
 
-                        <ScatterPlot
-                            dataPoints={this.state.dataPoints}
-                            labels={this.state.selectedLabels}
-                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
-                        />
+                        <div>
+                            <button onClick={this.changeData}>Upload Census data</button>
+                            <button onClick={this.changeLabels}>Change data</button>
+                            
+                            <ScatterPlot
+                                dataPoints={this.state.dataPoints}
+                                labels={this.state.selectedLabels} 
+                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
+                            />
+                            
+                        </div>
+
+                        {/* <ScatterPlot 
+                                dataPoints={this.state.dataPoints} 
+                                labels={this.state.selectedLabels} 
+                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
+                        /> */}
 
                         <DropZone 
                             position={"xMin"}
