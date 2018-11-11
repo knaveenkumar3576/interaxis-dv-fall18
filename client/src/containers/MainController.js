@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import PanelGroup from 'react-panelgroup'
 import * as Papa from 'papaparse';
+import GridLayout from 'react-grid-layout';
+import '../css/MainController.css'
 
 import Header from './Header';
 import ScatterPlot from '../Components/ScatterPlot';
@@ -10,6 +12,7 @@ import DropZone from '../Components/DropZone';
 import DataPointDetail from '../Components/DataPointDetail';
 import Wrap from '../hoc/Wrap';
 import SaveUtil from "../Components/SaveUtil";
+import BottomPanel from '../Components/BottomPannel';
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
@@ -27,14 +30,20 @@ class MainController extends Component {
             columns: [],
             xAttribute: 'Choose X Attribute',
             yAttribute: 'Choose Y Attribute',
+            xAxisWidth: 0,
+            xAxisHeight: 0,
+            leftBarWidth: 0,
+            leftBarHeight: 0,
+            rightBarWidth: 0,
+            rightBarHeight: 0,
             // update the features selected from the drop down here
 
-            selectedLabels : {
+            selectedLabels: {
                 x: 'Men',
                 y: 'Women'
             },
-            
-            dataPoints : [],
+
+            dataPoints: [],
 
             dataPointDetails: {
                 Asian: "14",
@@ -67,8 +76,14 @@ class MainController extends Component {
 
     // }
 
-    componentDidMount(){
+    componentDidMount() {
         console.log("componentDidMount");
+        this.setState({
+            xAxisWidth: this.refs.middleBottom.clientWidth,
+            xAxisHeight: this.refs.middleBottom.clientHeight - 10,
+            leftBarWidth: this.refs.leftBar.clientWidth,
+            leftBarHeight: this.refs.leftBar.clientHeight
+        });
     }
 
     changeData = () => {
@@ -81,17 +96,17 @@ class MainController extends Component {
             complete: this.processAndNormalizeData
         });
 
-    }    
+    }
 
     changeLabels = () => {
         let labels = {
             x: 'Income',
             y: 'TotalPop'
         };
-        this.setState({ 
+        this.setState({
             selectedLabels: labels
-         });
-    }    
+        });
+    }
 
     processAndNormalizeData = (result) => {
         console.log("updateDatadata");
@@ -107,10 +122,10 @@ class MainController extends Component {
                     point[key] = (point[key] - min) / (max - min);
                 })
             });
-            console.log(resultdataPoints);        
-            this.setState({ 
-                dataPoints : resultdataPoints,
-             });
+            console.log(resultdataPoints);
+            this.setState({
+                dataPoints: resultdataPoints,
+            });
 
         });
 
@@ -133,92 +148,61 @@ class MainController extends Component {
     }
 
     render() {
+        let columnLayout = [
+            {i: 'a', x: 0, y: 0, w: 3, h: 1, static: true},
+            {i: 'b', x: 3, y: 0, w: 6, h: 1, static: true},
+            {i: 'c', x: 9, y: 0, w: 3, h: 1, static: true}
+        ];
         return (
             <Wrap>
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
                         onVersionChanged={this.onVersionChangedCallback.bind(this)}/>
-                <PanelGroup direction="column" borderColor="grey">
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 200, minSize: 0, resize: "dynamic"},
-                        {size: 50, minSize: 0, resize: "dynamic"},
-                        {size: 100, minSize: 50, resize: "stretch"}
-                    ]}>
-                        <div>
-                            <p> Y Bar plots </p>
-                            <BarChart height={600} width={250} barWidth={25}/>
+                <GridLayout className="layout grid-layout" layout={columnLayout} cols={12}
+                            rowHeight={window.innerHeight - 50}
+                            width={window.innerWidth}>
+                    <div key="a">
+                        <div style={{height: '15%'}}>
+                            <div className={'pull-right'}
+                                 style={{height: '100%', width: '30%'}}>a
+                            </div>
                         </div>
-                        <div> Y dropzones
-
+                        <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
+                            <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth} barWidth={25}
+                                      id={'leftBarChart'}/>
                         </div>
-
-                        <div>
+                        <div style={{height: '15%'}}>
+                            <div className={'pull-right'}
+                                 style={{height: '100%', width: '30%'}}>a
+                            </div>
+                        </div>
+                        <div style={{height: '15%'}}>
+                            <div className={'save-util-panel'}>
+                                {this.state.dataset !== '' ?
+                                    <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                              xAttribute={this.state.xAttribute} yAttribute={this.state.yAttribute}
+                                              currentVersion={this.state.currentVersion}/> : null}
+                            </div>
+                        </div>
+                    </div>
+                    <div key="b">
+                        <div style={{height: '70%'}}>
                             <button onClick={this.changeData}>Upload Census data</button>
                             <button onClick={this.changeLabels}>Change data</button>
-                            
+
                             <ScatterPlot
                                 dataPoints={this.state.dataPoints}
-                                labels={this.state.selectedLabels} 
-                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
+                                labels={this.state.selectedLabels}
+                                detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                             />
-                            
                         </div>
-
-                        {/* <ScatterPlot 
-                                dataPoints={this.state.dataPoints} 
-                                labels={this.state.selectedLabels} 
-                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
-                        /> */}
-
-                        <DropZone position={"xMin"}/>
-                        <DropZone position={"xMax"}/>
-                    </PanelGroup>
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 300, minSize: 200, resize: "dynamic"},
-                        {minSize: 100, resize: "stretch"},
-                    ]}>
-                        <div className={'save-util-panel'}>
-                            {this.state.dataset !== '' ?
-                                <SaveUtil columns={this.state.columns} versions={this.state.versions}
-                                          xAttribute={this.state.xAttribute} yAttribute={this.state.yAttribute}
-                                          currentVersion={this.state.currentVersion}/> : null}
+                        <div ref={'middleBottom'} style={{height: '30%'}}>
+                            <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
-                        <div className={'save-util-panel'}>
-                            <p>X dropzones</p>
-                        </div>
-                    </PanelGroup>
-
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 200, minSize: 50, resize: "dynamic"},
-                        {size: 100, minSize: 50, resize: "dynamic"}
-                    ]}>
-                        <div> Extra Filters</div>
-                        <div>
-                            <p>
-                                X Bar Plots
-                            </p>
-                            <BarChart height={250} width={800} barWidth={10}/>
-                        </div>
-                    </PanelGroup>
-
-                    <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
-
-                </PanelGroup>
-
-                {/* <div> 
-                    A(Main Scatterplot)
-                </div>
-                <div> 
-                    B()
-                </div>
-                <div> 
-                    C
-                </div>
-                <div> 
-                    D
-                </div>
-                <div> 
-                    E
-                </div> */}
+                    </div>
+                    <div key="c">
+                        <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
+                    </div>
+                </GridLayout>
             </Wrap>
         );
     }
