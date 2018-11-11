@@ -1,7 +1,7 @@
 .filter-container {
     position: absolute;
-    height: 100%;
     width: 100%;
+    height: 100%;
 }
 
 .filter-form {
@@ -15,12 +15,12 @@
 }
 
 .form-row {
-    margin-left: 15px !important;
+    margin-left: 5px !important;
 }
 
 .drop-down-btn {
     width: 160px !important;
-    margin: 15px 0 0 15px !important;
+    margin: 5px 0 0 15px !important;
 }
 
 .bottom-column {
