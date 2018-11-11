@@ -23,7 +23,7 @@ class DropZone extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            dataPointList: {}, // List of objects having details about circles
+            dataPointList: [], // List of objects having details about circles
             nodes: [
             ]
         };
@@ -47,15 +47,15 @@ class DropZone extends React.Component {
                 return 7;
             }))
             .on('tick', function () {
-                var circles = select(self.refs.svg)
+                var circles = select(".svg")
                     .selectAll('circle')
                     .data(self.state.nodes);
 
-                circles.enter()
+                circles.enter(circles)
                     .append('circle')
                     .attr('r', function (d) {
                         return 10
-                    }).merge()
+                    }).merge(circles)
                     .attr('cx', function (d) {
                         return d.x
                     })
@@ -98,7 +98,7 @@ class DropZone extends React.Component {
                 return 7;
             }))
             .on('tick', function() {
-                var circles = select(self.refs.svg)
+                var circles = select(".svg")
                     .selectAll('circle')
                     .data(self.state.nodes);
 
@@ -106,7 +106,7 @@ class DropZone extends React.Component {
                     .append('circle')
                     .attr('r', function (d) {
                         return 10
-                    }).merge()
+                    }).merge(circles)
                     .attr('cx', function (d) {
                         return d.x
                     })
@@ -147,7 +147,7 @@ class DropZone extends React.Component {
                 onDragLeave={this.dragLeaveHandler}
                 onDoubleClick={this.removeDataPoint} 
                 onDrop={this.addDataPoint} >
-                <svg width={this.width} ref="svg" height={this.height} >
+                <svg width={this.width} ref="svg" height={this.height} className="svg">
                 </svg>
            </div>
         )
