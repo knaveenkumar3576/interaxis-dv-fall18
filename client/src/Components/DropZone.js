@@ -1,29 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { forceSimulation, forceManyBody, forceCenter, forceCollide } from 'd3-force';
-import { select } from 'd3-selection';
+import {forceSimulation, forceManyBody, forceCenter, forceCollide} from 'd3-force';
+import {select} from 'd3-selection';
 import PropTypes from 'prop-types';
 
- let dropZoneDiv = {
-     height: 75,
-     width: 75,
-     backgroundColor: "lightgreen"
- };
-
 /** Props:
- * Position: xMax, xMin, yMax, yMin  
+ * Position: xMax, xMin, yMax, yMin
  * Callback: to restore circle back to the scatterplot on double click
  */
 class DropZone extends React.Component {
-
-    height = 100;
-    width = 100;
-
     constructor(props) {
-        super(props)
+        super(props);
         this.state = {
-            nodes: [
-            ]
+            nodes: [],
+            height: 0,
+            width: 0
         };
 
         // Function bindings
@@ -31,6 +22,15 @@ class DropZone extends React.Component {
         this.removeDataPoint = this.removeDataPoint.bind(this);
         this.dragOverHandler = this.dragOverHandler.bind(this);
         // this.ticked = this.ticked.bind(this);
+    }
+
+    componentWillReceiveProps(props) {
+        if (props.height > 0 && props.width > 0) {
+            this.setState({
+                height: props.height,
+                width: props.width
+            })
+        }
     }
 
     // Create an empty SVG with a force layout with no nodes
@@ -87,18 +87,18 @@ class DropZone extends React.Component {
         console.log(datapointjson);
         let dataPoint = JSON.parse(datapointjson);
         console.log(dataPoint);
-        /* Add data point to the nodes array in the state of this component*/ 
+        /* Add data point to the nodes array in the state of this component*/
         /* TODO: Changing state manually, change state using setState() method*/
         self.setState({nodes: self.state.nodes.push(dataPoint)});
 
         // Update the force layout and re-render the svg
         let simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(5))
-            .force('center', forceCenter(self.width / 2,  self.height / 2))
+            .force('center', forceCenter(self.width / 2, self.height / 2))
             .force('collision', forceCollide().radius(function (d) {
                 return 7;
             }))
-            .on('tick', function() {
+            .on('tick', function () {
                 var circles = select(".svg")
                     .selectAll('circle')
                     .data(self.state.nodes);
@@ -113,7 +113,7 @@ class DropZone extends React.Component {
                         console.log("Double click on data point");
                         console.log("Datapoint: ");
                         console.log(d);
-                        
+
                         self.removeDataPoint(dataPoint);
                     })
                     .merge(circles)
@@ -123,7 +123,7 @@ class DropZone extends React.Component {
                     .attr('cy', function (d) {
                         return d.y
                     });
-                    
+
                 circles.exit()
                     .remove();
             });
@@ -201,15 +201,20 @@ class DropZone extends React.Component {
     }
 
     render() {
+        let dropZoneDiv = {
+            width: this.state.width,
+            height: this.state.height,
+            backgroundColor: "lightgreen"
+        };
         return (
-            <div 
-                style={dropZoneDiv} 
+            <div
+                style={dropZoneDiv}
                 onDragOver={this.dragOverHandler}
                 onDragLeave={this.dragLeaveHandler}
-                onDrop={this.addDataPoint} >
-                <svg width={this.width} ref="svg" height={this.height} className="svg">
+                onDrop={this.addDataPoint}>
+                <svg width={this.state.width} ref="svg" height={this.state.height} className="svg">
                 </svg>
-           </div>
+            </div>
         )
     }
 

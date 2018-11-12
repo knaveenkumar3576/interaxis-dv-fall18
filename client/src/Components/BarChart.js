@@ -73,7 +73,7 @@ class BarChart extends React.Component {
         let svg = select(id)
             .append("svg")
             .attr("width", width)
-            .attr("height", height + 40);
+            .attr("height", height);
 
         let axis = svg.append("g")
             .attr("transform", function () {

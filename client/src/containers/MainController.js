@@ -39,6 +39,12 @@ class MainController extends Component {
             leftBarHeight: 0,
             rightBarWidth: 0,
             rightBarHeight: 0,
+            yMaxDropZoneHeight: 0,
+            yMinDropZoneHeight: 0,
+            yMaxDropZoneWidth: 0,
+            yMinDropZoneWidth: 0,
+            scatterPlotWidth: 0,
+            scatterPlotHeight: 0,
             // update the features selected from the drop down here
             dataPoints: [],
             originalDataPoints: [],
@@ -65,7 +71,14 @@ class MainController extends Component {
             xAxisWidth: this.refs.middleBottom.clientWidth,
             xAxisHeight: this.refs.middleBottom.clientHeight - 10,
             leftBarWidth: this.refs.leftBar.clientWidth,
-            leftBarHeight: this.refs.leftBar.clientHeight
+            leftBarHeight: this.refs.leftBar.clientHeight,
+            yMaxDropZoneHeight: this.refs.yMaxDropZone.clientHeight,
+            yMinDropZoneHeight: this.refs.yMinDropZone.clientHeight,
+            yMaxDropZoneWidth: this.refs.yMaxDropZone.clientWidth,
+            yMinDropZoneWidth: this.refs.yMinDropZone.clientWidth,
+            scatterPlotWidth: this.refs.scatterPlot.clientWidth,
+            scatterPlotHeight: this.refs.scatterPlot.clientHeight,
+
         });
         this.onDataSetChangedCallback("sample");
     }
@@ -80,17 +93,17 @@ class MainController extends Component {
             complete: (result) => {
                 this.saveOriginalData(result)
                 this.processAndNormalizeData(result)
-            } 
+            }
         });
     }
-    
+
     saveOriginalData = (result) => {
         this.setState({
             originalDataPoints: JSON.parse(JSON.stringify(result.data))
-        });    
-    } 
+        });
+    }
 
-    processAndNormalizeData = (result) => {        
+    processAndNormalizeData = (result) => {
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
         let resultdataPoints = result.data;
         keysToNormalize.forEach(key => {
@@ -192,8 +205,8 @@ class MainController extends Component {
     render() {
         let columnLayout = [
             {i: 'a', x: 0, y: 0, w: 3, h: 1, static: true},
-            {i: 'b', x: 3, y: 0, w: 6, h: 1, static: true},
-            {i: 'c', x: 9, y: 0, w: 3, h: 1, static: true}
+            {i: 'b', x: 3, y: 0, w: 7, h: 1, static: true},
+            {i: 'c', x: 10, y: 0, w: 2, h: 1, static: true}
         ];
         return (
             <Wrap>
@@ -204,14 +217,13 @@ class MainController extends Component {
                             width={window.innerWidth}>
                     <div key="a">
                         <div style={{height: '10%'}}>
-                            <div className={'pull-right'}
+                            <div ref={'yMaxDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone 
-                                    position={"yMax"}
-                                    dataset = {this.state.dataset}
-                                    addDataPointCallback = {this.removeDataPointFromScatterCallback.bind(this)}
-                                    removeDataPointCallback = {this.addDataPointToScatterCallback.bind(this)}
-                                />
+                                <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
+                                          width={this.state.yMaxDropZoneWidth}
+                                          dataset = {this.state.dataset}
+                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -221,14 +233,13 @@ class MainController extends Component {
                                           id={'leftBarChart'}/> : null}
                         </div>
                         <div style={{height: '10%'}}>
-                            <div className={'pull-right'}
+                            <div ref={'yMinDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone
-                                    position = {"yMin"}
-                                    dataset = {this.state.dataset}
-                                    addDataPointCallback = {this.removeDataPointFromScatterCallback.bind(this)}
-                                    removeDataPointCallback = {this.addDataPointToScatterCallback.bind(this)}
-                                />
+                                <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
+                                          width={this.state.yMinDropZoneWidth}
+                                          dataset = {this.state.dataset}
+                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>
@@ -245,12 +256,12 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div key="b">
-                        <div style={{height: '70%'}}>
+                        <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
                             {this.state.dataset !== '' ?
-                                <ScatterPlot
-                                    dataPoints={this.state.dataPoints}
-                                    labels={this.state.selectedLabels}
-                                    detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                <ScatterPlot id={'scatterPlotId'}
+                                             dataPoints={this.state.dataPoints} labels={this.state.selectedLabels}
+                                             width={this.state.scatterPlotWidth} height={this.state.scatterPlotHeight}
+                                             detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                                 /> : null
                             }
                         </div>
