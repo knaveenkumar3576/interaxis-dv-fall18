@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {forceSimulation, forceManyBody, forceCenter, forceCollide} from 'd3-force';
 import {select} from 'd3-selection';
-import PropTypes from 'prop-types';
 
 /** Props:
  * Position: xMax, xMin, yMax, yMin
@@ -21,7 +19,6 @@ class DropZone extends React.Component {
         this.addDataPoint = this.addDataPoint.bind(this);
         this.removeDataPoint = this.removeDataPoint.bind(this);
         this.dragOverHandler = this.dragOverHandler.bind(this);
-        // this.ticked = this.ticked.bind(this);
     }
 
     componentWillReceiveProps(props) {

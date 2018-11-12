@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import PanelGroup from 'react-panelgroup'
 import * as Papa from 'papaparse';
 import GridLayout from 'react-grid-layout';
 import '../css/MainController.css'
@@ -172,7 +170,7 @@ class MainController extends Component {
             case "yMax":
                 this.setState({dataPointsyMax: dataPoints});
                 break;
-            case "default":
+            default:
                 return false;
         }
         this.setState()
@@ -195,7 +193,7 @@ class MainController extends Component {
             case "yMax":
                 this.setState({dataPointsyMax: dataPoints});
                 break;
-            case "default":
+            default:
                 return false;
         }
         console.log("Add Datapoint from scatter");
@@ -219,7 +217,7 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div ref={'yMaxDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
+                                <DropZone position={"xMin"} height={this.state.yMaxDropZoneHeight}
                                           width={this.state.yMaxDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
@@ -235,7 +233,7 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div ref={'yMinDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
+                                <DropZone position={"xMax"} height={this.state.yMinDropZoneHeight}
                                           width={this.state.yMinDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
@@ -266,7 +264,13 @@ class MainController extends Component {
                             }
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
-                            <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
+                            <BottomPanel 
+                                width={this.state.xAxisWidth} 
+                                height={this.state.xAxisHeight}
+                                dataset = {this.state.dataset}
+                                removeDataPointFromScatterCallback = {this.removeDataPointFromScatterCallback.bind(this)}
+                                addDataPointToScatterCallback = {this.addDataPointToScatterCallback.bind(this)}
+                                />
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
