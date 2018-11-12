@@ -24,7 +24,6 @@ const DEFAULT_FILTERS = {
     census: ['Men', 'Women']
 };
 
-
 class MainController extends Component {
 
     constructor(props) {
@@ -42,6 +41,7 @@ class MainController extends Component {
             rightBarHeight: 0,
             // update the features selected from the drop down here
             dataPoints: [],
+            originalDataPoints: [],
             dataPointsxMin: [],
             dataPointsxMax: [],
             dataPointsyMin: [],
@@ -77,7 +77,7 @@ class MainController extends Component {
         };
     }
 
-    componentWillMount(){
+    componentWillMount() {
         // this.onDataSetChangedCallback("sample");
 
     }
@@ -100,15 +100,20 @@ class MainController extends Component {
             header: true,
             download: true,
             skipEmptyLines: true,
-            complete: this.processAndNormalizeData
+            complete: (result) => {
+                this.saveOriginalData(result)
+                this.processAndNormalizeData(result)
+            } 
         });
-
     }
+    
+    saveOriginalData = (result) => {
+        this.setState({
+            originalDataPoints: JSON.parse(JSON.stringify(result.data))
+        });    
+    } 
 
-    processAndNormalizeData = (result) => {
-        console.log("updateDatadata");
-        console.log(result.data);
-
+    processAndNormalizeData = (result) => {        
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
         let resultdataPoints = result.data;
         keysToNormalize.forEach(key => {
@@ -126,11 +131,11 @@ class MainController extends Component {
     };
 
     // callback to show detail view
-    scatterOnMouseOverCallback(dataPoint) {
+    scatterOnMouseOverCallback(i) {
         // update the props of DataPointDetail
         console.log("Datapoint callback!");
-        console.log(dataPoint);
-        this.setState({currDataPoint: dataPoint});
+        console.log(i);
+        this.setState({currDataPoint: this.state.originalDataPoints[i]});
     }
 
     onDataSetChangedCallback(dataset) {
@@ -164,12 +169,21 @@ class MainController extends Component {
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {
-        switch(position) {
-            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
-            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
-            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
-            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
-            case "default": return false; 
+        switch (position) {
+            case "xMin":
+                this.setState({dataPointsxMin: dataPoints});
+                break;
+            case "xMax":
+                this.setState({dataPointsxMax: dataPoints});
+                break;
+            case "yMin":
+                this.setState({dataPointsyMin: dataPoints});
+                break;
+            case "yMax":
+                this.setState({dataPointsyMax: dataPoints});
+                break;
+            case "default":
+                return false;
         }
         this.setState()
         console.log("Added point to ");
@@ -178,12 +192,21 @@ class MainController extends Component {
     }
 
     addDataPointToScatterCallback(dataPoints, position) {
-        switch(position) {
-            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
-            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
-            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
-            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
-            case "default": return false; 
+        switch (position) {
+            case "xMin":
+                this.setState({dataPointsxMin: dataPoints});
+                break;
+            case "xMax":
+                this.setState({dataPointsxMax: dataPoints});
+                break;
+            case "yMin":
+                this.setState({dataPointsyMin: dataPoints});
+                break;
+            case "yMax":
+                this.setState({dataPointsyMax: dataPoints});
+                break;
+            case "default":
+                return false;
         }
         console.log("Add Datapoint from scatter");
         return true;
@@ -214,8 +237,10 @@ class MainController extends Component {
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
-                            <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth} barWidth={25}
-                                      id={'leftBarChart'}/>
+                            {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ?
+                                <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
+                                          barWidth={25}
+                                          id={'leftBarChart'}/> : null}
                         </div>
                         <div style={{height: '10%'}}>
                             <div className={'pull-right'}
@@ -231,6 +256,7 @@ class MainController extends Component {
                             <div className={'save-util-panel'}>
                                 {this.state.dataset !== '' ?
                                     <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                              default={DEFAULT_FILTERS[this.state.dataset]}
                                               xAttribute={this.state.selectedLabels.x}
                                               yAttribute={this.state.selectedLabels.y}
                                               currentVersion={this.state.currentVersion}
@@ -242,18 +268,18 @@ class MainController extends Component {
                     <div key="b">
                         <div style={{height: '70%'}}>
                             {this.state.dataset !== '' ?
-                            <ScatterPlot
-                                dataPoints={this.state.dataPoints}
-                                labels={this.state.selectedLabels}
-                                detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
-                            /> : null
+                                <ScatterPlot
+                                    dataPoints={this.state.dataPoints}
+                                    labels={this.state.selectedLabels}
+                                    detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                /> : null
                             }
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
                     </div>
-                    <div key="c">
+                    <div style={{'overflowY': 'scroll'}} key="c">
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>
