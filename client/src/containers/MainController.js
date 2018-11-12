@@ -24,7 +24,6 @@ const DEFAULT_FILTERS = {
     census: ['Men', 'Women']
 };
 
-
 class MainController extends Component {
 
     constructor(props) {
@@ -46,6 +45,7 @@ class MainController extends Component {
             yMinDropZoneWidth: 0,
             // update the features selected from the drop down here
             dataPoints: [],
+            originalDataPoints: [],
             dataPointsxMin: [],
             dataPointsxMax: [],
             dataPointsyMin: [],
@@ -109,15 +109,20 @@ class MainController extends Component {
             header: true,
             download: true,
             skipEmptyLines: true,
-            complete: this.processAndNormalizeData
+            complete: (result) => {
+                this.saveOriginalData(result)
+                this.processAndNormalizeData(result)
+            }
         });
+    }
 
+    saveOriginalData = (result) => {
+        this.setState({
+            originalDataPoints: JSON.parse(JSON.stringify(result.data))
+        });
     }
 
     processAndNormalizeData = (result) => {
-        console.log("updateDatadata");
-        console.log(result.data);
-
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
         let resultdataPoints = result.data;
         keysToNormalize.forEach(key => {
@@ -135,11 +140,11 @@ class MainController extends Component {
     };
 
     // callback to show detail view
-    scatterOnMouseOverCallback(dataPoint) {
+    scatterOnMouseOverCallback(i) {
         // update the props of DataPointDetail
         console.log("Datapoint callback!");
-        console.log(dataPoint);
-        this.setState({currDataPoint: dataPoint});
+        console.log(i);
+        this.setState({currDataPoint: this.state.originalDataPoints[i]});
     }
 
     onDataSetChangedCallback(dataset) {
@@ -234,7 +239,9 @@ class MainController extends Component {
                             <div ref={'yMaxDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
-                                          width={this.state.yMaxDropZoneWidth}/>
+                                          width={this.state.yMaxDropZoneWidth}
+                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -247,7 +254,9 @@ class MainController extends Component {
                             <div ref={'yMinDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
-                                          width={this.state.yMinDropZoneWidth}/>
+                                          width={this.state.yMinDropZoneWidth}
+                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>

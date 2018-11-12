@@ -97,27 +97,15 @@ class ScatterPlot extends React.Component {
       .attr("cy", function(d) { return y(d[labels.y]); })
       .attr("draggable", "true")
       .style("fill",  "red")  
-      .on("click", function (d) {
-          that.detailViewCallback(d);
-          console.log("clicked");
-          console.log(d);
-        })
         .on("dragstart", function (d, i) {
           console.log("Dragging started");
           console.log("DAtaPoint: ");
           console.log(d);
-          d3.event.dataTransfer.setData("data", d);
-
-        })
-        .on("drag", function (d, i) {
-          console.log("Dragging started");
-          console.log("DAtaPoint: ");
-          console.log(d);
-          d3.event.dataTransfer.setData("data", d);
+          d3.event.dataTransfer.setData("data", JSON.stringify(d));
         })
         .on("mouseover", function (d, i) {
           console.log("Mouse over ...");
-          that.detailViewCallback(d);
+          that.detailViewCallback(i);
         })
         .on("mouseout", function (d) {
           console.log("Mouse out ...");
@@ -186,26 +174,15 @@ class ScatterPlot extends React.Component {
           return y(d[labels.y]); 
         })
         .style("fill",  "red")
-        .on("click", function(d) {
-          that.detailViewCallback(d);
-          console.log("clicked");
-          console.log(d);
-        })
         .on("dragstart", function(d, i) {
           console.log("Dragging started");
           console.log("DAtaPoint: ");
           console.log(d);
-          d3.event.dataTransfer.setData("data", d);
+          d3.event.dataTransfer.setData("data", JSON.stringify(d));
         })
-        // .on("drag", function (d, i) {
-        //   console.log("Dragging started");
-        //   console.log("DAtaPoint: ");
-        //   console.log(d);
-        //   d3.event.dataTransfer.setData("data", d);
-        // })
         .on("mouseover", function(d, i) {
           console.log("Mouse over ...");
-          that.detailViewCallback(d);         
+          that.detailViewCallback(i);         
         })
         .on("mouseout", function(d) {
           console.log("Mouse out ...");
