@@ -88,6 +88,76 @@ class MainController extends Component {
 
     }
 
+    calculateCustomValues = () => {
+        let noOfDataPointsXMin = this.state.dataPointsxMin.length;
+        let noOfDataPointsXMax = this.state.dataPointsxMax.length;
+
+        let customX = {};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            let value=0;
+            this.state.dataPointsxMin.forEach(d => {
+                value += d[key];
+            })
+            let avgMinValue = value/noOfDataPointsXMin;
+
+            value = 0;
+            this.state.dataPointsxMax.forEach(d => {
+                value += d[key];
+            })
+            let avgMaxValue = value/noOfDataPointsXMax;
+            customX[key] = avgMaxValue - avgMinValue;
+        });
+        
+        console.log(customX);
+        
+        this.state.dataPoints.forEach( d => {
+            let v=0;
+            KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                v += d[key] * customX[key];
+            });
+            d["customX"] = v;
+        })
+
+        let selectedX = "customX";
+        let selectedY = this.state.selectedLabels.y;
+
+        this.setState({
+            selectedLabels : {
+                x: selectedX,
+                y: selectedY,
+            } 
+        });
+
+        console.log(this.state.dataPoints);
+
+    }
+
+    simulateDrops = () => {
+
+        let sampleXMin = [
+            {
+                x: .1,
+                y: 1,
+                z : .1  
+            }
+        ];
+
+        let sampleXMax = [
+            {
+                x: 1,
+                y: .1,
+                z : .1  
+            }
+        ];
+
+        this.setState({dataPointsxMin : sampleXMin, dataPointsxMax : sampleXMax}, () => {
+            this.calculateCustomValues();
+        });
+
+
+    }
+    
     componentDidMount() {
         console.log("componentDidMount");
         this.setState({
@@ -291,6 +361,7 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
+                        <button onClick={this.simulateDrops}>Simulate Dropzones</button>
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>
