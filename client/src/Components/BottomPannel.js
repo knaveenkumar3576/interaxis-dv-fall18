@@ -41,8 +41,11 @@ class BottomPannel extends React.Component {
             <GridLayout className="layout" layout={columnLayout} cols={12}
                         rowHeight={this.state.height} width={this.state.width}>
                 <div ref={'xMinDropZone'} key="a">
-                    <DropZone position={"xMin"} height={this.state.xMinDropZoneHeight}
-                              width={this.state.xMinDropZoneWidth}/>
+                    <DropZone position={"xMin"} height={this.state.yMinDropZoneHeight}
+                        width={this.state.yMinDropZoneWidth}
+                        dataset = {this.props.dataset}
+                        addDataPointCallback={this.props.removeDataPointFromScatterCallback}
+                        removeDataPointCallback={this.props.addDataPointToScatterCallback} />
                 </div>
                 <div ref={'rightBar'} key="b" id={'rightBarChart'}>
                     {this.state.rightBarHeight > 0 && this.state.rightBarWidth > 0 ?
@@ -50,8 +53,12 @@ class BottomPannel extends React.Component {
                                   barWidth={10} id={'rightBarChart'}/> : null}
                 </div>
                 <div ref={'xMaxDropZone'} key="c">
-                    <DropZone position={"xMax"} height={this.state.xMaxDropZoneHeight}
-                              width={this.state.xMaxDropZoneWidth}/>
+                    <DropZone position={"xMax"} 
+                        height={this.state.yMinDropZoneHeight}
+                        width={this.state.yMinDropZoneWidth}
+                        dataset = {this.props.dataset}
+                        addDataPointCallback={this.props.removeDataPointFromScatterCallback}
+                        removeDataPointCallback={this.props.addDataPointToScatterCallback} />
                 </div>
             </GridLayout>
         );

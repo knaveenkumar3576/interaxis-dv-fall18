@@ -2,11 +2,6 @@
 import React from 'react';
 
 class ListItems extends React.Component {
-
-    constructor(props) {
-        super(props)
-    }
-
     render() {
 
         let self = this
@@ -15,11 +10,11 @@ class ListItems extends React.Component {
             return ( 
                 <tr>
                     <td > 
-                        { console.log(item.key) } 
+                        {/* { console.log(item.key) }  */}
                         { item.key } 
                     </td>  
                     <td> 
-                        { console.log(item.value) } 
+                        {/* { console.log(item.value) }  */}
                         { item.value } 
                     </td>  
                 </tr>

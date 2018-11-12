@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {forceSimulation, forceManyBody, forceCenter, forceCollide} from 'd3-force';
 import {select} from 'd3-selection';
-import PropTypes from 'prop-types';
 
 /** Props:
  * Position: xMax, xMin, yMax, yMin
@@ -21,7 +19,6 @@ class DropZone extends React.Component {
         this.addDataPoint = this.addDataPoint.bind(this);
         this.removeDataPoint = this.removeDataPoint.bind(this);
         this.dragOverHandler = this.dragOverHandler.bind(this);
-        // this.ticked = this.ticked.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -128,8 +125,8 @@ class DropZone extends React.Component {
                     .remove();
             });
         /* Invoke callback function, passing the dataPoint as data */
-        let currDataPoints = self.state.nodes;
-        let success = self.props.addDataPointCallback(currDataPoints, that.position);
+        let currDataPoints = this.state.nodes;
+        let success = this.props.addDataPointCallback(currDataPoints, this.props.position);
         if (success) {
             console.log("Success");
         }
@@ -143,7 +140,18 @@ class DropZone extends React.Component {
         console.log("Double Click ...");
         let that = this.props;
         /* TODO: uniquely identify the data point */
+        let idKeyString = "";
+        if (that.dataset == "football") {
+            idKeyString = "Sno"; 
+        }
+        else if (that.dataset == "census") {
+            idKeyString = "CensusId";
+        }
         /* TODO: Remove data point from nodes in state */
+        let newNodes = this.state.nodes.filter((node) => {
+            return node[idKeyString] !== dataPoint[idKeyString]
+        })
+        this.setState({nodes: newNodes});
         /* Update the force layout and re-render */
         self.simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(5))
@@ -174,7 +182,7 @@ class DropZone extends React.Component {
             });
         /* Invoke callback to add dataPoint to the scatterplot */
         let currDataPoints = this.state.nodes;
-        let success = that.removeDataPointCallback(currDataPoints, that.position);
+        let success = this.props.removeDataPointCallback(currDataPoints, this.props.position);
         if (success) {
             console.log("Success");
         } else {

@@ -116,7 +116,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 3.5)
+            .attr("r", 7)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
@@ -196,7 +196,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             })
             .attr("class", "dot")
-            .attr("r", 3.5)
+            .attr("r", 7)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
@@ -224,7 +224,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 3.5)
+            .attr("r", 7)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
