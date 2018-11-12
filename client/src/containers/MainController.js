@@ -73,7 +73,7 @@ class MainController extends Component {
         };
     }
 
-    componentWillMount(){
+    componentWillMount() {
         // this.onDataSetChangedCallback("sample");
 
     }
@@ -193,6 +193,7 @@ class MainController extends Component {
                             <div className={'save-util-panel'}>
                                 {this.state.dataset !== '' ?
                                     <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                              default={DEFAULT_FILTERS[this.state.dataset]}
                                               xAttribute={this.state.selectedLabels.x}
                                               yAttribute={this.state.selectedLabels.y}
                                               currentVersion={this.state.currentVersion}
@@ -204,18 +205,18 @@ class MainController extends Component {
                     <div key="b">
                         <div style={{height: '70%'}}>
                             {this.state.dataset !== '' ?
-                            <ScatterPlot
-                                dataPoints={this.state.dataPoints}
-                                labels={this.state.selectedLabels}
-                                detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
-                            /> : null
+                                <ScatterPlot
+                                    dataPoints={this.state.dataPoints}
+                                    labels={this.state.selectedLabels}
+                                    detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                /> : null
                             }
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
                     </div>
-                    <div key="c">
+                    <div style={{'overflow-y': 'scroll'}} key="c">
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>

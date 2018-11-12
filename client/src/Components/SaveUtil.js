@@ -13,8 +13,8 @@ class SaveUtil extends React.Component {
         this.state = {
             xAttributes: columns,
             yAttributes: columns,
-            xAttribute: props.xAttribute,
-            yAttribute: props.yAttribute,
+            xAttribute: props.default[0],
+            yAttribute: props.default[1],
             xLow: [],
             yLow: [],
             xHigh: [],
@@ -85,25 +85,23 @@ class SaveUtil extends React.Component {
         });
     }
 
-    refreshPage(props, columns) {
-        this.setState({
-            xAttributes: columns,
-            yAttributes: columns,
-            xAttribute: props.xAttribute,
-            yAttribute: props.yAttribute
-        })
-    }
-
     componentWillReceiveProps(props) {
         if (props.currentVersion !== this.state.currentVersion) {
             this.setState({
                 versions: props.versions,
-                currentVersion: props.currentVersion
+                currentVersion: props.currentVersion,
+                xAttribute: props.xAttribute,
+                yAttribute: props.yAttribute
             });
         }
         let columns = this.parseColumns(props.columns);
         if (columns.join('') !== this.state.xAttributes.join('')) {
-            this.refreshPage(props, columns);
+            this.setState({
+                xAttributes: columns,
+                yAttributes: columns,
+                xAttribute: props.default[0],
+                yAttribute: props.default[1]
+            });
         }
     }
 
