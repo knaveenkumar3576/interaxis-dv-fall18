@@ -40,6 +40,10 @@ class MainController extends Component {
             leftBarHeight: 0,
             rightBarWidth: 0,
             rightBarHeight: 0,
+            yMaxDropZoneHeight: 0,
+            yMinDropZoneHeight: 0,
+            yMaxDropZoneWidth: 0,
+            yMinDropZoneWidth: 0,
             // update the features selected from the drop down here
             dataPoints: [],
             dataPointsxMin: [],
@@ -88,7 +92,12 @@ class MainController extends Component {
             xAxisWidth: this.refs.middleBottom.clientWidth,
             xAxisHeight: this.refs.middleBottom.clientHeight - 10,
             leftBarWidth: this.refs.leftBar.clientWidth,
-            leftBarHeight: this.refs.leftBar.clientHeight
+            leftBarHeight: this.refs.leftBar.clientHeight,
+            yMaxDropZoneHeight: this.refs.yMaxDropZone.clientHeight,
+            yMinDropZoneHeight: this.refs.yMinDropZone.clientHeight,
+            yMaxDropZoneWidth: this.refs.yMaxDropZone.clientWidth,
+            yMinDropZoneWidth: this.refs.yMinDropZone.clientWidth
+
         });
         this.onDataSetChangedCallback("sample");
     }
@@ -222,9 +231,10 @@ class MainController extends Component {
                             width={window.innerWidth}>
                     <div key="a">
                         <div style={{height: '10%'}}>
-                            <div className={'pull-right'}
+                            <div ref={'yMaxDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMax"}/>
+                                <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
+                                          width={this.state.yMaxDropZoneWidth}/>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -234,9 +244,10 @@ class MainController extends Component {
                                           id={'leftBarChart'}/> : null}
                         </div>
                         <div style={{height: '10%'}}>
-                            <div className={'pull-right'}
+                            <div ref={'yMinDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMin"}/>
+                                <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
+                                          width={this.state.yMinDropZoneWidth}/>
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>

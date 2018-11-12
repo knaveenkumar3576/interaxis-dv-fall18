@@ -10,7 +10,11 @@ class BottomPannel extends React.Component {
             height: props.height,
             width: props.width,
             rightBarHeight: 0,
-            rightBarWidth: 0
+            rightBarWidth: 0,
+            xMaxDropZoneHeight: 0,
+            xMinDropZoneHeight: 0,
+            xMaxDropZoneWidth: 0,
+            xMinDropZoneWidth: 0
         }
     }
 
@@ -19,7 +23,11 @@ class BottomPannel extends React.Component {
             height: props.height,
             width: props.width,
             rightBarWidth: this.refs.rightBar.clientWidth,
-            rightBarHeight: this.refs.rightBar.clientHeight
+            rightBarHeight: this.refs.rightBar.clientHeight,
+            xMaxDropZoneHeight: this.refs.xMaxDropZone.clientHeight,
+            xMinDropZoneHeight: this.refs.xMinDropZone.clientHeight,
+            xMaxDropZoneWidth: this.refs.xMaxDropZone.clientWidth,
+            xMinDropZoneWidth: this.refs.xMinDropZone.clientWidth,
         });
     }
 
@@ -32,16 +40,18 @@ class BottomPannel extends React.Component {
         return (
             <GridLayout className="layout" layout={columnLayout} cols={12}
                         rowHeight={this.state.height} width={this.state.width}>
-                <div key="a">
-                    <DropZone position={"xMin"}/>
+                <div ref={'xMinDropZone'} key="a">
+                    <DropZone position={"xMin"} height={this.state.xMinDropZoneHeight}
+                              width={this.state.xMinDropZoneWidth}/>
                 </div>
                 <div ref={'rightBar'} key="b" id={'rightBarChart'}>
                     {this.state.rightBarHeight > 0 && this.state.rightBarWidth > 0 ?
                         <BarChart height={this.state.rightBarHeight} width={this.state.rightBarWidth}
                                   barWidth={10} id={'rightBarChart'}/> : null}
                 </div>
-                <div key="c">
-                    <DropZone position={"xMax"}/>
+                <div ref={'xMaxDropZone'} key="c">
+                    <DropZone position={"xMax"} height={this.state.xMaxDropZoneHeight}
+                              width={this.state.xMaxDropZoneWidth}/>
                 </div>
             </GridLayout>
         );
