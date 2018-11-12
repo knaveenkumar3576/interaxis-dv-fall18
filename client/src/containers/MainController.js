@@ -42,6 +42,10 @@ class MainController extends Component {
             rightBarHeight: 0,
             // update the features selected from the drop down here
             dataPoints: [],
+            dataPointsxMin: [],
+            dataPointsxMax: [],
+            dataPointsyMin: [],
+            dataPointsyMax: [],
             selectedLabels: {
                 x: '',
                 y: ''
@@ -157,6 +161,32 @@ class MainController extends Component {
         this.setState({
             selectedLabels: {x: x, y: y}
         });
+    }
+
+    removeDataPointFromScatterCallback(dataPoints, position) {
+        switch(position) {
+            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
+            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
+            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
+            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
+            case "default": return false; 
+        }
+        this.setState()
+        console.log("Added point to ");
+        console.log("Remove point from scatter");
+        return true;
+    }
+
+    addDataPointToScatterCallback(dataPoints, position) {
+        switch(position) {
+            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
+            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
+            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
+            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
+            case "default": return false; 
+        }
+        console.log("Add Datapoint from scatter");
+        return true;
     }
 
     render() {
