@@ -208,8 +208,8 @@ class MainController extends Component {
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone 
                                     position={"yMax"}
-                                    addDataPointCallback = {this.removeDataPointFromScatterCallback}
-                                    removeDataPointCallback = {this.addDataPointToScatterCallback}
+                                    addDataPointCallback = {this.removeDataPointFromScatterCallback.bind(this)}
+                                    removeDataPointCallback = {this.addDataPointToScatterCallback.bind(this)}
                                 />
                             </div>
                         </div>
@@ -222,8 +222,8 @@ class MainController extends Component {
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone
                                     position = {"yMin"}
-                                    addDataPointCallback = {this.removeDataPointFromScatterCallback}
-                                    removeDataPointCallback = {this.addDataPointToScatterCallback}
+                                    addDataPointCallback = {this.removeDataPointFromScatterCallback.bind(this)}
+                                    removeDataPointCallback = {this.addDataPointToScatterCallback.bind(this)}
                                 />
                             </div>
                         </div>
