@@ -24,7 +24,6 @@ const DEFAULT_FILTERS = {
     census: ['Men', 'Women']
 };
 
-
 class MainController extends Component {
 
     constructor(props) {
@@ -42,6 +41,7 @@ class MainController extends Component {
             rightBarHeight: 0,
             // update the features selected from the drop down here
             dataPoints: [],
+            originalDataPoints: [],
             selectedLabels: {
                 x: '',
                 y: ''
@@ -96,15 +96,20 @@ class MainController extends Component {
             header: true,
             download: true,
             skipEmptyLines: true,
-            complete: this.processAndNormalizeData
+            complete: (result) => {
+                this.saveOriginalData(result)
+                this.processAndNormalizeData(result)
+            } 
         });
-
     }
+    
+    saveOriginalData = (result) => {
+        this.setState({
+            originalDataPoints: JSON.parse(JSON.stringify(result.data))
+        });    
+    } 
 
-    processAndNormalizeData = (result) => {
-        console.log("updateDatadata");
-        console.log(result.data);
-
+    processAndNormalizeData = (result) => {        
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
         let resultdataPoints = result.data;
         keysToNormalize.forEach(key => {
@@ -122,11 +127,11 @@ class MainController extends Component {
     };
 
     // callback to show detail view
-    scatterOnMouseOverCallback(dataPoint) {
+    scatterOnMouseOverCallback(i) {
         // update the props of DataPointDetail
         console.log("Datapoint callback!");
-        console.log(dataPoint);
-        this.setState({currDataPoint: dataPoint});
+        console.log(i);
+        this.setState({currDataPoint: this.state.originalDataPoints[i]});
     }
 
     onDataSetChangedCallback(dataset) {
