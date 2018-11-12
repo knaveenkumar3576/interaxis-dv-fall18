@@ -32,14 +32,15 @@ class BottomPannel extends React.Component {
         return (
             <GridLayout className="layout" layout={columnLayout} cols={12}
                         rowHeight={this.state.height} width={this.state.width}>
-                <div key="a" style={{height: '100%'}}>
+                <div key="a">
                     <DropZone position={"xMin"}/>
                 </div>
                 <div ref={'rightBar'} key="b" id={'rightBarChart'}>
-                    <BarChart height={this.state.rightBarHeight} width={this.state.rightBarWidth}
-                              barWidth={10} id={'rightBarChart'}/>
+                    {this.state.rightBarHeight > 0 && this.state.rightBarWidth > 0 ?
+                        <BarChart height={this.state.rightBarHeight} width={this.state.rightBarWidth}
+                                  barWidth={10} id={'rightBarChart'}/> : null}
                 </div>
-                <div key="c" style={{height: '100%'}}>
+                <div key="c">
                     <DropZone position={"xMax"}/>
                 </div>
             </GridLayout>

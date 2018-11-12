@@ -164,12 +164,21 @@ class MainController extends Component {
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {
-        switch(position) {
-            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
-            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
-            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
-            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
-            case "default": return false; 
+        switch (position) {
+            case "xMin":
+                this.setState({dataPointsxMin: dataPoints});
+                break;
+            case "xMax":
+                this.setState({dataPointsxMax: dataPoints});
+                break;
+            case "yMin":
+                this.setState({dataPointsyMin: dataPoints});
+                break;
+            case "yMax":
+                this.setState({dataPointsyMax: dataPoints});
+                break;
+            case "default":
+                return false;
         }
         this.setState()
         console.log("Added point to ");
@@ -178,12 +187,21 @@ class MainController extends Component {
     }
 
     addDataPointToScatterCallback(dataPoints, position) {
-        switch(position) {
-            case "xMin": this.setState({dataPointsxMin: dataPoints}); break; 
-            case "xMax": this.setState({dataPointsxMax: dataPoints}); break;
-            case "yMin": this.setState({dataPointsyMin: dataPoints}); break;
-            case "yMax": this.setState({dataPointsyMax: dataPoints}); break;
-            case "default": return false; 
+        switch (position) {
+            case "xMin":
+                this.setState({dataPointsxMin: dataPoints});
+                break;
+            case "xMax":
+                this.setState({dataPointsxMax: dataPoints});
+                break;
+            case "yMin":
+                this.setState({dataPointsyMin: dataPoints});
+                break;
+            case "yMax":
+                this.setState({dataPointsyMax: dataPoints});
+                break;
+            case "default":
+                return false;
         }
         console.log("Add Datapoint from scatter");
         return true;
@@ -210,8 +228,10 @@ class MainController extends Component {
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
-                            <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth} barWidth={25}
-                                      id={'leftBarChart'}/>
+                            {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ?
+                                <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
+                                          barWidth={25}
+                                          id={'leftBarChart'}/> : null}
                         </div>
                         <div style={{height: '10%'}}>
                             <div className={'pull-right'}
@@ -246,7 +266,7 @@ class MainController extends Component {
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
                     </div>
-                    <div style={{'overflow-y': 'scroll'}} key="c">
+                    <div style={{'overflowY': 'scroll'}} key="c">
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>
