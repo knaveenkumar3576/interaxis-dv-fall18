@@ -43,6 +43,8 @@ class MainController extends Component {
             yMinDropZoneHeight: 0,
             yMaxDropZoneWidth: 0,
             yMinDropZoneWidth: 0,
+            scatterPlotWidth: 0,
+            scatterPlotHeight: 0,
             // update the features selected from the drop down here
             dataPoints: [],
             originalDataPoints: [],
@@ -96,7 +98,9 @@ class MainController extends Component {
             yMaxDropZoneHeight: this.refs.yMaxDropZone.clientHeight,
             yMinDropZoneHeight: this.refs.yMinDropZone.clientHeight,
             yMaxDropZoneWidth: this.refs.yMaxDropZone.clientWidth,
-            yMinDropZoneWidth: this.refs.yMinDropZone.clientWidth
+            yMinDropZoneWidth: this.refs.yMinDropZone.clientWidth,
+            scatterPlotWidth: this.refs.scatterPlot.clientWidth,
+            scatterPlotHeight: this.refs.scatterPlot.clientHeight,
 
         });
         this.onDataSetChangedCallback("sample");
@@ -224,8 +228,8 @@ class MainController extends Component {
     render() {
         let columnLayout = [
             {i: 'a', x: 0, y: 0, w: 3, h: 1, static: true},
-            {i: 'b', x: 3, y: 0, w: 6, h: 1, static: true},
-            {i: 'c', x: 9, y: 0, w: 3, h: 1, static: true}
+            {i: 'b', x: 3, y: 0, w: 7, h: 1, static: true},
+            {i: 'c', x: 10, y: 0, w: 2, h: 1, static: true}
         ];
         return (
             <Wrap>
@@ -273,12 +277,12 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div key="b">
-                        <div style={{height: '70%'}}>
+                        <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
                             {this.state.dataset !== '' ?
-                                <ScatterPlot
-                                    dataPoints={this.state.dataPoints}
-                                    labels={this.state.selectedLabels}
-                                    detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                <ScatterPlot id={'scatterPlotId'}
+                                             dataPoints={this.state.dataPoints} labels={this.state.selectedLabels}
+                                             width={this.state.scatterPlotWidth} height={this.state.scatterPlotHeight}
+                                             detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                                 /> : null
                             }
                         </div>
