@@ -18,7 +18,6 @@ class DropZone extends React.Component {
 
     height = 100;
     width = 100;
-    simulation = null;
 
     constructor(props) {
         super(props)
@@ -39,7 +38,7 @@ class DropZone extends React.Component {
         let self = this;
         console.log("REFS SVG: ");
         console.log(self.refs.svg);
-        self.simulation = forceSimulation(self.state.nodes)
+        let simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(5))
             .force('center', forceCenter(self.width / 2, self.height / 2))
             .force('collision', forceCollide().radius(function (d) {
@@ -84,14 +83,16 @@ class DropZone extends React.Component {
         console.log("Dropped point: ");
         console.log(event.dataTransfer.getData("data"));
         /* extract the points "data" from event.dataTrasnfer object */
-        let dataPoint = event.dataTransfer.getData("data");
+        let datapointjson = event.dataTransfer.getData("data");
+        console.log(datapointjson);
+        let dataPoint = JSON.parse(datapointjson);
         console.log(dataPoint);
         /* Add data point to the nodes array in the state of this component*/ 
         /* TODO: Changing state manually, change state using setState() method*/
         self.setState({nodes: self.state.nodes.push(dataPoint)});
 
         // Update the force layout and re-render the svg
-        self.simulation = forceSimulation(self.state.nodes)
+        let simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(5))
             .force('center', forceCenter(self.width / 2,  self.height / 2))
             .force('collision', forceCollide().radius(function (d) {

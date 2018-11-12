@@ -107,6 +107,7 @@ class ScatterPlot extends React.Component {
           console.log("DAtaPoint: ");
           console.log(d);
           d3.event.dataTransfer.setData("data", d);
+
         })
         .on("drag", function (d, i) {
           console.log("Dragging started");
@@ -196,12 +197,12 @@ class ScatterPlot extends React.Component {
           console.log(d);
           d3.event.dataTransfer.setData("data", d);
         })
-        .on("drag", function (d, i) {
-          console.log("Dragging started");
-          console.log("DAtaPoint: ");
-          console.log(d);
-          d3.event.dataTransfer.setData("data", d);
-        })
+        // .on("drag", function (d, i) {
+        //   console.log("Dragging started");
+        //   console.log("DAtaPoint: ");
+        //   console.log(d);
+        //   d3.event.dataTransfer.setData("data", d);
+        // })
         .on("mouseover", function(d, i) {
           console.log("Mouse over ...");
           that.detailViewCallback(d);         
