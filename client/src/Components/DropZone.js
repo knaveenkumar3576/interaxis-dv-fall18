@@ -106,7 +106,12 @@ class DropZone extends React.Component {
                     .append('circle')
                     .attr('r', function (d) {
                         return 10
-                    }).merge(circles)
+                    })
+                    .on('dblclick', function(d, i) {
+                        console.log("Double click...");
+                        event.dat
+                    })
+                    .merge(circles)
                     .attr('cx', function (d) {
                         return d.x
                     })

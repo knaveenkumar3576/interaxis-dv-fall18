@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import PanelGroup from 'react-panelgroup'
 import * as Papa from 'papaparse';
+import GridLayout from 'react-grid-layout';
+import '../css/MainController.css'
 
 import Header from './Header';
 import ScatterPlot from '../Components/ScatterPlot';
@@ -10,6 +12,7 @@ import DropZone from '../Components/DropZone';
 import DataPointDetail from '../Components/DataPointDetail';
 import Wrap from '../hoc/Wrap';
 import SaveUtil from "../Components/SaveUtil";
+import BottomPanel from '../Components/BottomPannel';
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
@@ -31,25 +34,18 @@ class MainController extends Component {
             currentVersion: '',
             versions: [],
             columns: [],
-            xAttribute: 'Choose X Attribute',
-            yAttribute: 'Choose Y Attribute',
+            xAxisWidth: 0,
+            xAxisHeight: 0,
+            leftBarWidth: 0,
+            leftBarHeight: 0,
+            rightBarWidth: 0,
+            rightBarHeight: 0,
             // update the features selected from the drop down here
-<<<<<<< HEAD
-
-            selectedLabels : {
-                x: 'Men',
-                y: 'Women'
-            },
-            
-            dataPoints : [],
-
-=======
             dataPoints: [],
             selectedLabels: {
                 x: '',
                 y: ''
             },
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
             dataPointDetails: {
                 Asian: "14",
                 Black: "8",
@@ -82,10 +78,8 @@ class MainController extends Component {
 
     }
 
-    componentDidMount(){
+    componentDidMount() {
         console.log("componentDidMount");
-<<<<<<< HEAD
-=======
         this.setState({
             xAxisWidth: this.refs.middleBottom.clientWidth,
             xAxisHeight: this.refs.middleBottom.clientHeight - 10,
@@ -93,7 +87,6 @@ class MainController extends Component {
             leftBarHeight: this.refs.leftBar.clientHeight
         });
         this.onDataSetChangedCallback("sample");
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
     }
 
     changeData = () => {
@@ -106,42 +99,12 @@ class MainController extends Component {
             complete: this.processAndNormalizeData
         });
 
-    }    
+    }
 
-<<<<<<< HEAD
-    changeLabels = () => {
-        let labels = {
-            x: 'Income',
-            y: 'TotalPop'
-        };
-        this.setState({ 
-            selectedLabels: labels
-         });
-    }    
-
-=======
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
     processAndNormalizeData = (result) => {
         console.log("updateDatadata");
         console.log(result.data);
 
-<<<<<<< HEAD
-        this.setState({dataset: 'census', columns: KEYS_TO_BE_USED['census']}, () => {
-            let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
-            let resultdataPoints = result.data;
-            keysToNormalize.forEach(key => {
-                let max = Math.max.apply(null, resultdataPoints.map(d => d[key]));
-                let min = Math.min.apply(null, resultdataPoints.map(d => d[key]));
-                resultdataPoints.forEach(point => {
-                    point[key] = (point[key] - min) / (max - min);
-                })
-            });
-            console.log(resultdataPoints);        
-            this.setState({ 
-                dataPoints : resultdataPoints,
-             });
-
-=======
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
         let resultdataPoints = result.data;
         keysToNormalize.forEach(key => {
@@ -154,7 +117,6 @@ class MainController extends Component {
         console.log(resultdataPoints);
         this.setState({
             dataPoints: resultdataPoints,
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
         });
 
     };
@@ -167,14 +129,6 @@ class MainController extends Component {
         this.setState({currDataPoint: dataPoint});
     }
 
-<<<<<<< HEAD
-    addPointToScatterCallback(dataPoint, position) {
-        console.log("Add data point - Data Point: ");
-        console.log(dataPoint);
-        console.log("Position: " + position);
-        /* TODO: Add data point to scatter plot */
-        /* TODO: Send return value to DropZone if success or failure */
-=======
     onDataSetChangedCallback(dataset) {
         this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]}, () => {
             this.changeData();
@@ -185,26 +139,32 @@ class MainController extends Component {
                 }
             });
         })
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
-    }
-
-    removePointFromScatterCallback(dataPoint, position) {
-        console.log("Remove data point - Data Point: ");
-        console.log(dataPoint);
-        console.log("Position: " + position);
-        /* TODO: Remove data point from scatter plot */
-        /* TODO: Send return value to DropZone if success or failure */
-    }
-
-    onDataSetChangedCallback(dataset) {
-        this.setState({dataset: dataset, columns: KEYS_TO_BE_USED[dataset]});
     }
 
     onVersionChangedCallback(versions, currentVersion) {
         this.setState({versions: versions, currentVersion: currentVersion});
     }
 
+    onXAttributeChangedCallback(x) {
+        let y = this.state.selectedLabels.y;
+        this.setState({
+            selectedLabels: {x: x, y: y}
+        });
+    }
+
+    onYAttributeChangedCallback(y) {
+        let x = this.state.selectedLabels.x;
+        this.setState({
+            selectedLabels: {x: x, y: y}
+        });
+    }
+
     render() {
+        let columnLayout = [
+            {i: 'a', x: 0, y: 0, w: 3, h: 1, static: true},
+            {i: 'b', x: 3, y: 0, w: 6, h: 1, static: true},
+            {i: 'c', x: 9, y: 0, w: 3, h: 1, static: true}
+        ];
         return (
             <Wrap>
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
@@ -242,50 +202,6 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div key="b">
-<<<<<<< HEAD
-                        <div style={{height: '75%'}}>
-                            <button onClick={this.changeData}>Upload Census data</button>
-                            <button onClick={this.changeLabels}>Change data</button>
-                            
-                            <ScatterPlot
-                                dataPoints={this.state.dataPoints}
-                                labels={this.state.selectedLabels} 
-                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
-                            />
-                            
-                        </div>
-
-                        {/* <ScatterPlot 
-                                dataPoints={this.state.dataPoints} 
-                                labels={this.state.selectedLabels} 
-                                detailViewCallback = {this.scatterOnMouseOverCallback.bind(this)} 
-                        /> */}
-
-                        <DropZone 
-                            position={"xMin"}
-                            addDataPointCallback={this.removeDataPointFromScatterCallback} 
-                            removeDataPointCallback = {this.addDataPointFromScatterCallback} 
-                        />
-                        
-                        <DropZone 
-                            position={"xMax"}
-                            addDataPointCallback={this.removeDataPointFromScatterCallback} 
-                            removeDataPointCallback = {this.addDataPointFromScatterCallback} 
-                        />
-                    </PanelGroup>
-                    <PanelGroup direction="row" borderColor="grey" panelWidths={[
-                        {size: 300, minSize: 200, resize: "dynamic"},
-                        {minSize: 100, resize: "stretch"},
-                    ]}>
-                        <div className={'save-util-panel'}>
-                            {this.state.dataset !== '' ?
-                                <SaveUtil columns={this.state.columns} versions={this.state.versions}
-                                          xAttribute={this.state.xAttribute} yAttribute={this.state.yAttribute}
-                                          currentVersion={this.state.currentVersion}/> : null}
-                        </div>
-                        <div className={'save-util-panel'}>
-                            <p>X dropzones</p>
-=======
                         <div style={{height: '70%'}}>
                             {this.state.dataset !== '' ?
                             <ScatterPlot
@@ -294,32 +210,15 @@ class MainController extends Component {
                                 detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                             /> : null
                             }
->>>>>>> ea14ecf8c7b64ae834fe9c9674197559a1900d6d
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
                             <BottomPanel width={this.state.xAxisWidth} height={this.state.xAxisHeight}/>
                         </div>
-                    </PanelGroup>
-
-                    <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
-
-                </PanelGroup>
-
-                {/* <div> 
-                    A(Main Scatterplot)
-                </div>
-                <div> 
-                    B()
-                </div>
-                <div> 
-                    C
-                </div>
-                <div> 
-                    D
-                </div>
-                <div> 
-                    E
-                </div> */}
+                    </div>
+                    <div key="c">
+                        <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
+                    </div>
+                </GridLayout>
             </Wrap>
         );
     }
