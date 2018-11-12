@@ -129,7 +129,7 @@ class DropZone extends React.Component {
             });
         /* Invoke callback function, passing the dataPoint as data */
         let currDataPoints = self.state.nodes;
-        let success = that.removeDataPointFromScatter(currDataPoints, that.position);
+        let success = self.props.addDataPointCallback(currDataPoints, that.position);
         if (success) {
             console.log("Success");
         }
@@ -174,7 +174,7 @@ class DropZone extends React.Component {
             });
         /* Invoke callback to add dataPoint to the scatterplot */
         let currDataPoints = this.state.nodes;
-        let success = that.addDataPointFromScatter(currDataPoints, that.position);
+        let success = that.removeDataPointCallback(currDataPoints, that.position);
         if (success) {
             console.log("Success");
         } else {

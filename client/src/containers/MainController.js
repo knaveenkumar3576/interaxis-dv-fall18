@@ -206,7 +206,11 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMax"}/>
+                                <DropZone 
+                                    position={"yMax"}
+                                    addDataPointCallback = {this.removeDataPointFromScatterCallback}
+                                    removeDataPointCallback = {this.addDataPointToScatterCallback}
+                                />
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -216,7 +220,11 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMin"}/>
+                                <DropZone
+                                    position = {"yMin"}
+                                    addDataPointCallback = {this.removeDataPointFromScatterCallback}
+                                    removeDataPointCallback = {this.addDataPointToScatterCallback}
+                                />
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>
