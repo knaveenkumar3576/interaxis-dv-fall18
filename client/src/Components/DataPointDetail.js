@@ -36,10 +36,6 @@ class DataPointDetail extends React.Component {
                 };
                 dataPointsArray.push(attribute)
             })
-
-            console.log("Dp array: ");
-            console.log(dataPointsArray)
-
             return ( 
                 <ListItems data={dataPointsArray} dataPointName={"Name"}/>
             )

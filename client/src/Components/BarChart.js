@@ -47,9 +47,6 @@ class BarChart extends React.Component {
         let id = this.state.id;
 
         // this.setState({height: height, width: width});
-        console.log(this.state.height);
-        console.log(this.state.width);
-        console.log(this.state);
 
         let marginLeft, marginRight, marginTop, marginBottom;
         marginRight = marginLeft = width * 0.05;

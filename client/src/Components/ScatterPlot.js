@@ -126,17 +126,13 @@ class ScatterPlot extends React.Component {
             .attr("draggable", "true")
             .style("fill", "red")
             .on("dragstart", function (d, i) {
-                console.log("Dragging started");
-                console.log("DAtaPoint: ");
-                console.log(d);
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
             .on("mouseover", function (d, i) {
-                console.log("Mouse over ...");
-                // that.detailViewCallback(i);
+                that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
+                // console.log("Mouse out ...");
             });
 
     }
@@ -205,17 +201,13 @@ class ScatterPlot extends React.Component {
             })
             .style("fill", "red")
             .on("dragstart", function (d, i) {
-                console.log("Dragging started");
-                console.log("DAtaPoint: ");
-                console.log(d);
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
             .on("mouseover", function (d, i) {
-                console.log("Mouse over ...");
-                // that.detailViewCallback(i);
+                that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
+                // console.log("Mouse out ...");
             })
             .merge(dot_g)
             .transition()

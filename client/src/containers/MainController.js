@@ -50,14 +50,14 @@ class MainController extends Component {
             dataPointsxMax: [],
             dataPointsyMin: [],
             dataPointsyMax: [],
+            customXWeights: {},
+            customYWeights: {},
             selectedLabels: {
                 x: '',
                 y: ''
             },
             currDataPoint: null
         };
-
-        console.log("Dataset: " + this.state.dataset);
     }
 
     componentWillMount() {
@@ -72,114 +72,75 @@ class MainController extends Component {
         let noOfDataPointsYMax = this.state.dataPointsyMax.length;
 
         let customX = {};
-
         let customY = {};
-
-        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
-            let value=0;
-            this.state.dataPointsxMin.forEach(d => {
-                value += d[key];
-            })
-            let avgMinValue = value/noOfDataPointsXMin;
-
-            value = 0;
-            this.state.dataPointsxMax.forEach(d => {
-                value += d[key];
-            })
-            let avgMaxValue = value/noOfDataPointsXMax;
-            customX[key] = avgMaxValue - avgMinValue;
-
-            
-            
-            value=0;
-            this.state.dataPointsyMin.forEach(d => {
-                value += d[key];
-            })
-            
-            avgMinValue = value/noOfDataPointsYMin;
-
-            value = 0;
-            this.state.dataPointsyMax.forEach(d => {
-                value += d[key];
-            })
-
-            avgMaxValue = value/noOfDataPointsYMax;
-            
-            customY[key] = avgMaxValue - avgMinValue;
-
-        });
         
-        console.log(customX);
-        console.log(customY);
-        
-        this.state.dataPoints.forEach( d => {
-            let x=0,y=0;
+        let labels = Object.assign({}, this.state.selectedLabels);
 
+        if(noOfDataPointsXMin > 0 && noOfDataPointsXMax>0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
-                x += d[key] * customX[key];
-                y += d[key] * customY[key];
-            });
-            d["customX"] = x;
-            d["customY"] = y;
-        })
+                let minWeights=0;
+                
+                this.state.dataPointsxMin.forEach(d => {
+                    minWeights += d[key];
+                })
+                let avgMinValue = minWeights/noOfDataPointsXMin;
+    
+                let maxWeights=0;
+                this.state.dataPointsxMax.forEach(d => {
+                    maxWeights += d[key];
+                })
+                let avgMaxValue = maxWeights/noOfDataPointsXMax;
+                customX[key] = avgMaxValue - avgMinValue;
+            });    
 
-        let selectedX = "customX";
-        let selectedY = "customY";
+            this.state.dataPoints.forEach( d => {
+                let x=0;    
+                KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                    x += d[key] * customX[key];
+                });
+                d["customX"] = x;
+            })   
+            labels.x = "customX";   
+        }
+
+        if(noOfDataPointsYMin > 0 && noOfDataPointsYMax>0) {
+            KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                let minWeights=0;
+                
+                this.state.dataPointsyMin.forEach(d => {
+                    minWeights += d[key];
+                })
+                let avgMinValue = minWeights/noOfDataPointsYMin;
+    
+                let maxWeights=0;
+                this.state.dataPointsyMax.forEach(d => {
+                    maxWeights += d[key];
+                })
+                let avgMaxValue = maxWeights/noOfDataPointsYMax;
+                customY[key] = avgMaxValue - avgMinValue;
+            });
+
+            this.state.dataPoints.forEach( d => {
+                let y=0;    
+                KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                    y += d[key] * customY[key];
+                });
+                d["customY"] = y;
+            });
+            labels.y = "customY";  
+        }
 
         this.setState({
-            selectedLabels : {
-                x: selectedX,
-                y: selectedY,
-            } 
+            customXWeights : customX,
+            customYWeights : customY,
+        });        
+
+        this.setState({
+            selectedLabels : labels
         });
+    }    
 
-        console.log(this.state.dataPoints);
-
-    }
-
-    simulateDrops = () => {
-
-        let sampleXMin = [
-            {
-                x: .1,
-                y: 1,
-                z : .1  
-            }
-        ];
-
-        let sampleXMax = [
-            {
-                x: 1,
-                y: .1,
-                z : .1  
-            }
-        ];
-
-        let sampleYMin = [
-            {
-                x: .1,
-                y: .1,
-                z : 1  
-            }
-        ];
-
-        let sampleYMax = [
-            {
-                x: 1,
-                y: .1,
-                z : .1  
-            }
-        ];
-
-        this.setState({dataPointsxMin : sampleXMin, dataPointsxMax : sampleXMax, dataPointsyMin : sampleYMin, dataPointsyMax : sampleYMax}, () => {
-            this.calculateCustomValues();
-        });
-
-
-    }
-    
     componentDidMount() {
-        console.log("componentDidMount");
         this.setState({
             xAxisWidth: this.refs.middleBottom.clientWidth,
             xAxisHeight: this.refs.middleBottom.clientHeight - 10,
@@ -226,7 +187,6 @@ class MainController extends Component {
                 point[key] = (point[key] - min) / (max - min);
             })
         });
-        console.log(resultdataPoints);
         this.setState({
             dataPoints: resultdataPoints,
         });
@@ -235,9 +195,6 @@ class MainController extends Component {
 
     // callback to show detail view
     scatterOnMouseOverCallback(i) {
-        // update the props of DataPointDetail
-        console.log("Datapoint callback!");
-        console.log(i);
         this.setState({currDataPoint: this.state.originalDataPoints[i]});
     }
 
@@ -272,60 +229,54 @@ class MainController extends Component {
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {
-        console.log("Adding point to drop zone");
-        console.log("Position: " + position);
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints}, () => {
-                    console.log(this.state.dataPointsxMin);
+                    this.calculateCustomValues();
                 });
                 break;
             case "xMax":
                 this.setState({dataPointsxMax: dataPoints}, () => {
-                    console.log(this.state.dataPointsxMax);
+                    this.calculateCustomValues();
                 });
                 break;
             case "yMin":
                 this.setState({dataPointsyMin: dataPoints}, () => {;
-                    console.log(this.state.dataPointsyMin);
+                    this.calculateCustomValues();
                 });
                 break;
             case "yMax":
                 this.setState({dataPointsyMax: dataPoints}, () => {
-                    console.log(this.state.dataPointsyMax);
+                    this.calculateCustomValues();
                 });
                 break;
             default:
                 return false;
         }
-        console.log("Added point to ");
-        console.log("Remove point from scatter");
         return true;
     }
 
     addDataPointToScatterCallback(dataPoints, position) {
-        console.log("Removing point from dropzone");
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints});
-                console.log(this.state.dataPointsxMin);
+                this.calculateCustomValues();
                 break;
             case "xMax":
                 this.setState({dataPointsxMax: dataPoints});
-                console.log(this.state.dataPointsxMax);
+                this.calculateCustomValues();
                 break;
             case "yMin":
                 this.setState({dataPointsyMin: dataPoints});
-                console.log(this.state.dataPointsyMin);
+                this.calculateCustomValues();
                 break;
             case "yMax":
                 this.setState({dataPointsyMax: dataPoints});
-                console.log(this.state.dataPointsyMax);
+                this.calculateCustomValues();
                 break;
             default:
                 return false;
         }
-        console.log("Add Datapoint from scatter");
         return true;
     }
 
