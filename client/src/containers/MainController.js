@@ -14,12 +14,17 @@ import BottomPanel from '../Components/BottomPannel';
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
-    census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment']
+    census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment'],
+    car: ['Sedan','Sports Car','SUV','Wagon','Minivan','Pickup','AWD','RWD','Retail Price','Dealer Cost','Engine Size','Cyl','HP','City MPG','Hwy MPG','Weight','Wheel Base','Len','Width'],
+    football: ['Age','Overall','Potential','Special','Acceleration','Aggression','Agility','Balance','Ball control','Composure','Crossing','Curve','Dribbling','Finishing','Free kick accuracy','GK diving','GK handling','GK kicking','GK positioning','GK reflexes','Heading accuracy','Interceptions','Jumping','Long passing','Long shots','Marking','Penalties','Positioning','Reactions','Short passing','Shot power','Sliding tackle','Sprint speed','Stamina','Standing tackle','Strength','Vision','Volleys','CAM','CB','CDM','CF','CM','LAM','LB','LCB','LCM','LDM','LF','LM','LS','LW','LWB','RAM','RB','RCB','RCM','RDM','RF','RM','RS','RW','RWB','ST']
 };
 
 const DEFAULT_FILTERS = {
     sample: ['x', 'y'],
-    census: ['Men', 'Women']
+    census: ['Men', 'Women'],
+    car: ['Retail Price', 'HP'],
+    football: ['Age', 'Overall'],
+
 };
 
 class MainController extends Component {
@@ -354,7 +359,6 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
-                        <button onClick={this.simulateDrops}>Simulate Dropzones</button>
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>
