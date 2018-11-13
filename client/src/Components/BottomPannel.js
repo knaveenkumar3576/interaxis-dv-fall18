@@ -16,6 +16,11 @@ class BottomPannel extends React.Component {
             xMaxDropZoneWidth: 0,
             xMinDropZoneWidth: 0
         }
+
+        console.log("Props: Add: ");
+        console.log(this.props.removeDataPointFromScatterCallback);
+        console.log("Props: Remove: ");
+        console.log(this.props.addDataPointToScatterCallback);
     }
 
     componentWillReceiveProps(props) {

@@ -116,7 +116,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 7)
+            .attr("r", 4)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
@@ -133,7 +133,7 @@ class ScatterPlot extends React.Component {
             })
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
-                that.detailViewCallback(i);
+                // that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
@@ -196,7 +196,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             })
             .attr("class", "dot")
-            .attr("r", 7)
+            .attr("r", 4)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
@@ -212,7 +212,7 @@ class ScatterPlot extends React.Component {
             })
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
-                that.detailViewCallback(i);
+                // that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
@@ -224,7 +224,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 7)
+            .attr("r", 4)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })

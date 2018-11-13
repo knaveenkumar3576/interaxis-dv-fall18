@@ -36,8 +36,8 @@ class DropZone extends React.Component {
         console.log("REFS SVG: ");
         console.log(self.refs.svg);
         let simulation = forceSimulation(self.state.nodes)
-            .force('charge', forceManyBody().strength(5))
-            .force('center', forceCenter(self.width / 2, self.height / 2))
+            .force('charge', forceManyBody().strength(70))
+            .force('center', forceCenter(self.props.width / 2, self.props.height / 2))
             .force('collision', forceCollide().radius(function (d) {
                 return 7;
             }))
@@ -86,10 +86,61 @@ class DropZone extends React.Component {
         console.log(dataPoint);
         /* Add data point to the nodes array in the state of this component*/
         /* TODO: Changing state manually, change state using setState() method*/
-        self.setState({nodes: self.state.nodes.push(dataPoint)});
+        console.log("Before adding " + self.props.position);
+        console.log(self.state.nodes.length);
+        console.log(self.state.nodes);
+        self.setState({nodes: [...self.state.nodes, dataPoint]}, function() {
+            console.log("After adding " + self.props.position);
+            console.log(self.state.nodes.length);
+            console.log(self.state.nodes);
+
+            forceSimulation(self.state.nodes)
+                .force('charge', forceManyBody().strength(70))
+                .force('center', forceCenter(self.props.width / 2, self.props.height / 2))
+                .force('collision', forceCollide().radius(function (d) {
+                    return 7;
+                }))
+                .on('tick', function () {
+                    var circles = select(".svg")
+                        .selectAll('circle')
+                        .data(self.state.nodes);
+
+                    circles.enter()
+                        .append('circle')
+                        .attr('r', function (d) {
+                            return 7;
+                        })
+                        .on("dblclick", function (d, i) {
+                            // event.preventDefault();
+                            console.log("Double click on data point");
+                            console.log("Datapoint: ");
+                            console.log(d);
+
+                            self.removeDataPoint(dataPoint);
+                        })
+                        .merge(circles)
+                        .attr('cx', function (d) {
+                            return d.x
+                        })
+                        .attr('cy', function (d) {
+                            return d.y
+                        });
+
+                    circles.exit()
+                        .remove();
+                });
+
+            let currDataPoints = self.state.nodes;
+            let success = this.props.addDataPointCallback(currDataPoints, this.props.position);
+            if (success) {
+                console.log("Success");
+            } else {
+                console.log("Failure");
+            }
+        });
 
         // Update the force layout and re-render the svg
-        let simulation = forceSimulation(self.state.nodes)
+        /* let simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(5))
             .force('center', forceCenter(self.width / 2, self.height / 2))
             .force('collision', forceCollide().radius(function (d) {
@@ -123,16 +174,8 @@ class DropZone extends React.Component {
 
                 circles.exit()
                     .remove();
-            });
+            }); */
         /* Invoke callback function, passing the dataPoint as data */
-        let currDataPoints = this.state.nodes;
-        let success = this.props.addDataPointCallback(currDataPoints, this.props.position);
-        if (success) {
-            console.log("Success");
-        }
-        else {
-            console.log("Failure");
-        }
     }
 
     removeDataPoint(dataPoint) {
@@ -151,43 +194,50 @@ class DropZone extends React.Component {
         let newNodes = this.state.nodes.filter((node) => {
             return node[idKeyString] !== dataPoint[idKeyString]
         })
-        this.setState({nodes: newNodes});
-        /* Update the force layout and re-render */
-        self.simulation = forceSimulation(self.state.nodes)
-            .force('charge', forceManyBody().strength(5))
-            .force('center', forceCenter(self.width / 2, self.height / 2))
-            .force('collision', forceCollide().radius(function (d) {
-                return 7;
-            }))
-            .on('tick', function () {
-                var circles = select(".svg")
-                    .selectAll('circle')
-                    .data(self.state.nodes);
+        this.setState({nodes: newNodes}, () => {
+            /* Update the force layout and re-render */
+            self.simulation = forceSimulation(self.state.nodes)
+                .force('charge', forceManyBody().strength(70))
+                .force('center', forceCenter(self.props.width / 2, self.props.height / 2))
+                .force('collision', forceCollide().radius(function (d) {
+                    return 7;
+                }))
+                .on('tick', function () {
+                    var circles = select(".svg")
+                        .selectAll('circle')
+                        .data(self.state.nodes);
 
-                circles.enter()
-                    .append('circle')
-                    .attr('r', function (d) {
-                        return 7;
-                    })
-                    .merge(circles)
-                    .attr('cx', function (d) {
-                        return d.x
-                    })
-                    .attr('cy', function (d) {
-                        return d.y
-                    });
+                    circles.enter()
+                        .append('circle')
+                        .attr('r', function (d) {
+                            return 7;
+                        })
+                        .attr('cx', function (d) {
+                            return d.x
+                        })
+                        .attr('cy', function (d) {
+                            return d.y
+                        })
+                        .merge(circles)
+                        .attr('cx', function (d) {
+                            return d.x
+                        })
+                        .attr('cy', function (d) {
+                            return d.y
+                        });
 
-                circles.exit()
-                    .remove();
-            });
-        /* Invoke callback to add dataPoint to the scatterplot */
-        let currDataPoints = this.state.nodes;
-        let success = this.props.removeDataPointCallback(currDataPoints, this.props.position);
-        if (success) {
-            console.log("Success");
-        } else {
-            console.log("Failure");
-        }
+                    circles.exit()
+                        .remove();
+                });
+            /* Invoke callback to add dataPoint to the scatterplot */
+            let currDataPoints = this.state.nodes;
+            let success = this.props.removeDataPointCallback(currDataPoints, this.props.position);
+            if (success) {
+                console.log("Success");
+            } else {
+                console.log("Failure");
+            }
+        });  
     }
 
     dragOverHandler(event) {

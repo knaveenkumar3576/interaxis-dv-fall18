@@ -56,11 +56,12 @@ class MainController extends Component {
             },
             currDataPoint: null
         };
+
+        console.log("Dataset: " + this.state.dataset);
     }
 
     componentWillMount() {
         // this.onDataSetChangedCallback("sample");
-
     }
 
     componentDidMount() {
@@ -157,41 +158,54 @@ class MainController extends Component {
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {
+        console.log("Adding point to drop zone");
         switch (position) {
             case "xMin":
-                this.setState({dataPointsxMin: dataPoints});
+                this.setState({dataPointsxMin: dataPoints}, () => {
+                    console.log(this.state.dataPointsxMin);
+                });
                 break;
             case "xMax":
-                this.setState({dataPointsxMax: dataPoints});
+                this.setState({dataPointsxMax: dataPoints}, () => {
+                    console.log(this.state.dataPointsxMax);
+                });
                 break;
             case "yMin":
-                this.setState({dataPointsyMin: dataPoints});
+                this.setState({dataPointsyMin: dataPoints}, () => {;
+                    console.log(this.state.dataPointsyMin);
+                });
                 break;
             case "yMax":
-                this.setState({dataPointsyMax: dataPoints});
+                this.setState({dataPointsyMax: dataPoints}, () => {
+                    console.log(this.state.dataPointsyMax);
+                });
                 break;
             default:
                 return false;
         }
-        this.setState()
         console.log("Added point to ");
         console.log("Remove point from scatter");
         return true;
     }
 
     addDataPointToScatterCallback(dataPoints, position) {
+        console.log("Removing point from dropzone");
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints});
+                console.log(this.state.dataPointsxMin);
                 break;
             case "xMax":
                 this.setState({dataPointsxMax: dataPoints});
+                console.log(this.state.dataPointsxMax);
                 break;
             case "yMin":
                 this.setState({dataPointsyMin: dataPoints});
+                console.log(this.state.dataPointsyMin);
                 break;
             case "yMax":
                 this.setState({dataPointsyMax: dataPoints});
+                console.log(this.state.dataPointsyMax);
                 break;
             default:
                 return false;
@@ -217,7 +231,7 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div ref={'yMaxDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"xMin"} height={this.state.yMaxDropZoneHeight}
+                                <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
                                           width={this.state.yMaxDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
@@ -233,7 +247,7 @@ class MainController extends Component {
                         <div style={{height: '10%'}}>
                             <div ref={'yMinDropZone'} className={'pull-right'}
                                  style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"xMax"} height={this.state.yMinDropZoneHeight}
+                                <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
                                           width={this.state.yMinDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
