@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import {forceSimulation, forceManyBody, forceCenter, forceCollide} from 'd3-force';
 import {select} from 'd3-selection';
 
@@ -101,7 +102,7 @@ class DropZone extends React.Component {
                     return 7;
                 }))
                 .on('tick', function () {
-                    var circles = select(".svg")
+                    var circles = select(ReactDOM.findDOMNode(self.refs.svg))
                         .selectAll('circle')
                         .data(self.state.nodes);
 
@@ -203,7 +204,7 @@ class DropZone extends React.Component {
                     return 7;
                 }))
                 .on('tick', function () {
-                    var circles = select(".svg")
+                    var circles = select(ReactDOM.findDOMNode(self.refs.svg))
                         .selectAll('circle')
                         .data(self.state.nodes);
 

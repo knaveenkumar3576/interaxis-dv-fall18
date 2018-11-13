@@ -273,6 +273,7 @@ class MainController extends Component {
 
     removeDataPointFromScatterCallback(dataPoints, position) {
         console.log("Adding point to drop zone");
+        console.log("Position: " + position);
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints}, () => {
