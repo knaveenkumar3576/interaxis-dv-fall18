@@ -64,6 +64,120 @@ class MainController extends Component {
         // this.onDataSetChangedCallback("sample");
     }
 
+    calculateCustomValues = () => {
+        let noOfDataPointsXMin = this.state.dataPointsxMin.length;
+        let noOfDataPointsXMax = this.state.dataPointsxMax.length;
+
+        let noOfDataPointsYMin = this.state.dataPointsyMin.length;
+        let noOfDataPointsYMax = this.state.dataPointsyMax.length;
+
+        let customX = {};
+
+        let customY = {};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            let value=0;
+            this.state.dataPointsxMin.forEach(d => {
+                value += d[key];
+            })
+            let avgMinValue = value/noOfDataPointsXMin;
+
+            value = 0;
+            this.state.dataPointsxMax.forEach(d => {
+                value += d[key];
+            })
+            let avgMaxValue = value/noOfDataPointsXMax;
+            customX[key] = avgMaxValue - avgMinValue;
+
+            
+            
+            value=0;
+            this.state.dataPointsyMin.forEach(d => {
+                value += d[key];
+            })
+            
+            avgMinValue = value/noOfDataPointsYMin;
+
+            value = 0;
+            this.state.dataPointsyMax.forEach(d => {
+                value += d[key];
+            })
+
+            avgMaxValue = value/noOfDataPointsYMax;
+            
+            customY[key] = avgMaxValue - avgMinValue;
+
+        });
+        
+        console.log(customX);
+        console.log(customY);
+        
+        this.state.dataPoints.forEach( d => {
+            let x=0,y=0;
+
+            KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                x += d[key] * customX[key];
+                y += d[key] * customY[key];
+            });
+            d["customX"] = x;
+            d["customY"] = y;
+        })
+
+        let selectedX = "customX";
+        let selectedY = "customY";
+
+        this.setState({
+            selectedLabels : {
+                x: selectedX,
+                y: selectedY,
+            } 
+        });
+
+        console.log(this.state.dataPoints);
+
+    }
+
+    simulateDrops = () => {
+
+        let sampleXMin = [
+            {
+                x: .1,
+                y: 1,
+                z : .1  
+            }
+        ];
+
+        let sampleXMax = [
+            {
+                x: 1,
+                y: .1,
+                z : .1  
+            }
+        ];
+
+        let sampleYMin = [
+            {
+                x: .1,
+                y: .1,
+                z : 1  
+            }
+        ];
+
+        let sampleYMax = [
+            {
+                x: 1,
+                y: .1,
+                z : .1  
+            }
+        ];
+
+        this.setState({dataPointsxMin : sampleXMin, dataPointsxMax : sampleXMax, dataPointsyMin : sampleYMin, dataPointsyMax : sampleYMax}, () => {
+            this.calculateCustomValues();
+        });
+
+
+    }
+    
     componentDidMount() {
         console.log("componentDidMount");
         this.setState({
@@ -288,6 +402,7 @@ class MainController extends Component {
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
+                        <button onClick={this.simulateDrops}>Simulate Dropzones</button>
                         <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                 </GridLayout>
