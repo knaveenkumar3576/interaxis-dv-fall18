@@ -15,8 +15,8 @@ import BottomPanel from '../Components/BottomPannel';
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
     census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment'],
-    car: ['Sedan','Sports Car','SUV','Wagon','Minivan','Pickup','AWD','RWD','Retail Price','Dealer Cost','Engine Size','Cyl','HP','City MPG','Hwy MPG','Weight','Wheel Base','Len','Width'],
-    football: ['Age','Overall','Potential','Special','Acceleration','Aggression','Agility','Balance','Ball control','Composure','Crossing','Curve','Dribbling','Finishing','Free kick accuracy','GK diving','GK handling','GK kicking','GK positioning','GK reflexes','Heading accuracy','Interceptions','Jumping','Long passing','Long shots','Marking','Penalties','Positioning','Reactions','Short passing','Shot power','Sliding tackle','Sprint speed','Stamina','Standing tackle','Strength','Vision','Volleys','CAM','CB','CDM','CF','CM','LAM','LB','LCB','LCM','LDM','LF','LM','LS','LW','LWB','RAM','RB','RCB','RCM','RDM','RF','RM','RS','RW','RWB','ST']
+    car: ['Sedan', 'Sports Car', 'SUV', 'Wagon', 'Minivan', 'Pickup', 'AWD', 'RWD', 'Retail Price', 'Dealer Cost', 'Engine Size', 'Cyl', 'HP', 'City MPG', 'Hwy MPG', 'Weight', 'Wheel Base', 'Len', 'Width'],
+    football: ['Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'Aggression', 'Agility', 'Balance', 'Ball control', 'Composure', 'Crossing', 'Curve', 'Dribbling', 'Finishing', 'Free kick accuracy', 'GK diving', 'GK handling', 'GK kicking', 'GK positioning', 'GK reflexes', 'Heading accuracy', 'Interceptions', 'Jumping', 'Long passing', 'Long shots', 'Marking', 'Penalties', 'Positioning', 'Reactions', 'Short passing', 'Shot power', 'Sliding tackle', 'Sprint speed', 'Stamina', 'Standing tackle', 'Strength', 'Vision', 'Volleys', 'CAM', 'CB', 'CDM', 'CF', 'CM', 'LAM', 'LB', 'LCB', 'LCM', 'LDM', 'LF', 'LM', 'LS', 'LW', 'LWB', 'RAM', 'RB', 'RCB', 'RCM', 'RDM', 'RF', 'RM', 'RS', 'RW', 'RWB', 'ST']
 };
 
 const DEFAULT_FILTERS = {
@@ -61,7 +61,8 @@ class MainController extends Component {
                 x: '',
                 y: ''
             },
-            currDataPoint: null
+            currDataPoint: null,
+            reloadHeader: false
         };
     }
 
@@ -78,72 +79,82 @@ class MainController extends Component {
 
         let customX = {};
         let customY = {};
-        
+
         let labels = Object.assign({}, this.state.selectedLabels);
 
-        if(noOfDataPointsXMin > 0 && noOfDataPointsXMax>0) {
+        if (noOfDataPointsXMin > 0 && noOfDataPointsXMax > 0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
-                let minWeights=0;
-                
+                let minWeights = 0;
+
                 this.state.dataPointsxMin.forEach(d => {
                     minWeights += d[key];
-                })
-                let avgMinValue = minWeights/noOfDataPointsXMin;
-    
-                let maxWeights=0;
+                });
+                let avgMinValue = minWeights / noOfDataPointsXMin;
+
+                let maxWeights = 0;
                 this.state.dataPointsxMax.forEach(d => {
                     maxWeights += d[key];
-                })
-                let avgMaxValue = maxWeights/noOfDataPointsXMax;
+                });
+                let avgMaxValue = maxWeights / noOfDataPointsXMax;
                 customX[key] = avgMaxValue - avgMinValue;
-            });    
+            });
 
-            this.state.dataPoints.forEach( d => {
-                let x=0;    
+            this.state.dataPoints.forEach(d => {
+                let x = 0;
                 KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                     x += d[key] * customX[key];
                 });
                 d["customX"] = x;
-            })   
-            labels.x = "customX";   
+            });
+            let newColumn = this.state.columns;
+            newColumn.push('customX');
+            this.setState({
+                columns: newColumn
+            });
+            labels.x = "customX";
         }
 
-        if(noOfDataPointsYMin > 0 && noOfDataPointsYMax>0) {
+        if (noOfDataPointsYMin > 0 && noOfDataPointsYMax > 0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
-                let minWeights=0;
-                
+                let minWeights = 0;
+
                 this.state.dataPointsyMin.forEach(d => {
                     minWeights += d[key];
-                })
-                let avgMinValue = minWeights/noOfDataPointsYMin;
-    
-                let maxWeights=0;
+                });
+                let avgMinValue = minWeights / noOfDataPointsYMin;
+
+                let maxWeights = 0;
                 this.state.dataPointsyMax.forEach(d => {
                     maxWeights += d[key];
-                })
-                let avgMaxValue = maxWeights/noOfDataPointsYMax;
+                });
+                let avgMaxValue = maxWeights / noOfDataPointsYMax;
                 customY[key] = avgMaxValue - avgMinValue;
             });
 
-            this.state.dataPoints.forEach( d => {
-                let y=0;    
+            this.state.dataPoints.forEach(d => {
+                let y = 0;
                 KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                     y += d[key] * customY[key];
                 });
                 d["customY"] = y;
             });
-            labels.y = "customY";  
+            let newColumn = this.state.columns;
+            newColumn.push('customY');
+            this.setState({
+                columns: newColumn
+            });
+            labels.y = "customY";
         }
 
         this.setState({
-            customXWeights : customX,
-            customYWeights : customY,
-        });        
+            customXWeights: customX,
+            customYWeights: customY,
+        });
 
         this.setState({
-            selectedLabels : labels
+            selectedLabels: labels
         });
-    }    
+    };
 
     componentDidMount() {
         this.setState({
@@ -170,17 +181,17 @@ class MainController extends Component {
             download: true,
             skipEmptyLines: true,
             complete: (result) => {
-                this.saveOriginalData(result)
-                this.processAndNormalizeData(result)
+                this.saveOriginalData(result);
+                this.processAndNormalizeData(result);
             }
         });
-    }
+    };
 
     saveOriginalData = (result) => {
         this.setState({
             originalDataPoints: JSON.parse(JSON.stringify(result.data))
         });
-    }
+    };
 
     processAndNormalizeData = (result) => {
         let keysToNormalize = KEYS_TO_BE_USED[this.state.dataset];
@@ -195,7 +206,7 @@ class MainController extends Component {
         this.setState({
             dataPoints: resultdataPoints,
         });
-
+        this.calculateCustomValues();
     };
 
     // callback to show detail view
@@ -215,8 +226,25 @@ class MainController extends Component {
         })
     }
 
-    onVersionChangedCallback(versions, currentVersion) {
-        this.setState({versions: versions, currentVersion: currentVersion});
+    onVersionChangedCallback(versions, currentVersion, info) {
+        if (versions.length > 0) {
+            this.setState({
+                dataset: info.dataset,
+                columns: KEYS_TO_BE_USED[info.dataset],
+                versions: versions,
+                currentVersion: currentVersion,
+                selectedLabels: {
+                    x: info.xAttribute,
+                    y: info.yAttribute
+                },
+                dataPointsxMin: info.xMin || [],
+                dataPointsxMax: info.xMax || [],
+                dataPointsyMin: info.yMin || [],
+                dataPointsyMax: info.yMax || []
+            }, () => {
+                this.changeData();
+            });
+        }
     }
 
     onXAttributeChangedCallback(x) {
@@ -225,6 +253,13 @@ class MainController extends Component {
             selectedLabels: {x: x, y: y}
         });
     }
+
+    // onSaveCallback() {
+    //     let reload = this.state.reloadHeader;
+    //     this.setState({
+    //         reloadHeader: !reload
+    //     })
+    // }
 
     onYAttributeChangedCallback(y) {
         let x = this.state.selectedLabels.x;
@@ -246,7 +281,7 @@ class MainController extends Component {
                 });
                 break;
             case "yMin":
-                this.setState({dataPointsyMin: dataPoints}, () => {;
+                this.setState({dataPointsyMin: dataPoints}, () => {
                     this.calculateCustomValues();
                 });
                 break;
@@ -294,7 +329,8 @@ class MainController extends Component {
         return (
             <Wrap>
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
-                        onVersionChanged={this.onVersionChangedCallback.bind(this)}/>
+                        onVersionChanged={this.onVersionChangedCallback.bind(this)}
+                        reload={this.state.reloadHeader}/>
                 <GridLayout className="layout grid-layout" layout={columnLayout} cols={12}
                             rowHeight={window.innerHeight - 50}
                             width={window.innerWidth}>
@@ -304,7 +340,7 @@ class MainController extends Component {
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
                                           width={this.state.yMaxDropZoneWidth}
-                                          dataset = {this.state.dataset}
+                                          dataset={this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                           removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
@@ -320,7 +356,7 @@ class MainController extends Component {
                                  style={{height: '100%', width: '30%'}}>
                                 <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
                                           width={this.state.yMinDropZoneWidth}
-                                          dataset = {this.state.dataset}
+                                          dataset={this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                           removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
                             </div>
@@ -329,9 +365,11 @@ class MainController extends Component {
                             <div className={'save-util-panel'}>
                                 {this.state.dataset !== '' ?
                                     <SaveUtil columns={this.state.columns} versions={this.state.versions}
-                                              default={DEFAULT_FILTERS[this.state.dataset]}
+                                              dataset={this.state.dataset} default={DEFAULT_FILTERS[this.state.dataset]}
                                               xAttribute={this.state.selectedLabels.x}
                                               yAttribute={this.state.selectedLabels.y}
+                                              xMin={this.state.dataPointsxMin} xMax={this.state.dataPointsxMax}
+                                              yMin={this.state.dataPointsyMin} yMax={this.state.dataPointsyMax}
                                               currentVersion={this.state.currentVersion}
                                               onXChange={this.onXAttributeChangedCallback.bind(this)}
                                               onYChange={this.onYAttributeChangedCallback.bind(this)}/> : null}
@@ -349,13 +387,13 @@ class MainController extends Component {
                             }
                         </div>
                         <div ref={'middleBottom'} style={{height: '25%'}}>
-                            <BottomPanel 
-                                width={this.state.xAxisWidth} 
+                            <BottomPanel
+                                width={this.state.xAxisWidth}
                                 height={this.state.xAxisHeight}
-                                dataset = {this.state.dataset}
-                                removeDataPointFromScatterCallback = {this.removeDataPointFromScatterCallback.bind(this)}
-                                addDataPointToScatterCallback = {this.addDataPointToScatterCallback.bind(this)}
-                                />
+                                dataset={this.state.dataset}
+                                removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
+                            />
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">

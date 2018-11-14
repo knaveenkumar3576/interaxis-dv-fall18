@@ -16,37 +16,55 @@ class Header extends React.Component {
             data: dataset[0].name,
             dataset: dataset,
             version: '',
-            versions: []
+            versions: [],
+            savedInfo: []
+            // reload: props.reload
         };
 
         this.handleDataSetChange = this.handleDataSetChange.bind(this);
         this.handleVersionChange = this.handleVersionChange.bind(this);
+        this.loadVersionInfo = this.loadVersionInfo.bind(this);
     }
 
     componentDidMount() {
+        this.loadVersionInfo();
+    }
+
+    loadVersionInfo() {
         const itemsRef = firebase.database().ref('items');
         let that = this;
         itemsRef.on('value', (snapshot) => {
             let items = snapshot.val();
             if (items != null) {
-                let newState = [];
+                let versions = [], info = [];
                 let recentVersion = '';
                 for (let item in items) {
                     if (items.hasOwnProperty(item)) {
-                        newState.push({name: items[item]});
-                        recentVersion = item;
+                        info.push(items[item]);
+                        versions.push({name: items[item]['version']});
+                        recentVersion = items[item]['version'];
                     }
                 }
-                that.setState({versions: newState, version: recentVersion});
-                that.props.onVersionChanged([], recentVersion);
+                that.setState({data: info[0].dataset, versions: versions, version: recentVersion, savedInfo: info});
+                that.props.onVersionChanged(versions, recentVersion, info.filter((attr) => {
+                    return attr.version === recentVersion
+                })[0]);
             } else {
-                // that.setState({version: '1.0'});
-                // that.props.onVersionChanged([], '1.0');
-                that.setState({versions: [{name: '1.0'}, {name: '1.1'}, {name: '2.0'}, {name: '2.1'}], version: '2.1'});
-                that.props.onVersionChanged([{name: '1.0'}, {name: '1.1'}, {name: '2.0'}, {name: '2.1'}], '2.1');
+                that.setState({version: '1.0'});
+                that.props.onVersionChanged([], '1.0', []);
             }
         });
     }
+
+    // componentWillReceiveProps(props) {
+    //     if (props.reload !== this.state.reload) {
+    //         this.setState({
+    //             reload: props.reload
+    //         }, () => {
+    //             this.loadVersionInfo();
+    //         });
+    //     }
+    // }
 
     handleDataSetChange(e) {
         this.setState({
@@ -59,7 +77,9 @@ class Header extends React.Component {
         this.setState({
             version: e
         });
-        this.props.onVersionChanged(this.state.versions, e);
+        this.props.onVersionChanged(this.state.versions, e, this.state.savedInfo.filter((attr) => {
+            return attr.version === e
+        })[0]);
     }
 
     render() {
@@ -71,7 +91,8 @@ class Header extends React.Component {
             <Navbar>
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a>Inter-Axis Scatter Plot</a>
+                        <a>Inter-Axis Scatter Plot </a>
+                        <a>({this.state.version})</a>
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Nav pullRight={true}>
