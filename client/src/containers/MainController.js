@@ -81,6 +81,7 @@ class MainController extends Component {
         let customY = {};
 
         let labels = Object.assign({}, this.state.selectedLabels);
+        let newColumns = this.state.columns;
 
         if (noOfDataPointsXMin > 0 && noOfDataPointsXMax > 0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
@@ -106,11 +107,8 @@ class MainController extends Component {
                 });
                 d["customX"] = x;
             });
-            let newColumn = this.state.columns;
-            newColumn.push('customX');
-            this.setState({
-                columns: newColumn
-            });
+            
+            newColumns.push('customX');
             labels.x = "customX";
         }
 
@@ -138,11 +136,8 @@ class MainController extends Component {
                 });
                 d["customY"] = y;
             });
-            let newColumn = this.state.columns;
-            newColumn.push('customY');
-            this.setState({
-                columns: newColumn
-            });
+
+            newColumns.push('customY');
             labels.y = "customY";
         }
 
@@ -152,6 +147,7 @@ class MainController extends Component {
         });
 
         this.setState({
+            columns: newColumns,
             selectedLabels: labels
         });
     };
