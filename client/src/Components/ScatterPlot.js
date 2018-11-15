@@ -131,20 +131,13 @@ class ScatterPlot extends React.Component {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
             .on("mouseover", function (d, i) {
-<<<<<<< HEAD
                 console.log("Mouse over ...");
-                // that.detailViewCallback(i);
+                that.detailViewCallback(i);
                 select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
                 select(this).style('cursor', 'auto');
-=======
-                that.detailViewCallback(i);
-            })
-            .on("mouseout", function (d) {
-                // console.log("Mouse out ...");
->>>>>>> b47268eae5cadbefe5efc9531309e9b118f29898
             });
     }
 

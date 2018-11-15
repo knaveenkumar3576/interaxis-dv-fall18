@@ -146,17 +146,12 @@ class MainController extends Component {
             customYWeights: customY,
         });
 
-<<<<<<< HEAD
-    }
-    
-=======
         this.setState({
             columns: newColumns,
             selectedLabels: labels
         });
     };
 
->>>>>>> b47268eae5cadbefe5efc9531309e9b118f29898
     componentDidMount() {
         this.setState({
             xAxisWidth: this.refs.middleBottom.clientWidth,
@@ -270,12 +265,6 @@ class MainController extends Component {
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {
-<<<<<<< HEAD
-        console.log("Adding point to drop zone");
-        console.log("Position: " + position);
-        
-=======
->>>>>>> b47268eae5cadbefe5efc9531309e9b118f29898
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints}, () => {
@@ -399,19 +388,12 @@ class MainController extends Component {
                             <BottomPanel
                                 width={this.state.xAxisWidth}
                                 height={this.state.xAxisHeight}
-<<<<<<< HEAD
                                 dataset = {this.state.dataset}
                                 removeDataPointFromScatterCallback = {this.removeDataPointFromScatterCallback.bind(this)}
                                 addDataPointToScatterCallback = {this.addDataPointToScatterCallback.bind(this)}
-                                xMinNodes = {[]}
-                                xMaxNods = {[]}
+                                /* xMinNodes = {[]} */
+                                /* xMaxNods = {[]} */
                                 />
-=======
-                                dataset={this.state.dataset}
-                                removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
-                            />
->>>>>>> b47268eae5cadbefe5efc9531309e9b118f29898
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
