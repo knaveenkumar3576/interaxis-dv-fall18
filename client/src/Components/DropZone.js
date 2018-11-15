@@ -197,16 +197,16 @@ class DropZone extends React.Component {
         let that = this.props;
         /* TODO: uniquely identify the data point */
         let idKeyString = "";
-        if (that.dataset == "football") {
+        if (that.dataset === "football") {
             idKeyString = "Sno"; 
         }
-        else if (that.dataset == "census") {
+        else if (that.dataset === "census") {
             idKeyString = "CensusId";
         }
         /* TODO: Remove data point from nodes in state */
         let newNodes = this.state.nodes.filter((node) => {
             return node[idKeyString] !== dataPoint[idKeyString]
-        })
+        });
         this.setState({nodes: newNodes}, () => {
             /* Update the force layout and re-render */
             self.simulation = forceSimulation(self.state.nodes)
