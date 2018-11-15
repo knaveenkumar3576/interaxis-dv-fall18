@@ -1,6 +1,7 @@
-import React from 'react'
-import * as d3 from 'd3'
-import './Chart.css'
+import React from 'react';
+import ReactDOM from 'react-dom';
+import * as d3 from 'd3';
+import './Chart.css';
 import {select} from "d3";
 
 class ScatterPlot extends React.Component {
@@ -45,7 +46,7 @@ class ScatterPlot extends React.Component {
         let width = this.state.width, height = this.state.height;
 
         return (
-            <div style={{width: width, height: height}}>
+            <div style={{width: width, height: height}} ref="mainDiv">
                 {this.props.chart}
             </div>
         )
@@ -53,6 +54,7 @@ class ScatterPlot extends React.Component {
 
     renderD3() {
         const that = this.props;
+        let self = this;
 
         var data = this.props.dataPoints;
         var labels = this.props.labels;
@@ -134,11 +136,12 @@ class ScatterPlot extends React.Component {
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
                 // that.detailViewCallback(i);
+                select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
+                select(this).style('cursor', 'auto');
             });
-
     }
 
     updateD3() {
@@ -213,9 +216,11 @@ class ScatterPlot extends React.Component {
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
                 // that.detailViewCallback(i);
+                select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
+                select(this).style('cursor', 'auto');
             })
             .merge(dot_g)
             .transition()

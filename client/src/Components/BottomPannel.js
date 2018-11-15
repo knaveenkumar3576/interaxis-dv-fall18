@@ -50,7 +50,8 @@ class BottomPannel extends React.Component {
                               width={this.state.xMinDropZoneWidth}
                               dataset={this.props.dataset}
                               addDataPointCallback={this.props.removeDataPointFromScatterCallback}
-                              removeDataPointCallback={this.props.addDataPointToScatterCallback}/>
+                              removeDataPointCallback={this.props.addDataPointToScatterCallback}
+                              /* currNodes={this.props.xMinNodes} */ />
                 </div>
                 <div ref={'rightBar'} key="b" id={'rightBarChart'}>
                     {this.state.rightBarHeight > 0 && this.state.rightBarWidth > 0 ?
@@ -63,7 +64,8 @@ class BottomPannel extends React.Component {
                               width={this.state.xMinDropZoneWidth}
                               dataset={this.props.dataset}
                               addDataPointCallback={this.props.removeDataPointFromScatterCallback}
-                              removeDataPointCallback={this.props.addDataPointToScatterCallback}/>
+                              removeDataPointCallback={this.props.addDataPointToScatterCallback}
+                              /* currNodes={this.props.xMaxNodes} */ />
                 </div>
             </GridLayout>
         );

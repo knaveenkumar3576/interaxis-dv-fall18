@@ -16,7 +16,25 @@ class BarChart extends React.Component {
 
         this.state = {
             id: '#' + props.id,
-            dataset: [0.5, 0.5, 0.35, 0.25, 0.1, -0.5, -0.25, -0.4, -0.25, -0.3, 0.45, 0.35, 0.50, -0.4],
+            dataset: [0.5, 0.5, -0.35, 0.25],
+            // dataset: [
+            //     {
+            //         key: "hello",
+            //         value: 0.5, 
+            //     }, 
+            //     {
+            //         key: "world", 
+            //         value: 0.5
+            //     },
+            //     {
+            //         key: "foo",
+            //         value: -0.35
+            //     },
+            //     {
+            //         key: "bar", 
+            //         value: 0.25
+            //     }
+            // ],
             height: props.height,
             width: props.width,
             barWidth: props.barWidth
@@ -28,6 +46,23 @@ class BarChart extends React.Component {
     }
 
     componentWillReceiveProps(props) {
+
+        // if (props.dataset) {
+        //     let dataObject = props.dataObject;
+        //     let dataset = []
+        //     Object.keys(dataObject).forEach((k) => {
+        //         let obj = {
+        //             key: k,
+        //             value: parseInt(dataObject[k])
+        //         }
+        //         dataset.push(obj);
+        //     });
+
+        //     this.setState({
+        //         dataset: dataset
+        //     });
+        // }
+
         if (props.height > 0 && props.width > 0) {
             this.setState({
                 height: props.height,
@@ -36,8 +71,9 @@ class BarChart extends React.Component {
                 select(this.state.id).selectAll("*").remove();
                 this.drawBars();
             });
-
         }
+
+        
     }
 
     drawBars() {
@@ -89,9 +125,11 @@ class BarChart extends React.Component {
             .enter()
             .append("rect")
             .attr("class", function (d) {
-                return d < 0 ? "negative" : "positive";
+                // console.log("class: " + d + " " + d.value);
+                return d.value < 0 ? "negative" : "positive";
             })
             .attr("x", function (d, i) {
+                // console.log("x: " + d.value < 0 ? totalScale(d.value) : totalScale(0));
                 return (d < 0 ? totalScale(d) : totalScale(0));
             })
             .attr("y", function (d, i) {
@@ -104,6 +142,26 @@ class BarChart extends React.Component {
             .style("fill", function (d) {
                 return d < 0 ? "red" : "blue";
             });
+
+        // let text = g.selectAll("text")
+        //     .data(this.state.dataset)
+        //     .enter()
+        //     .append("text")
+        //     .attr("class", function(d) {
+
+        //     })
+        //     .attr("x", function(d, i) {
+        //         if (d.value < 0) 
+        //             return totalScale(d.value) - 30;
+        //         else 
+        //             return totalScale(0) + Math.abs(totalScale(0) - totalScale(d.value)) + 10;
+        //     })
+        //     .attr("y", function(d, i) {
+        //         return yScale(i) + 5;
+        //     })
+        //     .attr("text", function(d, i) {
+        //         return d.key;
+        //     });
     }
 
     componentDidUpdate() {

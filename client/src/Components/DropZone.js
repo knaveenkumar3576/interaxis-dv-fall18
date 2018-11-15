@@ -19,7 +19,6 @@ class DropZone extends React.Component {
         // Function bindings
         this.addDataPoint = this.addDataPoint.bind(this);
         this.removeDataPoint = this.removeDataPoint.bind(this);
-        this.dragOverHandler = this.dragOverHandler.bind(this);
     }
 
     componentWillReceiveProps(props) {
@@ -29,9 +28,13 @@ class DropZone extends React.Component {
                 width: props.width
             })
         }
+
+        // if (props.currNodes.length > 0) {
+        //     this.setState({nodes: props.currNodes});
+        // }
     }
 
-    // Create an empty SVG with a force layout with no nodes
+    // Create an empty SVG with a force layout with [no nodes (or) nodes sent from main controller if reloading previously saved data]
     componentDidMount() {
         let self = this;
         console.log("REFS SVG: ");
@@ -43,15 +46,29 @@ class DropZone extends React.Component {
                 return 7;
             }))
             .on('tick', function () {
-                var circles = select(".svg")
+                var circles = select(ReactDOM.findDOMNode(self.refs.svg))
                     .selectAll('circle')
                     .data(self.state.nodes);
 
-                circles.enter(circles)
+                circles.enter()
                     .append('circle')
                     .attr('r', function (d) {
-                        return 7
-                    }).merge(circles)
+                        return 7;
+                    })
+                    .on("dblclick", function (d, i) {
+                        console.log("Double click on data point");
+                        console.log("Datapoint: ");
+                        console.log(d);
+
+                        self.removeDataPoint(d);
+                    })
+                    .on('mouseover', function () {
+                        select(this).style('cursor', 'move');
+                    })
+                    .on('mouseout', function () {
+                        select(this).style('cursor', 'auto');
+                    })
+                    .merge(circles)
                     .attr('cx', function (d) {
                         return d.x
                     })
@@ -86,10 +103,29 @@ class DropZone extends React.Component {
         let dataPoint = JSON.parse(datapointjson);
         console.log(dataPoint);
         /* Add data point to the nodes array in the state of this component*/
-        /* TODO: Changing state manually, change state using setState() method*/
         console.log("Before adding " + self.props.position);
         console.log(self.state.nodes.length);
         console.log(self.state.nodes);
+
+        // Ignore if duplicate point
+        let idKeyString = "";
+        if (that.dataset == "football") {
+            idKeyString = "Sno";
+        } else if (that.dataset == "census") {
+            idKeyString = "CensusId";
+        }
+        let found = false;
+        let stateNodes = self.state.nodes;
+        for (let i = 0; i < stateNodes.length; i++) {
+            if (stateNodes[i][idKeyString] === dataPoint[idKeyString]) {
+                found = true;
+            }
+        }
+
+        if (found) {
+            return true;
+        }
+
         self.setState({nodes: [...self.state.nodes, dataPoint]}, function() {
             console.log("After adding " + self.props.position);
             console.log(self.state.nodes.length);
@@ -117,13 +153,19 @@ class DropZone extends React.Component {
                             console.log("Datapoint: ");
                             console.log(d);
 
-                            self.removeDataPoint(dataPoint);
+                            self.removeDataPoint(d);
+                        })
+                        .on('mouseover', function() {
+                            select(this).style('cursor', 'move');
+                        })
+                        .on('mouseout', function() {
+                            select(this).style('cursor', 'auto');
                         })
                         .merge(circles)
                         .attr('cx', function (d) {
                             return d.x
                         })
-                        .attr('cy', function (d) {
+                        .attr('cy', function (d) {  
                             return d.y
                         });
 
@@ -131,53 +173,23 @@ class DropZone extends React.Component {
                         .remove();
                 });
 
-            let currDataPoints = self.state.nodes;
-            let success = this.props.addDataPointCallback(currDataPoints, this.props.position);
-            if (success) {
-                console.log("Success");
-            } else {
-                console.log("Failure");
-            }
+                let currDataPoints = self.state.nodes;
+                currDataPoints.forEach((dataPoint) => {
+                    // delete dataPoint.index;
+                    // delete dataPoint.x;
+                    // delete dataPoint.y;
+                    // delete dataPoint.vx;
+                    // delete dataPoint.vy;
+                });
+                let success = self.props.addDataPointCallback(currDataPoints, self.props.position);
+                if (success) {
+                    console.log("Success");
+                } else {
+                    console.log("Failure");
+                }
         });
-
-        // Update the force layout and re-render the svg
-        /* let simulation = forceSimulation(self.state.nodes)
-            .force('charge', forceManyBody().strength(5))
-            .force('center', forceCenter(self.width / 2, self.height / 2))
-            .force('collision', forceCollide().radius(function (d) {
-                return 7;
-            }))
-            .on('tick', function () {
-                var circles = select(".svg")
-                    .selectAll('circle')
-                    .data(self.state.nodes);
-
-                circles.enter()
-                    .append('circle')
-                    .attr('r', function (d) {
-                        return 7;
-                    })
-                    .on("dblclick", function (d, i) {
-                        // event.preventDefault();
-                        console.log("Double click on data point");
-                        console.log("Datapoint: ");
-                        console.log(d);
-
-                        self.removeDataPoint(dataPoint);
-                    })
-                    .merge(circles)
-                    .attr('cx', function (d) {
-                        return d.x
-                    })
-                    .attr('cy', function (d) {
-                        return d.y
-                    });
-
-                circles.exit()
-                    .remove();
-            }); */
-        /* Invoke callback function, passing the dataPoint as data */
     }
+
 
     removeDataPoint(dataPoint) {
         let self = this
@@ -203,7 +215,7 @@ class DropZone extends React.Component {
                 .force('collision', forceCollide().radius(function (d) {
                     return 7;
                 }))
-                .on('tick', function () {
+                .on('tick', function() {
                     var circles = select(ReactDOM.findDOMNode(self.refs.svg))
                         .selectAll('circle')
                         .data(self.state.nodes);
@@ -219,6 +231,20 @@ class DropZone extends React.Component {
                         .attr('cy', function (d) {
                             return d.y
                         })
+                        .on('mouseover', function () {
+                            select(this).style('cursor', 'move');
+                        })
+                        .on('mouseout', function () {
+                            select(this).style('cursor', 'auto');
+                        })
+                        .on("dblclick", function (d, i) {
+                            // event.preventDefault();
+                            console.log("Double click on data point");
+                            console.log("Datapoint: ");
+                            console.log(d);
+
+                            self.removeDataPoint(d);
+                        })
                         .merge(circles)
                         .attr('cx', function (d) {
                             return d.x
@@ -230,22 +256,29 @@ class DropZone extends React.Component {
                     circles.exit()
                         .remove();
                 });
-            /* Invoke callback to add dataPoint to the scatterplot */
-            let currDataPoints = this.state.nodes;
-            let success = this.props.removeDataPointCallback(currDataPoints, this.props.position);
-            if (success) {
-                console.log("Success");
-            } else {
-                console.log("Failure");
-            }
-        });  
+
+                /* Invoke callback to add dataPoint to the scatterplot */
+                let currDataPoints = self.state.nodes;
+                // currDataPoints.forEach((dataPoint) => {
+                // delete dataPoint.index;
+                // delete dataPoint.x;
+                // delete dataPoint.y;
+                // delete dataPoint.vx;
+                // delete dataPoint.vy;
+                // });
+                let success = self.props.removeDataPointCallback(currDataPoints, self.props.position);
+                if (success) {
+                    console.log("Success");
+                } else {
+                    console.log("Failure");
+                }
+            });  
     }
 
     dragOverHandler(event) {
         event.preventDefault();
         console.log("Drag over ...");
-        // Change background color
-        this.setState({backgroundColor: "gray"});
+        
     }
 
     render() {

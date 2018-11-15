@@ -175,7 +175,6 @@ class MainController extends Component {
             this.calculateCustomValues();
         });
 
-
     }
     
     componentDidMount() {
@@ -274,6 +273,7 @@ class MainController extends Component {
     removeDataPointFromScatterCallback(dataPoints, position) {
         console.log("Adding point to drop zone");
         console.log("Position: " + position);
+        
         switch (position) {
             case "xMin":
                 this.setState({dataPointsxMin: dataPoints}, () => {
@@ -350,7 +350,8 @@ class MainController extends Component {
                                           width={this.state.yMaxDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
+                                          /* currNodes = {[]} *//>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -366,7 +367,8 @@ class MainController extends Component {
                                           width={this.state.yMinDropZoneWidth}
                                           dataset = {this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}/>
+                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
+                                          /* currNodes = {[]} *//>
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>
@@ -399,6 +401,8 @@ class MainController extends Component {
                                 dataset = {this.state.dataset}
                                 removeDataPointFromScatterCallback = {this.removeDataPointFromScatterCallback.bind(this)}
                                 addDataPointToScatterCallback = {this.addDataPointToScatterCallback.bind(this)}
+                                xMinNodes = {[]}
+                                xMaxNods = {[]}
                                 />
                         </div>
                     </div>
