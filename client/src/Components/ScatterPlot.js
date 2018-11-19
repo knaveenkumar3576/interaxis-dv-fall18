@@ -132,8 +132,8 @@ class ScatterPlot extends React.Component {
             })
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
-                that.detailViewCallback(i);
                 select(this).style('cursor', 'move');
+                that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");

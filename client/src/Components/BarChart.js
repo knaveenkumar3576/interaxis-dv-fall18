@@ -16,25 +16,34 @@ class BarChart extends React.Component {
 
         this.state = {
             id: '#' + props.id,
-            dataset: [0.5, 0.5, -0.35, 0.25],
-            // dataset: [
-            //     {
-            //         key: "hello",
-            //         value: 0.5, 
-            //     }, 
-            //     {
-            //         key: "world", 
-            //         value: 0.5
-            //     },
-            //     {
-            //         key: "foo",
-            //         value: -0.35
-            //     },
-            //     {
-            //         key: "bar", 
-            //         value: 0.25
-            //     }
-            // ],
+            // dataset: [0.5, 0.5, -0.35, 0.25],
+            dataset: [
+                {
+                    key: "hello",
+                    value: 0.5, 
+                }, {
+                    key: "world", 
+                    value: 0.5
+                }, {
+                    key: "Attribute 1",
+                    value: -0.35
+                }, {
+                    key: "barchart", 
+                    value: 0.35
+                }, {
+                    key: "foobars",
+                    value: -0.15
+                }, {
+                    key: "HP",
+                    value: 0.15
+                }, {
+                    key: "foo",
+                    value: -0.50
+                }, {
+                    key: "bar",
+                    value: 0.25
+                }
+            ],
             height: props.height,
             width: props.width,
             barWidth: props.barWidth
@@ -88,8 +97,12 @@ class BarChart extends React.Component {
         marginRight = marginLeft = width * 0.05;
         marginTop = marginBottom = 20;
 
-        let minValue = min(this.state.dataset);
-        let maxValue = max(this.state.dataset);
+        let minValue = min(this.state.dataset, function(d) {
+            return d.value;
+        });
+        let maxValue = max(this.state.dataset, function(d) {
+            return d.value;
+        });
 
         let totalScale = scaleLinear()
             .domain([minValue, maxValue])
@@ -127,38 +140,37 @@ class BarChart extends React.Component {
             })
             .attr("x", function (d, i) {
                 // console.log("x: " + d.value < 0 ? totalScale(d.value) : totalScale(0));
-                return (d < 0 ? totalScale(d) : totalScale(0));
+                // console.log(typeof(d.value));
+                // console.log(d.value);
+                // console.log(totalScale(d.value));
+                // console.log(typeof(totalScale(d.value)));
+                return (d.value < 0 ? totalScale(d.value) : totalScale(0));
             })
             .attr("y", function (d, i) {
                 return yScale(i);
             })
             .attr("width", function (d, i) {
-                return Math.abs(totalScale(0) - totalScale(d));
+                return Math.abs(totalScale(0) - totalScale(d.value));
             })
             .attr("height", barWidth)
             .style("fill", function (d) {
-                return d < 0 ? "red" : "blue";
+                return d.value < 0 ? "red" : "blue";
             });
 
-        // let text = g.selectAll("text")
-        //     .data(this.state.dataset)
-        //     .enter()
-        //     .append("text")
-        //     .attr("class", function(d) {
-
-        //     })
-        //     .attr("x", function(d, i) {
-        //         if (d.value < 0) 
-        //             return totalScale(d.value) - 30;
-        //         else 
-        //             return totalScale(0) + Math.abs(totalScale(0) - totalScale(d.value)) + 10;
-        //     })
-        //     .attr("y", function(d, i) {
-        //         return yScale(i) + 5;
-        //     })
-        //     .attr("text", function(d, i) {
-        //         return d.key;
-        //     });
+        let text = g.selectAll("text")
+            .data(this.state.dataset)
+            .enter()
+            .append("text")
+            .attr("x", function(d, i) {
+                return (d.value < 0 ? totalScale(d.value) : totalScale(0));
+            })
+            .attr("y", function (d, i) {
+                return yScale(i);
+            })
+            .attr("fill", "black")
+            .text(function(d) {
+                return d.key;
+            });
     }
 
     componentDidUpdate() {
