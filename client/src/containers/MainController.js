@@ -270,6 +270,10 @@ class MainController extends Component {
         });
     }
 
+    onCompareCallback(options) {
+        console.log(options);
+    }
+
     removeDataPointFromScatterCallback(dataPoints, position) {
         switch (position) {
             case "xMin":
@@ -377,7 +381,8 @@ class MainController extends Component {
                                               currentVersion={this.state.currentVersion}
                                               onXChange={this.onXAttributeChangedCallback.bind(this)}
                                               onYChange={this.onYAttributeChangedCallback.bind(this)}
-                                              onRefresh={this.onRefreshCallback.bind(this)}/> : null}
+                                              onRefresh={this.onRefreshCallback.bind(this)}
+                                              onCompareChange={this.onCompareCallback.bind(this)}/> : null}
                             </div>
                         </div>
                     </div>

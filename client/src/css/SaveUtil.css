@@ -23,6 +23,10 @@
     margin: 5px 0 0 15px !important;
 }
 
+.compare {
+    margin: 5px 0 0 15px !important;
+}
+
 .bottom-column {
     position: absolute;
     bottom: 0;
@@ -37,6 +41,7 @@
 .modal-container {
     position: relative;
 }
+
 .modal-container .modal, .modal-container .modal-backdrop {
     position: absolute;
 }

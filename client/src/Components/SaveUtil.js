@@ -1,11 +1,9 @@
 import React from 'react';
 import firebase from '../hoc/firebase';
-import PanelGroup from 'react-panelgroup';
-import {Button, DropdownButton, MenuItem, Label, Grid, Row, Col} from 'react-bootstrap';
+import {Button, DropdownButton, MenuItem} from 'react-bootstrap';
 import '../css/SaveUtil.css';
+import Select from 'react-select';
 import Trigger from '../containers/Trigger';
-
-var Multiselect = require('react-bootstrap-multiselect');
 
 class SaveUtil extends React.Component {
     constructor(props) {
@@ -22,11 +20,14 @@ class SaveUtil extends React.Component {
             xMax: props.xMax,
             yMax: props.yMax,
             currentVersion: props.currentVersion,
-            versions: props.versions
+            versions: props.versions,
+            multiValue: [],
+            filterOptions: []
         };
         this.handleXChange = this.handleXChange.bind(this);
         this.handleYChange = this.handleYChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleMultiChange = this.handleMultiChange.bind(this);
     }
 
     parseColumns(data) {
@@ -49,6 +50,17 @@ class SaveUtil extends React.Component {
             yAttribute: e
         });
         this.props.onYChange(e);
+    }
+
+    handleMultiChange(option) {
+        this.setState({
+            multiValue: option
+        });
+        if (option.length > 1) {
+            this.props.onCompareChange(option.map(attr => {
+                return attr.label;
+            }));
+        }
     }
 
     onSaveCallback(name) {
@@ -82,28 +94,6 @@ class SaveUtil extends React.Component {
 
         itemsRef.push(item);
     }
-
-    // componentDidMount() {
-    //     const itemsRef = firebase.database().ref('items');
-    //     itemsRef.on('value', (snapshot) => {
-    //         let items = snapshot.val();
-    //         let newState = [];
-    //         for (let item in items) {
-    //             if (items.hasOwnProperty(item)) {
-    //                 newState.push({
-    //                     id: item,
-    //                     xAttribute: items[item].xAttribute,
-    //                     yAttribute: items[item].yAttribute,
-    //                     xMin: items[item].xMin,
-    //                     yMin: items[item].yMin,
-    //                     xMax: items[item].xMax,
-    //                     yMax: items[item].yMax,
-    //                 });
-    //             }
-    //         }
-    //
-    //     });
-    // }
 
     componentWillReceiveProps(props) {
         if (props.currentVersion !== this.state.currentVersion) {
@@ -167,6 +157,9 @@ class SaveUtil extends React.Component {
         let availableNames = this.state.versions.map((attr) => {
             return attr.name
         });
+        let filterOptions = this.state.versions.map((attr, index) => {
+            return {value: index, label: attr.name}
+        });
         return (
             <div className='filter-container'>
                 <form className={'filter-form'} onSubmit={this.handleSubmit}>
@@ -177,24 +170,13 @@ class SaveUtil extends React.Component {
                         <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'xsmall'}
                                         title={this.state.yAttribute}
                                         id={'yAttribute'}>{yAttributes}</DropdownButton>
+                        {filterOptions.length > 0 ?
+                            <Select className={'compare'} placeholder="Select at least 2 versions to compare"
+                                    value={this.state.multiValue} options={filterOptions}
+                                    onChange={this.handleMultiChange} isMulti/> : null}
+
                     </div>
 
-                    {/*<PanelGroup panelWidths={[*/}
-                    {/*{size: 120, resize: 'fixed'},*/}
-                    {/*{minSize: 180, resize: 'fixed'}*/}
-                    {/*]}>*/}
-                    {/*<div className={'row'}>*/}
-                    {/*<h4><label style={{margin: '3px 0 0 20px'}}>X Attribute:</label></h4>*/}
-                    {/*<h4><label style={{margin: '10px 0 0 20px'}}>Y Attribute:</label></h4>*/}
-                    {/*</div>*/}
-                    {/*<div className={'row'}>*/}
-                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary' title={this.state.xAttribute}*/}
-                    {/*id={'xAttribute'}>{xAttributes}</DropdownButton>*/}
-                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary'*/}
-                    {/*title={this.state.yAttribute}*/}
-                    {/*id={'yAttribute'}>{yAttributes}</DropdownButton>*/}
-                    {/*</div>*/}
-                    {/*</PanelGroup>*/}
                     <br/>
 
                     <div className={'row bottom-column'}>
@@ -204,9 +186,7 @@ class SaveUtil extends React.Component {
                                 Save
                             </Button>
                             <Trigger show={this.state.smShow} onHide={smClose} names={availableNames}/>
-                            {/*<Button bsStyle="success" style={{margin: '0 15px 0 0'}} type="submit">Save</Button>*/}
                             <Button bsStyle="warning" onClick={this.onStartFresh.bind(this)}>Start Fresh</Button>
-                            {/*<Multiselect data={this.state.versions} multiple/>*/}
                         </div>
 
                     </div>
