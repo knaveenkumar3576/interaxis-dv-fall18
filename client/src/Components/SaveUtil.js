@@ -126,6 +126,12 @@ class SaveUtil extends React.Component {
                 yAttribute: y
             });
         }
+        if (props.xAttribute !== this.state.xAttribute || props.yAttribute !== this.state.yAttribute) {
+            this.setState({
+                xAttribute: props.xAttribute,
+                yAttribute: props.yAttribute
+            });
+        }
         if (props.xMin.join('') !== this.state.xMin.join('') || props.xMax.join('') !== this.state.xMax.join('') ||
             props.yMin.join('') !== this.state.yMin.join('') || props.yMax.join('') !== this.state.yMax.join('')) {
             this.setState({
@@ -145,12 +151,14 @@ class SaveUtil extends React.Component {
     }
 
     onStartFresh(e) {
-
+        this.props.onRefresh();
     }
 
     render() {
         let smClose = (name) => this.setState({smShow: false}, () => {
-            this.onSaveCallback(name);
+            if (name !== undefined) {
+                this.onSaveCallback(name);
+            }
         });
         let xAttributes = this.state.xAttributes.map((attr, index) => <MenuItem
             key={index} eventKey={attr.name} onSelect={this.handleXChange}>{attr.name}</MenuItem>);

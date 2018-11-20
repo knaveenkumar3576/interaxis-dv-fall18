@@ -107,7 +107,7 @@ class MainController extends Component {
                 });
                 d["customX"] = x;
             });
-            
+
             newColumns.push('customX');
             labels.x = "customX";
         }
@@ -250,17 +250,23 @@ class MainController extends Component {
         });
     }
 
-    // onSaveCallback() {
-    //     let reload = this.state.reloadHeader;
-    //     this.setState({
-    //         reloadHeader: !reload
-    //     })
-    // }
-
     onYAttributeChangedCallback(y) {
         let x = this.state.selectedLabels.x;
         this.setState({
             selectedLabels: {x: x, y: y}
+        });
+    }
+
+    onRefreshCallback() {
+        this.setState({
+            selectedLabels: {
+                x: DEFAULT_FILTERS[this.state.dataset][0],
+                y: DEFAULT_FILTERS[this.state.dataset][1]
+            },
+            dataPointsxMin: [],
+            dataPointsxMax: [],
+            dataPointsyMin: [],
+            dataPointsyMax: []
         });
     }
 
@@ -339,7 +345,7 @@ class MainController extends Component {
                                           dataset={this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                           removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
-                                          /* currNodes = {[]} *//>
+                                    /* currNodes = {[]} *//>
                             </div>
                         </div>
                         <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
@@ -356,7 +362,7 @@ class MainController extends Component {
                                           dataset={this.state.dataset}
                                           addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                           removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
-                                          /* currNodes = {[]} *//>
+                                    /* currNodes = {[]} *//>
                             </div>
                         </div>
                         <div style={{height: '25%', position: 'relative'}}>
@@ -370,7 +376,8 @@ class MainController extends Component {
                                               yMin={this.state.dataPointsyMin} yMax={this.state.dataPointsyMax}
                                               currentVersion={this.state.currentVersion}
                                               onXChange={this.onXAttributeChangedCallback.bind(this)}
-                                              onYChange={this.onYAttributeChangedCallback.bind(this)}/> : null}
+                                              onYChange={this.onYAttributeChangedCallback.bind(this)}
+                                              onRefresh={this.onRefreshCallback.bind(this)}/> : null}
                             </div>
                         </div>
                     </div>
@@ -388,12 +395,12 @@ class MainController extends Component {
                             <BottomPanel
                                 width={this.state.xAxisWidth}
                                 height={this.state.xAxisHeight}
-                                dataset = {this.state.dataset}
-                                removeDataPointFromScatterCallback = {this.removeDataPointFromScatterCallback.bind(this)}
-                                addDataPointToScatterCallback = {this.addDataPointToScatterCallback.bind(this)}
+                                dataset={this.state.dataset}
+                                removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
                                 /* xMinNodes = {[]} */
                                 /* xMaxNods = {[]} */
-                                />
+                            />
                         </div>
                     </div>
                     <div style={{'overflowY': 'scroll'}} key="c">
