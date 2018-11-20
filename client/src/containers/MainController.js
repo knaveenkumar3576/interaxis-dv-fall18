@@ -48,6 +48,7 @@ class MainController extends Component {
             yMinDropZoneWidth: 0,
             scatterPlotWidth: 0,
             scatterPlotHeight: 0,
+            savedInfo: [],
             // update the features selected from the drop down here
             dataPoints: [],
             originalDataPoints: [],
@@ -222,25 +223,32 @@ class MainController extends Component {
         })
     }
 
-    onVersionChangedCallback(versions, currentVersion, info) {
-        if (versions.length > 0) {
-            this.setState({
-                dataset: info.dataset,
-                columns: KEYS_TO_BE_USED[info.dataset],
-                versions: versions,
-                currentVersion: currentVersion,
-                selectedLabels: {
-                    x: info.xAttribute,
-                    y: info.yAttribute
-                },
-                dataPointsxMin: info.xMin || [],
-                dataPointsxMax: info.xMax || [],
-                dataPointsyMin: info.yMin || [],
-                dataPointsyMax: info.yMax || []
-            }, () => {
-                this.changeData();
-            });
-        }
+    onVersionChangedCallback(versions, currentVersion, infos) {
+        this.setState({
+            savedInfo: infos
+        }, () => {
+            let info = infos.filter((attr) => {
+                return attr.version === currentVersion;
+            })[0];
+            if (versions.length > 0) {
+                this.setState({
+                    dataset: info.dataset,
+                    columns: KEYS_TO_BE_USED[info.dataset],
+                    versions: versions,
+                    currentVersion: currentVersion,
+                    selectedLabels: {
+                        x: info.xAttribute,
+                        y: info.yAttribute
+                    },
+                    dataPointsxMin: info.xMin || [],
+                    dataPointsxMax: info.xMax || [],
+                    dataPointsyMin: info.yMin || [],
+                    dataPointsyMax: info.yMax || []
+                }, () => {
+                    this.changeData();
+                });
+            }
+        });
     }
 
     onXAttributeChangedCallback(x) {
@@ -271,7 +279,14 @@ class MainController extends Component {
     }
 
     onCompareCallback(options) {
-        console.log(options);
+        let compareData = [], that = this;
+
+        options.forEach(function (option) {
+            compareData.push(that.state.savedInfo.filter(attr => {
+                return attr.version === option
+            }));
+        });
+        console.log(compareData);
     }
 
     removeDataPointFromScatterCallback(dataPoints, position) {

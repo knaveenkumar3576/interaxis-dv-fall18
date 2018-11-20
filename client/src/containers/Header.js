@@ -18,7 +18,6 @@ class Header extends React.Component {
             version: '',
             versions: [],
             savedInfo: []
-            // reload: props.reload
         };
 
         this.handleDataSetChange = this.handleDataSetChange.bind(this);
@@ -46,25 +45,13 @@ class Header extends React.Component {
                     }
                 }
                 that.setState({data: info[0].dataset, versions: versions, version: recentVersion, savedInfo: info});
-                that.props.onVersionChanged(versions, recentVersion, info.filter((attr) => {
-                    return attr.version === recentVersion
-                })[0]);
+                that.props.onVersionChanged(versions, recentVersion, info);
             } else {
                 that.setState({version: '1.0'});
                 that.props.onVersionChanged([], '1.0', []);
             }
         });
     }
-
-    // componentWillReceiveProps(props) {
-    //     if (props.reload !== this.state.reload) {
-    //         this.setState({
-    //             reload: props.reload
-    //         }, () => {
-    //             this.loadVersionInfo();
-    //         });
-    //     }
-    // }
 
     handleDataSetChange(e) {
         this.setState({
@@ -77,9 +64,7 @@ class Header extends React.Component {
         this.setState({
             version: e
         });
-        this.props.onVersionChanged(this.state.versions, e, this.state.savedInfo.filter((attr) => {
-            return attr.version === e
-        })[0]);
+        this.props.onVersionChanged(this.state.versions, e, this.state.savedInfo);
     }
 
     render() {
