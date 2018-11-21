@@ -2,7 +2,6 @@ import React from 'react';
 import firebase from '../hoc/firebase';
 import {Button, DropdownButton, MenuItem} from 'react-bootstrap';
 import '../css/SaveUtil.css';
-import Select from 'react-select';
 import Trigger from '../containers/Trigger';
 
 class SaveUtil extends React.Component {
@@ -20,14 +19,11 @@ class SaveUtil extends React.Component {
             xMax: props.xMax,
             yMax: props.yMax,
             currentVersion: props.currentVersion,
-            versions: props.versions,
-            multiValue: [],
-            filterOptions: []
+            versions: props.versions
         };
         this.handleXChange = this.handleXChange.bind(this);
         this.handleYChange = this.handleYChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleMultiChange = this.handleMultiChange.bind(this);
     }
 
     parseColumns(data) {
@@ -50,17 +46,6 @@ class SaveUtil extends React.Component {
             yAttribute: e
         });
         this.props.onYChange(e);
-    }
-
-    handleMultiChange(option) {
-        this.setState({
-            multiValue: option
-        });
-        if (option.length > 1) {
-            this.props.onCompareChange(option.map(attr => {
-                return attr.label;
-            }));
-        }
     }
 
     onSaveCallback(name) {
@@ -157,23 +142,16 @@ class SaveUtil extends React.Component {
         let availableNames = this.state.versions.map((attr) => {
             return attr.name
         });
-        let filterOptions = this.state.versions.map((attr, index) => {
-            return {value: index, label: attr.name}
-        });
         return (
             <div className='filter-container'>
                 <form className={'filter-form'} onSubmit={this.handleSubmit}>
                     <div align="center" style={{margin: '10px 0 0 0'}}>
-                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'xsmall'}
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'small'}
                                         title={this.state.xAttribute}
                                         id={'xAttribute'}>{xAttributes}</DropdownButton>
-                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'xsmall'}
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'small'}
                                         title={this.state.yAttribute}
                                         id={'yAttribute'}>{yAttributes}</DropdownButton>
-                        {filterOptions.length > 0 ?
-                            <Select className={'compare'} placeholder="Select at least 2 versions to compare"
-                                    value={this.state.multiValue} options={filterOptions}
-                                    onChange={this.handleMultiChange} isMulti/> : null}
 
                     </div>
 

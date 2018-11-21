@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import * as Papa from 'papaparse';
 import GridLayout from 'react-grid-layout';
 import '../css/MainController.css'
-
+import {Tabs, Tab} from 'react-bootstrap'
 import Header from './Header';
 import ScatterPlot from '../Components/ScatterPlot';
 import BarChart from '../Components/BarChart';
@@ -11,6 +11,7 @@ import DataPointDetail from '../Components/DataPointDetail';
 import Wrap from '../hoc/Wrap';
 import SaveUtil from "../Components/SaveUtil";
 import BottomPanel from '../Components/BottomPannel';
+import Compare from './Compare';
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
@@ -352,81 +353,106 @@ class MainController extends Component {
                 <Header dataset={KEYS_TO_BE_USED} onDataSetChanged={this.onDataSetChangedCallback.bind(this)}
                         onVersionChanged={this.onVersionChangedCallback.bind(this)}
                         reload={this.state.reloadHeader}/>
-                <GridLayout className="layout grid-layout" layout={columnLayout} cols={12}
-                            rowHeight={window.innerHeight - 50}
-                            width={window.innerWidth}>
-                    <div key="a">
-                        <div style={{height: '10%'}}>
-                            <div ref={'yMaxDropZone'} className={'pull-right'}
-                                 style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
-                                          width={this.state.yMaxDropZoneWidth}
-                                          dataset={this.state.dataset}
-                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
-                                    /* currNodes = {[]} *//>
+                <Tabs id={'tabs'} defaultActiveKey={1}>
+                    <Tab key={1} eventKey={1} title="Main">
+                        <GridLayout className="layout grid-layout" layout={columnLayout} cols={12}
+                                    rowHeight={window.innerHeight - 100}
+                                    width={window.innerWidth}>
+                            <div key="a">
+                                <div style={{height: '10%'}}>
+                                    <div ref={'yMaxDropZone'} className={'pull-right'}
+                                         style={{height: '100%', width: '30%'}}>
+                                        <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
+                                                  width={this.state.yMaxDropZoneWidth}
+                                                  dataset={this.state.dataset}
+                                                  addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                                  removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
+                                            /* currNodes = {[]} *//>
+                                    </div>
+                                </div>
+                                <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
+                                    {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ?
+                                        <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
+                                                  barWidth={25}
+                                                  id={'leftBarChart'}/> : null}
+                                </div>
+                                <div style={{height: '10%'}}>
+                                    <div ref={'yMinDropZone'} className={'pull-right'}
+                                         style={{height: '100%', width: '30%'}}>
+                                        <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
+                                                  width={this.state.yMinDropZoneWidth}
+                                                  dataset={this.state.dataset}
+                                                  addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                                  removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
+                                            /* currNodes = {[]} *//>
+                                    </div>
+                                </div>
+                                <div style={{height: '25%', position: 'relative'}}>
+                                    <div className={'save-util-panel'}>
+                                        {this.state.dataset !== '' ?
+                                            <SaveUtil columns={this.state.columns} versions={this.state.versions}
+                                                      dataset={this.state.dataset}
+                                                      default={DEFAULT_FILTERS[this.state.dataset]}
+                                                      xAttribute={this.state.selectedLabels.x}
+                                                      yAttribute={this.state.selectedLabels.y}
+                                                      xMin={this.state.dataPointsxMin} xMax={this.state.dataPointsxMax}
+                                                      yMin={this.state.dataPointsyMin} yMax={this.state.dataPointsyMax}
+                                                      currentVersion={this.state.currentVersion}
+                                                      onXChange={this.onXAttributeChangedCallback.bind(this)}
+                                                      onYChange={this.onYAttributeChangedCallback.bind(this)}
+                                                      onRefresh={this.onRefreshCallback.bind(this)}/> : null}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
-                            {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ?
-                                <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
-                                          barWidth={25}
-                                          id={'leftBarChart'}/> : null}
-                        </div>
-                        <div style={{height: '10%'}}>
-                            <div ref={'yMinDropZone'} className={'pull-right'}
-                                 style={{height: '100%', width: '30%'}}>
-                                <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
-                                          width={this.state.yMinDropZoneWidth}
-                                          dataset={this.state.dataset}
-                                          addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                          removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
-                                    /* currNodes = {[]} *//>
+                            <div key="b">
+                                <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
+                                    {this.state.dataset !== '' ?
+                                        <ScatterPlot id={'scatterPlotId'}
+                                                     dataPoints={this.state.dataPoints}
+                                                     labels={this.state.selectedLabels}
+                                                     width={this.state.scatterPlotWidth}
+                                                     height={this.state.scatterPlotHeight}
+                                                     detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                        /> : null
+                                    }
+                                </div>
+                                <div ref={'middleBottom'} style={{height: '25%'}}>
+                                    <BottomPanel
+                                        width={this.state.xAxisWidth}
+                                        height={this.state.xAxisHeight}
+                                        dataset={this.state.dataset}
+                                        removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
+                                        addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
+                                        /* xMinNodes = {[]} */
+                                        /* xMaxNods = {[]} */
+                                    />
+                                </div>
                             </div>
-                        </div>
-                        <div style={{height: '25%', position: 'relative'}}>
-                            <div className={'save-util-panel'}>
-                                {this.state.dataset !== '' ?
-                                    <SaveUtil columns={this.state.columns} versions={this.state.versions}
-                                              dataset={this.state.dataset} default={DEFAULT_FILTERS[this.state.dataset]}
-                                              xAttribute={this.state.selectedLabels.x}
-                                              yAttribute={this.state.selectedLabels.y}
-                                              xMin={this.state.dataPointsxMin} xMax={this.state.dataPointsxMax}
-                                              yMin={this.state.dataPointsyMin} yMax={this.state.dataPointsyMax}
-                                              currentVersion={this.state.currentVersion}
-                                              onXChange={this.onXAttributeChangedCallback.bind(this)}
-                                              onYChange={this.onYAttributeChangedCallback.bind(this)}
-                                              onRefresh={this.onRefreshCallback.bind(this)}
-                                              onCompareChange={this.onCompareCallback.bind(this)}/> : null}
+                            <div style={{'overflowY': 'scroll'}} key="c">
+                                <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                             </div>
+                        </GridLayout>
+                    </Tab>
+                    <Tab key={2} eventKey={2} title="Compare">
+                        <div>
+                            {this.state.versions.length > 0 ?
+                                <Compare versions={this.state.versions}
+                                         onCompareChange={this.onCompareCallback.bind(this)}/> : null}
                         </div>
-                    </div>
-                    <div key="b">
-                        <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
+                        <div>
                             {this.state.dataset !== '' ?
                                 <ScatterPlot id={'scatterPlotId'}
-                                             dataPoints={this.state.dataPoints} labels={this.state.selectedLabels}
-                                             width={this.state.scatterPlotWidth} height={this.state.scatterPlotHeight}
+                                             dataPoints={this.state.dataPoints}
+                                             labels={this.state.selectedLabels}
+                                             width={this.state.scatterPlotWidth}
+                                             height={this.state.scatterPlotHeight}
                                              detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                                 /> : null
                             }
                         </div>
-                        <div ref={'middleBottom'} style={{height: '25%'}}>
-                            <BottomPanel
-                                width={this.state.xAxisWidth}
-                                height={this.state.xAxisHeight}
-                                dataset={this.state.dataset}
-                                removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
-                                addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
-                                /* xMinNodes = {[]} */
-                                /* xMaxNods = {[]} */
-                            />
-                        </div>
-                    </div>
-                    <div style={{'overflowY': 'scroll'}} key="c">
-                        <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
-                    </div>
-                </GridLayout>
+                    </Tab>
+                </Tabs>
+
             </Wrap>
         );
     }
