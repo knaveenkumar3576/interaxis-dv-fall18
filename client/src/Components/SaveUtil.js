@@ -1,11 +1,8 @@
 import React from 'react';
 import firebase from '../hoc/firebase';
-import PanelGroup from 'react-panelgroup';
-import {Button, DropdownButton, MenuItem, Label, Grid, Row, Col} from 'react-bootstrap';
+import {Button, DropdownButton, MenuItem} from 'react-bootstrap';
 import '../css/SaveUtil.css';
 import Trigger from '../containers/Trigger';
-
-var Multiselect = require('react-bootstrap-multiselect');
 
 class SaveUtil extends React.Component {
     constructor(props) {
@@ -83,28 +80,6 @@ class SaveUtil extends React.Component {
         itemsRef.push(item);
     }
 
-    // componentDidMount() {
-    //     const itemsRef = firebase.database().ref('items');
-    //     itemsRef.on('value', (snapshot) => {
-    //         let items = snapshot.val();
-    //         let newState = [];
-    //         for (let item in items) {
-    //             if (items.hasOwnProperty(item)) {
-    //                 newState.push({
-    //                     id: item,
-    //                     xAttribute: items[item].xAttribute,
-    //                     yAttribute: items[item].yAttribute,
-    //                     xMin: items[item].xMin,
-    //                     yMin: items[item].yMin,
-    //                     xMax: items[item].xMax,
-    //                     yMax: items[item].yMax,
-    //                 });
-    //             }
-    //         }
-    //
-    //     });
-    // }
-
     componentWillReceiveProps(props) {
         if (props.currentVersion !== this.state.currentVersion) {
             this.setState({
@@ -126,6 +101,12 @@ class SaveUtil extends React.Component {
                 yAttribute: y
             });
         }
+        if (props.xAttribute !== this.state.xAttribute || props.yAttribute !== this.state.yAttribute) {
+            this.setState({
+                xAttribute: props.xAttribute,
+                yAttribute: props.yAttribute
+            });
+        }
         if (props.xMin.join('') !== this.state.xMin.join('') || props.xMax.join('') !== this.state.xMax.join('') ||
             props.yMin.join('') !== this.state.yMin.join('') || props.yMax.join('') !== this.state.yMax.join('')) {
             this.setState({
@@ -145,12 +126,14 @@ class SaveUtil extends React.Component {
     }
 
     onStartFresh(e) {
-
+        this.props.onRefresh();
     }
 
     render() {
         let smClose = (name) => this.setState({smShow: false}, () => {
-            this.onSaveCallback(name);
+            if (name !== undefined) {
+                this.onSaveCallback(name);
+            }
         });
         let xAttributes = this.state.xAttributes.map((attr, index) => <MenuItem
             key={index} eventKey={attr.name} onSelect={this.handleXChange}>{attr.name}</MenuItem>);
@@ -163,30 +146,15 @@ class SaveUtil extends React.Component {
             <div className='filter-container'>
                 <form className={'filter-form'} onSubmit={this.handleSubmit}>
                     <div align="center" style={{margin: '10px 0 0 0'}}>
-                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'xsmall'}
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'small'}
                                         title={this.state.xAttribute}
                                         id={'xAttribute'}>{xAttributes}</DropdownButton>
-                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'xsmall'}
+                        <DropdownButton className={'drop-down-btn'} bsStyle='primary' bsSize={'small'}
                                         title={this.state.yAttribute}
                                         id={'yAttribute'}>{yAttributes}</DropdownButton>
+
                     </div>
 
-                    {/*<PanelGroup panelWidths={[*/}
-                    {/*{size: 120, resize: 'fixed'},*/}
-                    {/*{minSize: 180, resize: 'fixed'}*/}
-                    {/*]}>*/}
-                    {/*<div className={'row'}>*/}
-                    {/*<h4><label style={{margin: '3px 0 0 20px'}}>X Attribute:</label></h4>*/}
-                    {/*<h4><label style={{margin: '10px 0 0 20px'}}>Y Attribute:</label></h4>*/}
-                    {/*</div>*/}
-                    {/*<div className={'row'}>*/}
-                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary' title={this.state.xAttribute}*/}
-                    {/*id={'xAttribute'}>{xAttributes}</DropdownButton>*/}
-                    {/*<DropdownButton className={'drop-down-btn'} bsStyle='primary'*/}
-                    {/*title={this.state.yAttribute}*/}
-                    {/*id={'yAttribute'}>{yAttributes}</DropdownButton>*/}
-                    {/*</div>*/}
-                    {/*</PanelGroup>*/}
                     <br/>
 
                     <div className={'row bottom-column'}>
@@ -196,9 +164,7 @@ class SaveUtil extends React.Component {
                                 Save
                             </Button>
                             <Trigger show={this.state.smShow} onHide={smClose} names={availableNames}/>
-                            {/*<Button bsStyle="success" style={{margin: '0 15px 0 0'}} type="submit">Save</Button>*/}
                             <Button bsStyle="warning" onClick={this.onStartFresh.bind(this)}>Start Fresh</Button>
-                            {/*<Multiselect data={this.state.versions} multiple/>*/}
                         </div>
 
                     </div>
