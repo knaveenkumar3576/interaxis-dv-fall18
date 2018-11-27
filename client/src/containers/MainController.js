@@ -290,6 +290,12 @@ class MainController extends Component {
         console.log(compareData);
     }
 
+    onSearchScatter(event) {
+        if (event.keyCode === 13) {
+            console.log(document.getElementById('search-scatter').value);
+        }
+    }
+
     removeDataPointFromScatterCallback(dataPoints, position) {
         switch (position) {
             case "xMin":
@@ -405,6 +411,19 @@ class MainController extends Component {
                                 </div>
                             </div>
                             <div key="b">
+                                <div align="center" style={{width: '75%', margin: 'auto'}}>
+                                    <div id="custom-search-input" className="input-group col-md-6">
+                                        <input id="search-scatter" type="text"
+                                               onKeyDown={this.onSearchScatter.bind(this)}
+                                               className="search-query form-control"
+                                               placeholder="Search"/>
+                                        <span className="input-group-btn">
+                                        <button className="btn btn-danger" type="button">
+                                            <span className=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                                    </div>
+                                </div>
                                 <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
                                     {this.state.dataset !== '' ?
                                         <ScatterPlot id={'scatterPlotId'}
