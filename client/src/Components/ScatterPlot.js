@@ -24,7 +24,7 @@ class ScatterPlot extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.props.dataPoints !== prevProps.dataPoints || this.props.labels !== prevProps.labels) {
+        if (this.props.searchString=='' && (this.props.dataPoints !== prevProps.dataPoints || this.props.labels !== prevProps.labels)) {
             this.updateD3();
         }
     }

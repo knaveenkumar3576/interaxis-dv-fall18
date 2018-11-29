@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import * as Papa from 'papaparse';
 import GridLayout from 'react-grid-layout';
-import '../css/MainController.css'
+import * as d3 from 'd3';
 import {Tabs, Tab} from 'react-bootstrap'
+
 import Header from './Header';
 import ScatterPlot from '../Components/ScatterPlot';
 import BarChart from '../Components/BarChart';
@@ -12,6 +13,9 @@ import Wrap from '../hoc/Wrap';
 import SaveUtil from "../Components/SaveUtil";
 import BottomPanel from '../Components/BottomPannel';
 import Compare from './Compare';
+
+
+import '../css/MainController.css'
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
@@ -25,7 +29,13 @@ const DEFAULT_FILTERS = {
     census: ['Men', 'Women'],
     car: ['Retail Price', 'HP'],
     football: ['Age', 'Overall'],
+};
 
+const SEARCH_PARAMS = {
+    sample: 'x',
+    census: 'County',
+    car: 'Vehicle Name',
+    football: 'Name',
 };
 
 class MainController extends Component {
@@ -64,6 +74,7 @@ class MainController extends Component {
                 y: ''
             },
             currDataPoint: null,
+            searchString: '',
             reloadHeader: false
         };
     }
@@ -73,6 +84,9 @@ class MainController extends Component {
     }
 
     calculateCustomValues = () => {
+
+        console.log("Inside calculateCustomValues");
+
         let noOfDataPointsXMin = this.state.dataPointsxMin.length;
         let noOfDataPointsXMax = this.state.dataPointsxMax.length;
 
@@ -110,12 +124,11 @@ class MainController extends Component {
                 d["customX"] = x;
             });
 
-            newColumns.push('customX');
             labels.x = "customX";
         }
 
         if (noOfDataPointsYMin > 0 && noOfDataPointsYMax > 0) {
-            KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+                KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                 let minWeights = 0;
 
                 this.state.dataPointsyMin.forEach(d => {
@@ -139,7 +152,6 @@ class MainController extends Component {
                 d["customY"] = y;
             });
 
-            newColumns.push('customY');
             labels.y = "customY";
         }
 
@@ -171,7 +183,6 @@ class MainController extends Component {
             yMinDropZoneWidth: this.refs.yMinDropZone.clientWidth,
             scatterPlotWidth: this.refs.scatterPlot.clientWidth,
             scatterPlotHeight: this.refs.scatterPlot.clientHeight,
-
         });
         this.onDataSetChangedCallback("sample");
     }
@@ -284,20 +295,36 @@ class MainController extends Component {
         });
     }
 
-    onCompareCallback(options) {
-        let compareData = [], that = this;
-
-        options.forEach(function (option) {
-            compareData.push(that.state.savedInfo.filter(attr => {
-                return attr.version === option
-            }));
-        });
-        console.log(compareData);
-    }
-
-    onSearchScatter(event) {
+    onSearchScatter = (event) => {
         if (event.keyCode === 13) {
-            console.log(document.getElementById('search-scatter').value);
+
+            console.log("Try onSearchScatter");
+            
+            let itemName = (document.getElementById('search-scatter').value);
+                        
+            var svg = d3.select('#scatterPlotId').select('svg');
+
+            let selectedDataset = this.state.dataset;
+
+            if(itemName != '') {
+
+                svg.selectAll(".dot").style("opacity","0");
+
+                svg.selectAll(".dot")
+                .filter(function(d) { 
+                    var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
+                    var searchPattern = itemName.toLowerCase();
+                    if(searchString.indexOf(searchPattern)!=-1)
+                        return true; 
+                })
+                .style("opacity","1")
+                .style("fill","green");
+
+            }
+            else {
+                svg.selectAll(".dot").style("opacity","1");
+            }
+    
         }
     }
 
@@ -434,11 +461,12 @@ class MainController extends Component {
                                 <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
                                     {this.state.dataset !== '' ?
                                         <ScatterPlot id={'scatterPlotId'}
-                                                     dataPoints={this.state.dataPoints}
-                                                     labels={this.state.selectedLabels}
-                                                     width={this.state.scatterPlotWidth}
-                                                     height={this.state.scatterPlotHeight}
-                                                     detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                            dataPoints={this.state.dataPoints}
+                                            labels={this.state.selectedLabels}
+                                            width={this.state.scatterPlotWidth}
+                                            height={this.state.scatterPlotHeight}
+                                            searchString={this.state.searchString}
+                                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                                         /> : null
                                     }
                                 </div>
@@ -462,18 +490,10 @@ class MainController extends Component {
                     </Tab>
                     <Tab key={2} eventKey={2} title="Compare">
                         <div>
-                            {this.state.versions.length > 0 ?
-                                <Compare versions={this.state.versions}
-                                         onCompareChange={this.onCompareCallback.bind(this)}/> : null}
-                        </div>
-                        <div>
-                            {this.state.dataset !== '' ?
-                                <ScatterPlot id={'scatterPlotId'}
-                                             dataPoints={this.state.dataPoints}
-                                             labels={this.state.selectedLabels}
-                                             width={this.state.scatterPlotWidth}
-                                             height={this.state.scatterPlotHeight}
-                                             detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                            {this.state.versions.length > 0 && this.state.dataset !== '' ?
+                                <Compare 
+                                    savedInfo={this.state.savedInfo}
+                                    versions={this.state.versions}
                                 /> : null
                             }
                         </div>
