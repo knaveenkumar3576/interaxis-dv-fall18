@@ -16,34 +16,7 @@ class BarChart extends React.Component {
 
         this.state = {
             id: '#' + props.id,
-            // dataset: [0.5, 0.5, -0.35, 0.25],
-            dataset: [
-                {
-                    key: "hello",
-                    value: 0.5, 
-                }, {
-                    key: "world", 
-                    value: 0.5
-                }, {
-                    key: "Attribute 1",
-                    value: -0.35
-                }, {
-                    key: "barchart", 
-                    value: 0.35
-                }, {
-                    key: "foobars",
-                    value: -0.15
-                }, {
-                    key: "HP",
-                    value: 0.15
-                }, {
-                    key: "foo",
-                    value: -0.50
-                }, {
-                    key: "bar",
-                    value: 0.25
-                }
-            ],
+            dataset: [],
             height: props.height,
             width: props.width,
             barWidth: props.barWidth
@@ -51,27 +24,11 @@ class BarChart extends React.Component {
 
         select(props.id).selectAll("*").remove();
 
-        this.drawBars = this.drawBars.bind(this)
+        this.drawBars = this.drawBars.bind(this);
+
     }
 
     componentWillReceiveProps(props) {
-
-        // if (props.dataset) {
-        //     let dataObject = props.dataObject;
-        //     let dataset = []
-        //     Object.keys(dataObject).forEach((k) => {
-        //         let obj = {
-        //             key: k,
-        //             value: parseInt(dataObject[k])
-        //         }
-        //         dataset.push(obj);
-        //     });
-
-        //     this.setState({
-        //         dataset: dataset
-        //     });
-        // }
-
         if (props.height > 0 && props.width > 0) {
             this.setState({
                 height: props.height,
@@ -82,7 +39,32 @@ class BarChart extends React.Component {
             });
         }
 
-        
+    }
+
+    componentWillMount() {
+        console.log("Props");
+        console.log(this.props);
+        console.log("Accessing data object");
+        console.log(this.props.dataObject);
+        let dataObject = this.props.dataObject;
+        let dataset = []
+        console.log(typeof(dataObject));
+        Object.keys(dataObject).forEach((k) => {
+            let obj = {
+                key: k,
+                value: parseInt(dataObject[k])
+            }
+            console.log("Object barchart: ");
+            console.log(obj);
+            dataset.push(obj);
+        });
+
+        this.setState({
+            dataset: dataset
+        });
+
+        console.log("Dataset:");
+        console.log(this.state.dataset);
     }
 
     drawBars() {
@@ -184,5 +166,34 @@ class BarChart extends React.Component {
         )
     }
 }
+
+ /* dataset: [
+                {
+                    key: "hello",
+                    value: 0.5, 
+                }, {
+                    key: "world", 
+                    value: 0.5
+                }, {
+                    key: "Attribute 1",
+                    value: -0.35
+                }, {
+                    key: "barchart", 
+                    value: 0.35
+                }, {
+                    key: "foobars",
+                    value: -0.15
+                }, {
+                    key: "HP",
+                    value: 0.15
+                }, {
+                    key: "foo",
+                    value: -0.50
+                }, {
+                    key: "bar",
+                    value: 0.25
+                }
+            ],
+            */
 
 export default BarChart;

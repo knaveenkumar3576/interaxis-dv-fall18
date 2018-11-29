@@ -63,11 +63,20 @@ class ScatterPlot extends React.Component {
             width = this.state.width - margin.left - margin.right,
             height = this.state.height - margin.top - margin.bottom;
 
+        var zoom = d3.zoom()
+            .scaleExtent([1, 100])
+            .extent([
+                [0, 0],
+                [width, height]
+            ])
+            .on("zoom", zoomed);
+
         var svg = d3.select(this.state.id).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            // .call(zoom);
 
         var x = d3.scaleLinear()
             .range([0, width]);
@@ -86,7 +95,13 @@ class ScatterPlot extends React.Component {
             return d[labels.y];
         })).nice();
 
-        svg.append("g")
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip") 
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
+
+        var gX = svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(xAxis)
@@ -97,7 +112,7 @@ class ScatterPlot extends React.Component {
             .style("text-anchor", "end")
             .text(labels.x);
 
-        svg.append("g")
+        var gY = svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
@@ -109,9 +124,10 @@ class ScatterPlot extends React.Component {
             .text(labels.y)
 
         var dot_g = svg.append('g')
-            .attr('class', 'lassoable');
+            .attr('class', 'lassoable')
+            .attr("clip-path", "url(#clip)");
 
-        dot_g.selectAll(".dot")
+        var dots = dot_g.selectAll(".dot")
             .data(data)
             .enter().append("circle")
             .attr("id", function (d, i) {
@@ -139,6 +155,31 @@ class ScatterPlot extends React.Component {
                 console.log("Mouse out ...");
                 select(this).style('cursor', 'auto');
             });
+
+        svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+            .call(zoom);
+        
+        function zoomed() {
+            var new_x = d3.event.transform.rescaleX(x);
+            var new_y = d3.event.transform.rescaleY(y);
+            // update axes
+            gX.call(xAxis.scale(new_x));
+            gY.call(yAxis.scale(new_y));
+            dots.data(data)
+                .attr('cx', function (d) {
+                    return new_x(d[labels.x])
+                })
+                .attr('cy', function (d) {
+                    return new_y(d[labels.y])
+                });
+        }
+
+
     }
 
     updateD3() {
@@ -152,6 +193,12 @@ class ScatterPlot extends React.Component {
             height = this.state.height - margin.top - margin.bottom;
 
         var svg = d3.select(this.state.id).select('svg');
+
+        svg.append("defs").append("clipPath")
+            .attr("id", "clip")
+            .append("rect")
+            .attr("width", width)
+            .attr("height", height);
 
         var x = d3.scaleLinear()
             .range([0, width]);
@@ -173,22 +220,23 @@ class ScatterPlot extends React.Component {
         var t = d3.transition()
             .duration(500)
 
-        svg.select(".x")
+        var gX = svg.select(".x")
             .transition(t)
             .call(xAxis)
 
-        svg.select(".y")
+        var gY = svg.select(".y")
             .transition(t)
             .call(yAxis)
 
         var dot_g = svg.select('g')
             .attr('class', 'lassoable')
+            .attr("clip-path", "url(#clip)")
             .selectAll(".dot")
             .data(data);
 
         dot_g.exit().remove();
 
-        dot_g.enter()
+        var dots = dot_g.enter()
             .append("circle")
             .attr('r', 0)
             .attr("draggable", "true")
@@ -232,6 +280,30 @@ class ScatterPlot extends React.Component {
             })
             .attr("draggable", "true")
             .style("fill", "red");
+
+        // Zoom functionality
+        // var zoom = d3.zoom()
+        //     .scaleExtent([.5, 20])
+        //     .extent([
+        //         [0, 0],
+        //         [width, height]
+        //     ])
+        //     .on("zoom", zoomed);
+
+        function zoomed() {
+            var new_x = d3.event.transform.rescaleX(x);
+            var new_y = d3.event.transform.rescaleY(y);
+            // update axes
+            gX.call(xAxis.scale(new_x));
+            gY.call(yAxis.scale(new_y));
+            dots.data(data)
+                .attr('cx', function (d) {
+                    return new_x(d[labels.x])
+                })
+                .attr('cy', function (d) {
+                    return new_y(d[labels.y])
+                });
+        }
     }
 }
 

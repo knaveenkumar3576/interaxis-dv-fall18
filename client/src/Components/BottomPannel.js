@@ -54,9 +54,10 @@ class BottomPannel extends React.Component {
                               /* currNodes={this.props.xMinNodes} */ />
                 </div>
                 <div ref={'rightBar'} key="b" id={'rightBarChart'}>
-                    {this.state.rightBarHeight > 0 && this.state.rightBarWidth > 0 ?
-                        <BarChart height={this.state.rightBarHeight} width={this.state.rightBarWidth}
-                                  barWidth={10} id={'rightBarChart'}/> : null}
+                    <BarChart height={this.state.rightBarHeight} 
+                            width={this.state.rightBarWidth}
+                            barWidth={10} id={'rightBarChart'}
+                            dataObject = {this.props.dataObject} />
                 </div>
                 <div ref={'xMaxDropZone'} key="c">
                     <DropZone position={"xMax"}

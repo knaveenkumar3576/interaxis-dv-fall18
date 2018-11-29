@@ -13,10 +13,10 @@ class DropZone extends React.Component {
         this.state = {
             nodes: [],
             height: 0,
-            width: 0
+            width: 0  
         };
 
-        // Function bindings
+        // Function bindings   
         this.addDataPoint = this.addDataPoint.bind(this);
         this.removeDataPoint = this.removeDataPoint.bind(this);
     }

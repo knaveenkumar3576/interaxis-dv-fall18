@@ -148,6 +148,11 @@ class MainController extends Component {
             customYWeights: customY,
         });
 
+        console.log("Custom X Weights");
+        console.log(this.state.customXWeights);
+        console.log("Custom Y values");
+        console.log(this.state.customYWeights);
+
         this.setState({
             columns: newColumns,
             selectedLabels: labels
@@ -377,10 +382,12 @@ class MainController extends Component {
                                     </div>
                                 </div>
                                 <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
-                                    {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ?
+                                    {/* {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ? */}
                                         <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
                                                   barWidth={25}
-                                                  id={'leftBarChart'}/> : null}
+                                                  id={'leftBarChart'}
+                                                  dataObject = {this.state.customYWeights} /> 
+                                                  {/* : null} */}
                                 </div>
                                 <div style={{height: '10%'}}>
                                     <div ref={'yMinDropZone'} className={'pull-right'}
@@ -442,6 +449,7 @@ class MainController extends Component {
                                         dataset={this.state.dataset}
                                         removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                         addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
+                                        dataObject={this.state.customXWeights}
                                         /* xMinNodes = {[]} */
                                         /* xMaxNods = {[]} */
                                     />
