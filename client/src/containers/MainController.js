@@ -292,6 +292,8 @@ class MainController extends Component {
 
     onSearchScatter = (event) => {
         if (event.keyCode === 13) {
+
+            console.log("Try onSearchScatter");
             
             let itemName = (document.getElementById('search-scatter').value);
                         
@@ -305,8 +307,9 @@ class MainController extends Component {
 
                 svg.selectAll(".dot")
                 .filter(function(d) { 
-                    var nameVar = String(d[SEARCH_PARAMS[selectedDataset]]); 
-                    if(nameVar.indexOf(itemName)!=-1)
+                    var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
+                    var searchPattern = itemName.toLowerCase();
+                    if(searchString.indexOf(searchPattern)!=-1)
                         return true; 
                 })
                 .style("opacity","1")
