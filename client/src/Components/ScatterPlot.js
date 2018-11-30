@@ -109,6 +109,26 @@ class ScatterPlot extends React.Component {
             return d[labels.y];
         })).nice();
 
+        svg.append("g")			
+            .attr("class", "grid")
+            .attr("transform", "translate(0," + height + ")")
+            .call(
+                d3.axisBottom(x)
+                .ticks(7)
+            .tickSize(-height)
+            .tickFormat("")
+            );   
+
+        // add the Y gridlines
+        svg.append("g")			
+            .attr("class", "grid")
+            .call(
+                d3.axisLeft(y)
+                .ticks(7)
+            .tickSize(-width)
+            .tickFormat("")
+            );
+
         var xAxis = d3.axisBottom(x);
 
         var yAxis = d3.axisLeft(y);
