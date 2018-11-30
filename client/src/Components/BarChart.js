@@ -65,16 +65,13 @@ class BarChart extends React.Component {
     }
 
     drawBars() {
-        let height = this.state.height;
         let width = this.state.width;
-        let barWidth = this.state.barWidth;
         let id = this.state.id;
 
-        // this.setState({height: height, width: width});
-
-        let marginLeft, marginRight, marginTop, marginBottom;
-        marginRight = marginLeft = width * 0.05;
-        marginTop = marginBottom = 20;
+        let marginRight = width * 0.05, 
+        marginLeft = width * 0.05,
+        marginTop = 15, marginBottom = 20,
+        height = this.state.height - marginTop;
 
         let minValue = min(this.state.dataset, function(d) {
             return d.value;
@@ -104,10 +101,11 @@ class BarChart extends React.Component {
             .attr("transform", function () {
                 return "translate(" + marginLeft + ", " + marginTop + ")";
             })
+            .style("font-size", 7)
             .call(xAxis);
 
         let g = svg.append("g")
-            .attr("transform", "translate(" + marginLeft + ", " + (marginTop + 5) + ")");
+            .attr("transform", "translate(" + marginLeft + ", " + marginTop + ")");
 
         let bars = g.selectAll("rect")
             .data(this.state.dataset)
@@ -118,11 +116,6 @@ class BarChart extends React.Component {
                 return d.value < 0 ? "negative" : "positive";
             })
             .attr("x", function (d, i) {
-                // console.log("x: " + d.value < 0 ? totalScale(d.value) : totalScale(0));
-                // console.log(typeof(d.value));
-                // console.log(d.value);
-                // console.log(totalScale(d.value));
-                // console.log(typeof(totalScale(d.value)));
                 return (d.value < 0 ? totalScale(d.value) : totalScale(0));
             })
             .attr("y", function (d, i) {
