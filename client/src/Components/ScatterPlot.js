@@ -75,18 +75,14 @@ class ScatterPlot extends React.Component {
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            // .call(zoom);
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .call(zoom);
 
         var x = d3.scaleLinear()
             .range([0, width]);
 
         var y = d3.scaleLinear()
             .range([height, 0]);
-
-        var xAxis = d3.axisBottom(x);
-
-        var yAxis = d3.axisLeft(y);
 
         x.domain(d3.extent(data, function (d) {
             return d[labels.x];
@@ -95,11 +91,23 @@ class ScatterPlot extends React.Component {
             return d[labels.y];
         })).nice();
 
+        var xAxis = d3.axisBottom(x);
+
+        var yAxis = d3.axisLeft(y);
+
         svg.append("defs").append("clipPath")
             .attr("id", "clip") 
             .append("rect")
             .attr("width", width)
             .attr("height", height);
+        
+        var event_rect = svg.append("rect")
+            .attr("width", width)
+            .attr("height", height)
+            .style("fill", "none")
+            .style("pointer-events", "all")
+            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+            .call(zoom);
 
         var gX = svg.append("g")
             .attr("class", "x axis")
@@ -126,7 +134,7 @@ class ScatterPlot extends React.Component {
         var dot_g = svg.append('g')
             .attr('class', 'lassoable')
             .attr("clip-path", "url(#clip)");
-
+        
         var dots = dot_g.selectAll(".dot")
             .data(data)
             .enter().append("circle")
@@ -146,23 +154,21 @@ class ScatterPlot extends React.Component {
             .on("dragstart", function (d, i) {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
+            .on("click", function(d, i) {
+                console.log("Clicked on dot");
+            })
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
+                // rect_ref.style("pointer-events", "none");
                 select(this).style('cursor', 'move');
                 that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
                 console.log("Mouse out ...");
+                // rect_ref.style("pointer-events", "all");
                 select(this).style('cursor', 'auto');
             });
 
-        svg.append("rect")
-            .attr("width", width)
-            .attr("height", height)
-            .style("fill", "none")
-            .style("pointer-events", "all")
-            .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
-            .call(zoom);
         
         function zoomed() {
             var new_x = d3.event.transform.rescaleX(x);

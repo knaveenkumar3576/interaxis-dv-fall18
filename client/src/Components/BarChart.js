@@ -39,16 +39,13 @@ class BarChart extends React.Component {
             });
         }
 
-    }
-
-    componentWillMount() {
         console.log("Props");
         console.log(this.props);
         console.log("Accessing data object");
         console.log(this.props.dataObject);
         let dataObject = this.props.dataObject;
         let dataset = []
-        console.log(typeof(dataObject));
+        console.log(typeof (dataObject));
         Object.keys(dataObject).forEach((k) => {
             let obj = {
                 key: k,
@@ -65,6 +62,7 @@ class BarChart extends React.Component {
 
         console.log("Dataset:");
         console.log(this.state.dataset);
+
     }
 
     drawBars() {
@@ -150,6 +148,7 @@ class BarChart extends React.Component {
                 return yScale(i);
             })
             .attr("fill", "black")
+            .style("font-size", 5)
             .text(function(d) {
                 return d.key;
             });
