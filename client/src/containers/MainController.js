@@ -278,16 +278,39 @@ class MainController extends Component {
 
     onXAttributeChangedCallback(x) {
         let y = this.state.selectedLabels.y;
-        this.setState({
-            selectedLabels: {x: x, y: y}
+
+        let customX ={};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            customX[key] = 0;
         });
+
+        customX[x] = 1.0;
+
+        this.setState({
+            selectedLabels: {x: x, y: y},
+            customXWeights : customX
+        });
+
     }
 
     onYAttributeChangedCallback(y) {
         let x = this.state.selectedLabels.x;
-        this.setState({
-            selectedLabels: {x: x, y: y}
+        
+        let customY = {};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            customY[key] = 0;
         });
+
+        customY[y] = 1.0;
+
+        this.setState({
+            selectedLabels: {x: x, y: y},
+            customYWeights : customY
+        });
+
+
     }
 
     onRefreshCallback() {
