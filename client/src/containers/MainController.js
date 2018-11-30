@@ -402,7 +402,7 @@ class MainController extends Component {
                                          style={{height: '100%', width: '30%'}}>
                                         <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
                                                   width={this.state.yMaxDropZoneWidth}
-                                                  dataset={this.state.dataset}
+                                                  dataset = {this.state.dataPointsyMax}
                                                   addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                                   removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
                                             /* currNodes = {[]} *//>
@@ -421,7 +421,7 @@ class MainController extends Component {
                                          style={{height: '100%', width: '30%'}}>
                                         <DropZone position={"yMin"} height={this.state.yMinDropZoneHeight}
                                                   width={this.state.yMinDropZoneWidth}
-                                                  dataset={this.state.dataset}
+                                                  dataset={this.state.dataPointsyMin}
                                                   addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                                   removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
                                             /* currNodes = {[]} *//>
@@ -478,6 +478,8 @@ class MainController extends Component {
                                         removeDataPointFromScatterCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                         addDataPointToScatterCallback={this.addDataPointToScatterCallback.bind(this)}
                                         dataObject={this.state.customXWeights}
+                                        dataPointsxMin={this.state.dataPointsxMin}
+                                        dataPointsxMax={this.state.dataPointsxMax}
                                         /* xMinNodes = {[]} */
                                         /* xMaxNods = {[]} */
                                     />

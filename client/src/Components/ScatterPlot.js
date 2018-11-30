@@ -39,10 +39,42 @@ class ScatterPlot extends React.Component {
                 this.renderD3();
             });
         }
+
+        // var margin = {
+        //         top: 30,
+        //         right: 30,
+        //         bottom: 50,
+        //         left: 50
+        // },
+        // width = this.state.width - margin.left - margin.right,
+        // height = this.state.height - margin.top - margin.bottom;
+
+        // var labels = props.labels;
+        // var data = props.dataPoints;
+
+        // var x = d3.scaleLinear()
+        //     .range([0, width]);
+        // var y = d3.scaleLinear()
+        //     .range([height, 0]);
+        // x.domain(d3.extent(data, function (d) {
+        //     return d[labels.x];
+        // })).nice();
+        // y.domain(d3.extent(data, function (d) {
+        //     return d[labels.y];
+        // })).nice();
+        // var xAxis = d3.axisBottom(x);
+        // var yAxis = d3.axisLeft(y);
+
+        // this.setState({
+        //     x: x,
+        //     y: y,
+        //     xAxis: xAxis,
+        //     yAxis: yAxis
+        // })
+
     }
 
     render() {
-
         let width = this.state.width, height = this.state.height;
 
         return (
@@ -80,7 +112,6 @@ class ScatterPlot extends React.Component {
 
         var x = d3.scaleLinear()
             .range([0, width]);
-
         var y = d3.scaleLinear()
             .range([height, 0]);
 
@@ -173,9 +204,10 @@ class ScatterPlot extends React.Component {
         function zoomed() {
             var new_x = d3.event.transform.rescaleX(x);
             var new_y = d3.event.transform.rescaleY(y);
-            // update axes
+
             gX.call(xAxis.scale(new_x));
             gY.call(yAxis.scale(new_y));
+
             dots.data(data)
                 .attr('cx', function (d) {
                     return new_x(d[labels.x])
@@ -299,7 +331,7 @@ class ScatterPlot extends React.Component {
         function zoomed() {
             var new_x = d3.event.transform.rescaleX(x);
             var new_y = d3.event.transform.rescaleY(y);
-            // update axes
+            // update axe
             gX.call(xAxis.scale(new_x));
             gY.call(yAxis.scale(new_y));
             dots.data(data)
