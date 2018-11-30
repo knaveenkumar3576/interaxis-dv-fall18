@@ -4,6 +4,7 @@ import * as Papa from 'papaparse';
 import DataPointDetail from '../Components/DataPointDetail';
 import MultiScatterPlot from '../Components/MultiScatterPlot';
 
+import {Grid, Col, Row} from 'react-bootstrap'
 
 const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
@@ -47,6 +48,31 @@ class Compare extends React.Component {
 
     scatterOnMouseOverCallback(i) {
         this.setState({currDataPoint: this.state.originalDataPoints1[i]});
+
+
+        // var svg = d3.select('#comparescatterPlotId').select('svg');
+
+        // svg.selectAll(".dot")
+        // .style("opacity","1")
+        // .style("fill", "red");
+
+        // let selectedDataset = this.state.dataset;
+
+        // if(itemName !== '') {
+
+        //     svg.selectAll(".dot")
+        //     .style("opacity","0")
+        //     .filter(function(d) { 
+        //         var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
+        //         var searchPattern = itemName.toLowerCase();
+        //         if(searchString.indexOf(searchPattern)!=-1)
+        //             return true; 
+        //     })
+        //     .style("opacity","1")
+        //     .style("fill","yellow");
+        // }
+ 
+
     }
 
     calculateCustomValues = (versioninfo, selectedIndex) => {
@@ -198,20 +224,28 @@ class Compare extends React.Component {
                             value={this.state.multiValue} options={filterOptions}
                             onChange={this.handleMultiChange} isMulti
                         />
-                        <div ref={'comaparescatterPlot'} id={'comparescatterPlotId'} style={{height: '70%'}}>
+                        <Grid>
+                            <Row className="show-grid">
+                                <Col xs={12} md={8}>
+                                    <div ref={'comaparescatterPlot'} id={'comparescatterPlotId'} style={{height: '70%'}}>
+                                        <MultiScatterPlot 
+                                            id={'comparescatterPlotId'}
+                                            dataPoints1={this.state.dataPoints1}
+                                            labels1={this.state.selectedLabels1}
+                                            dataPoints2={this.state.dataPoints2}
+                                            labels2={this.state.selectedLabels2}
+                                            width={this.state.scatterPlotWidth}
+                                            height={this.state.scatterPlotHeight}
+                                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                        />
+                                    </div>
+                                </Col>
+                                <Col xs={6} md={4}>
+                                    <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
+                                </Col>
+                            </Row>
+                        </Grid>
 
-                            <MultiScatterPlot 
-                                id={'comparescatterPlotId'}
-                                dataPoints1={this.state.dataPoints1}
-                                labels1={this.state.selectedLabels1}
-                                dataPoints2={this.state.dataPoints2}
-                                labels2={this.state.selectedLabels2}
-                                width={this.state.scatterPlotWidth}
-                                height={this.state.scatterPlotHeight}
-                                detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
-                            />
-                        </div>
-                        <DataPointDetail dataPointDetails={this.state.currDataPoint}/>
                     </div>
                     : null
                 }
