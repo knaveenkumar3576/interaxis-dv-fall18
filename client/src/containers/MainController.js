@@ -99,6 +99,14 @@ class MainController extends Component {
         let labels = Object.assign({}, this.state.selectedLabels);
         let newColumns = this.state.columns;
 
+        if(labels.x == "customX") {
+            labels.x =  DEFAULT_FILTERS[this.state.dataset][0];
+        }
+
+        if(labels.y == "customY") {
+            labels.y =  DEFAULT_FILTERS[this.state.dataset][1];
+        }
+
         if (noOfDataPointsXMin > 0 && noOfDataPointsXMax > 0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                 let minWeights = 0;
