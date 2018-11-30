@@ -351,7 +351,7 @@ class MainController extends Component {
                     return true; 
             })
             .style("opacity","1")
-            .style("fill","green");
+            .style("fill","yellow");
         }
     }
 
