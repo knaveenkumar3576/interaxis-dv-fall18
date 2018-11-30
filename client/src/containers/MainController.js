@@ -296,35 +296,31 @@ class MainController extends Component {
     }
 
     onSearchScatter = (event) => {
-        if (event.keyCode === 13) {
+        // if (event.keyCode === 13) {
 
-            console.log("Try onSearchScatter");
-            
-            let itemName = (document.getElementById('search-scatter').value);
-                        
-            var svg = d3.select('#scatterPlotId').select('svg');
+        
+        let itemName = (document.getElementById('search-scatter').value);
+                    
+        var svg = d3.select('#scatterPlotId').select('svg');
 
-            let selectedDataset = this.state.dataset;
+        svg.selectAll(".dot")
+        .style("opacity","1")
+        .style("fill", "red");
 
-            if(itemName != '') {
+        let selectedDataset = this.state.dataset;
 
-                svg.selectAll(".dot").style("opacity","0");
+        if(itemName !== '') {
 
-                svg.selectAll(".dot")
-                .filter(function(d) { 
-                    var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
-                    var searchPattern = itemName.toLowerCase();
-                    if(searchString.indexOf(searchPattern)!=-1)
-                        return true; 
-                })
-                .style("opacity","1")
-                .style("fill","green");
-
-            }
-            else {
-                svg.selectAll(".dot").style("opacity","1");
-            }
-    
+            svg.selectAll(".dot")
+            .style("opacity","0")
+            .filter(function(d) { 
+                var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
+                var searchPattern = itemName.toLowerCase();
+                if(searchString.indexOf(searchPattern)!=-1)
+                    return true; 
+            })
+            .style("opacity","1")
+            .style("fill","green");
         }
     }
 
@@ -452,7 +448,7 @@ class MainController extends Component {
                                                className="search-query form-control"
                                                placeholder="Search"/>
                                         <span className="input-group-btn">
-                                        <button className="btn btn-danger" type="button">
+                                        <button className="btn btn-danger" type="button" onclick={this.onSearchScatter.bind(this)}>
                                             <span className=" glyphicon glyphicon-search"></span>
                                         </button>
                                     </span>
