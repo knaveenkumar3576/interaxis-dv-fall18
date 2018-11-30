@@ -149,25 +149,29 @@ class ScatterPlot extends React.Component {
 
         var gX = svg.append("g")
             .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
+            .attr("transform", "translate(0," + (height) + ")")
             .call(xAxis)
             .append("text")
             .attr("class", "label")
             .attr("y", 25)
             .attr("x", width / 2)
             .style("text-anchor", "end")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
             .text(labels.x);
 
         var gY = svg.append("g")
             .attr("class", "y axis")
             .call(yAxis)
             .append("text")
-            .attr("class", "label")
-            .attr("y", height / 2)
-            .attr("transfsorm", "rotate(-90)")
-            .attr("dy", ".71em")
-            .style("text-anchor", "end")
-            .text(labels.y)
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - margin.left)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "1em")
+            .style("font-size", "12px")
+            .style("font-weight", "bold")
+            .style("text-anchor", "middle")
+            .text(labels.y);   
 
         var dot_g = svg.append('g')
             .attr('class', 'lassoable')
@@ -213,8 +217,8 @@ class ScatterPlot extends React.Component {
         const that = this.props;
         var data = this.props.dataPoints;
         var labels = this.props.labels;
-
-        var margin = {top: 30, right: 30, bottom: 100, left: 100},
+        
+        var margin = {top: 30, right: 30, bottom: 30, left: 30},
             width = this.state.width - margin.left - margin.right,
             height = this.state.height - margin.top - margin.bottom;
 
