@@ -101,7 +101,25 @@ class ScatterPlot extends React.Component {
                 [0, 0],
                 [width, height]
             ])
-            .on("zoom", zoomed);
+            .on("zoom", () => {
+                console.log("Zoom anonymous");
+                console.log(x);
+                console.log(y);
+                console.log(gX);
+                console.log(gY);
+                var new_x = d3.event.transform.rescaleX(x);
+                var new_y = d3.event.transform.rescaleY(y);
+                // update axes
+                gX.call(xAxis.scale(new_x));
+                gY.call(yAxis.scale(new_y));
+                dots.data(data)
+                    .attr('cx', function (d) {
+                        return new_x(d[labels.x])
+                    })
+                    .attr('cy', function (d) {
+                        return new_y(d[labels.y])
+                    }); 
+        });
 
         var svg = d3.select(this.state.id).append("svg")
             .attr("width", width + margin.left + margin.right)
@@ -121,6 +139,26 @@ class ScatterPlot extends React.Component {
         y.domain(d3.extent(data, function (d) {
             return d[labels.y];
         })).nice();
+
+        svg.append("g")			
+            .attr("class", "grid")
+            .attr("transform", "translate(0," + height + ")")
+            .call(
+                d3.axisBottom(x)
+                .ticks(7)
+            .tickSize(-height)
+            .tickFormat("")
+            );   
+
+        // add the Y gridlines
+        svg.append("g")			
+            .attr("class", "grid")
+            .call(
+                d3.axisLeft(y)
+                .ticks(7)
+            .tickSize(-width)
+            .tickFormat("")
+            );
 
         var xAxis = d3.axisBottom(x);
 

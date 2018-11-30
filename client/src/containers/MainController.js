@@ -21,7 +21,7 @@ const KEYS_TO_BE_USED = {
     sample: ['x', 'y', 'z'],
     census: ['TotalPop', 'Men', 'Women', 'Hispanic', 'White', 'Black', 'Native', 'Asian', 'Pacific', 'Citizen', 'Income', 'IncomeErr', 'IncomePerCap', 'IncomePerCapErr', 'Poverty', 'ChildPoverty', 'Professional', 'Service', 'Office', 'Construction', 'Production', 'Drive', 'Carpool', 'Transit', 'Walk', 'OtherTransp', 'WorkAtHome', 'MeanCommute', 'Employed', 'PrivateWork', 'PublicWork', 'SelfEmployed', 'FamilyWork', 'Unemployment'],
     car: ['Sedan', 'Sports Car', 'SUV', 'Wagon', 'Minivan', 'Pickup', 'AWD', 'RWD', 'Retail Price', 'Dealer Cost', 'Engine Size', 'Cyl', 'HP', 'City MPG', 'Hwy MPG', 'Weight', 'Wheel Base', 'Len', 'Width'],
-    football: ['Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'Aggression', 'Agility', 'Balance', 'Ball control', 'Composure', 'Crossing', 'Curve', 'Dribbling', 'Finishing', 'Free kick accuracy', 'GK diving', 'GK handling', 'GK kicking', 'GK positioning', 'GK reflexes', 'Heading accuracy', 'Interceptions', 'Jumping', 'Long passing', 'Long shots', 'Marking', 'Penalties', 'Positioning', 'Reactions', 'Short passing', 'Shot power', 'Sliding tackle', 'Sprint speed', 'Stamina', 'Standing tackle', 'Strength', 'Vision', 'Volleys', 'CAM', 'CB', 'CDM', 'CF', 'CM', 'LAM', 'LB', 'LCB', 'LCM', 'LDM', 'LF', 'LM', 'LS', 'LW', 'LWB', 'RAM', 'RB', 'RCB', 'RCM', 'RDM', 'RF', 'RM', 'RS', 'RW', 'RWB', 'ST']
+    football: ['Age', 'Overall', 'Potential', 'Special', 'Acceleration', 'Aggression', 'Agility', 'Balance', 'Ball control', 'Composure', 'Crossing', 'Curve', 'Dribbling', 'Finishing', 'Free kick accuracy', 'GK diving', 'GK handling', 'GK kicking', 'GK positioning', 'GK reflexes', 'Heading accuracy', 'Interceptions', 'Jumping', 'Long passing', 'Long shots', 'Marking', 'Penalties', 'Positioning', 'Reactions', 'Short passing', 'Shot power', 'Sliding tackle', 'Sprint speed', 'Stamina', 'Standing tackle', 'Strength', 'Vision', 'Volleys']
 };
 
 const DEFAULT_FILTERS = {
@@ -296,35 +296,31 @@ class MainController extends Component {
     }
 
     onSearchScatter = (event) => {
-        if (event.keyCode === 13) {
+        // if (event.keyCode === 13) {
 
-            console.log("Try onSearchScatter");
-            
-            let itemName = (document.getElementById('search-scatter').value);
-                        
-            var svg = d3.select('#scatterPlotId').select('svg');
+        
+        let itemName = (document.getElementById('search-scatter').value);
+                    
+        var svg = d3.select('#scatterPlotId').select('svg');
 
-            let selectedDataset = this.state.dataset;
+        svg.selectAll(".dot")
+        .style("opacity","1")
+        .style("fill", "red");
 
-            if(itemName != '') {
+        let selectedDataset = this.state.dataset;
 
-                svg.selectAll(".dot").style("opacity","0");
+        if(itemName !== '') {
 
-                svg.selectAll(".dot")
-                .filter(function(d) { 
-                    var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
-                    var searchPattern = itemName.toLowerCase();
-                    if(searchString.indexOf(searchPattern)!=-1)
-                        return true; 
-                })
-                .style("opacity","1")
-                .style("fill","green");
-
-            }
-            else {
-                svg.selectAll(".dot").style("opacity","1");
-            }
-    
+            svg.selectAll(".dot")
+            .style("opacity","0")
+            .filter(function(d) { 
+                var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
+                var searchPattern = itemName.toLowerCase();
+                if(searchString.indexOf(searchPattern)!=-1)
+                    return true; 
+            })
+            .style("opacity","1")
+            .style("fill","green");
         }
     }
 
@@ -452,7 +448,7 @@ class MainController extends Component {
                                                className="search-query form-control"
                                                placeholder="Search"/>
                                         <span className="input-group-btn">
-                                        <button className="btn btn-danger" type="button">
+                                        <button className="btn btn-danger" type="button" onclick={this.onSearchScatter.bind(this)}>
                                             <span className=" glyphicon glyphicon-search"></span>
                                         </button>
                                     </span>

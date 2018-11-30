@@ -5,6 +5,7 @@ Will render the object as table
 
 import React from 'react';
 import ListItems from './ListItems';
+import {ListGroup, ListGroupItem, Label} from 'react-bootstrap'
 
 class DataPointDetail extends React.Component { 
 
@@ -36,8 +37,17 @@ class DataPointDetail extends React.Component {
                 };
                 dataPointsArray.push(attribute)
             })
+
+            let details = dataPointsArray.map((item) => {
+                return ( 
+                    <ListGroupItem bsClass={"border: none"}> <Label bsStyle="default">{item.key}</Label>  <Label bsStyle="info">{item.value}</Label></ListGroupItem>
+                )
+            })
+
             return ( 
-                <ListItems data={dataPointsArray} dataPointName={"Name"}/>
+                <ListGroup>
+                    {details}
+                </ListGroup>
             )
         }
         else {

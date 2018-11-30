@@ -1,5 +1,6 @@
 /* For use with DataPointDetail */
 import React from 'react';
+import {ListGroupItem} from 'react-bootstrap'
 
 class ListItems extends React.Component {
     render() {
@@ -8,28 +9,12 @@ class ListItems extends React.Component {
 
         let details = self.props.data.map((item) => {
             return ( 
-                <tr>
-                    <td > 
-                        {/* { console.log(item.key) }  */}
-                        { item.key } 
-                    </td>  
-                    <td> 
-                        {/* { console.log(item.value) }  */}
-                        { item.value } 
-                    </td>  
-                </tr>
+                <ListGroupItem> {item.key} -  {item.key} </ListGroupItem>
             )
         })
 
         return (
-            <div>
-                <table>
-                    <tr>
-                        <p> { self.props.dataPointName } </p> 
-                    </tr>  
-                    { details } 
-                </table> 
-            </div>
+            {details}
         );
     }
 }
