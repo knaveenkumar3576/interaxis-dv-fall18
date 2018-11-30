@@ -29,9 +29,9 @@ class DropZone extends React.Component {
             })
         }
 
-        // if (props.currNodes.length > 0) {
-        //     this.setState({nodes: props.currNodes});
-        // }
+        if (props.dataset) {
+            this.setState({nodes: props.dataset});
+        }
     }
 
     // Create an empty SVG with a force layout with [no nodes (or) nodes sent from main controller if reloading previously saved data]

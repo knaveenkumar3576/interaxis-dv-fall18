@@ -48,7 +48,7 @@ class BottomPannel extends React.Component {
                 <div ref={'xMinDropZone'} key="a">
                     <DropZone position={"xMin"} height={this.state.xMinDropZoneHeight}
                               width={this.state.xMinDropZoneWidth}
-                              dataset={this.props.dataset}
+                              dataset={this.props.dataPointsxMin}
                               addDataPointCallback={this.props.removeDataPointFromScatterCallback}
                               removeDataPointCallback={this.props.addDataPointToScatterCallback}
                               /* currNodes={this.props.xMinNodes} */ />
@@ -63,7 +63,7 @@ class BottomPannel extends React.Component {
                     <DropZone position={"xMax"}
                               height={this.state.xMinDropZoneHeight}
                               width={this.state.xMinDropZoneWidth}
-                              dataset={this.props.dataset}
+                              dataset={this.props.dataPointsxMax}
                               addDataPointCallback={this.props.removeDataPointFromScatterCallback}
                               removeDataPointCallback={this.props.addDataPointToScatterCallback}
                               /* currNodes={this.props.xMaxNodes} */ />
