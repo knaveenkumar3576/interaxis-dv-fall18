@@ -99,6 +99,14 @@ class MainController extends Component {
         let labels = Object.assign({}, this.state.selectedLabels);
         let newColumns = this.state.columns;
 
+        if (labels.x == "customX") {
+            labels.x = DEFAULT_FILTERS[this.state.dataset][0];
+        }
+
+        if (labels.y == "customY") {
+            labels.y = DEFAULT_FILTERS[this.state.dataset][1];
+        }
+
         if (noOfDataPointsXMin > 0 && noOfDataPointsXMax > 0) {
             KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                 let minWeights = 0;
@@ -274,16 +282,39 @@ class MainController extends Component {
 
     onXAttributeChangedCallback(x) {
         let y = this.state.selectedLabels.y;
-        this.setState({
-            selectedLabels: {x: x, y: y}
+
+        let customX = {};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            customX[key] = 0;
         });
+
+        customX[x] = 1.0;
+
+        this.setState({
+            selectedLabels: {x: x, y: y},
+            customXWeights: customX
+        });
+
     }
 
     onYAttributeChangedCallback(y) {
         let x = this.state.selectedLabels.x;
-        this.setState({
-            selectedLabels: {x: x, y: y}
+
+        let customY = {};
+
+        KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            customY[key] = 0;
         });
+
+        customY[y] = 1.0;
+
+        this.setState({
+            selectedLabels: {x: x, y: y},
+            customYWeights: customY
+        });
+
+
     }
 
     onRefreshCallback() {
@@ -324,7 +355,7 @@ class MainController extends Component {
                         return true;
                 })
                 .style("opacity", "1")
-                .style("fill", "green");
+                .style("fill", "yellow");
         }
     }
 
