@@ -99,12 +99,12 @@ class MainController extends Component {
         let labels = Object.assign({}, this.state.selectedLabels);
         let newColumns = this.state.columns;
 
-        if(labels.x == "customX") {
-            labels.x =  DEFAULT_FILTERS[this.state.dataset][0];
+        if (labels.x == "customX") {
+            labels.x = DEFAULT_FILTERS[this.state.dataset][0];
         }
 
-        if(labels.y == "customY") {
-            labels.y =  DEFAULT_FILTERS[this.state.dataset][1];
+        if (labels.y == "customY") {
+            labels.y = DEFAULT_FILTERS[this.state.dataset][1];
         }
 
         if (noOfDataPointsXMin > 0 && noOfDataPointsXMax > 0) {
@@ -136,7 +136,7 @@ class MainController extends Component {
         }
 
         if (noOfDataPointsYMin > 0 && noOfDataPointsYMax > 0) {
-                KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
+            KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
                 let minWeights = 0;
 
                 this.state.dataPointsyMin.forEach(d => {
@@ -241,9 +241,13 @@ class MainController extends Component {
             this.changeData();
             this.setState({
                 selectedLabels: {
-                    x: DEFAULT_FILTERS[dataset][0],
-                    y: DEFAULT_FILTERS[dataset][1]
-                }
+                    x: DEFAULT_FILTERS[this.state.dataset][0],
+                    y: DEFAULT_FILTERS[this.state.dataset][1]
+                },
+                dataPointsxMin: [],
+                dataPointsxMax: [],
+                dataPointsyMin: [],
+                dataPointsyMax: []
             });
         })
     }
@@ -279,7 +283,7 @@ class MainController extends Component {
     onXAttributeChangedCallback(x) {
         let y = this.state.selectedLabels.y;
 
-        let customX ={};
+        let customX = {};
 
         KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
             customX[key] = 0;
@@ -289,14 +293,14 @@ class MainController extends Component {
 
         this.setState({
             selectedLabels: {x: x, y: y},
-            customXWeights : customX
+            customXWeights: customX
         });
 
     }
 
     onYAttributeChangedCallback(y) {
         let x = this.state.selectedLabels.x;
-        
+
         let customY = {};
 
         KEYS_TO_BE_USED[this.state.dataset].forEach(key => {
@@ -307,7 +311,7 @@ class MainController extends Component {
 
         this.setState({
             selectedLabels: {x: x, y: y},
-            customYWeights : customY
+            customYWeights: customY
         });
 
 
@@ -329,29 +333,29 @@ class MainController extends Component {
     onSearchScatter = (event) => {
         // if (event.keyCode === 13) {
 
-        
+
         let itemName = (document.getElementById('search-scatter').value);
-                    
+
         var svg = d3.select('#scatterPlotId').select('svg');
 
         svg.selectAll(".dot")
-        .style("opacity","1")
-        .style("fill", "red");
+            .style("opacity", "1")
+            .style("fill", "red");
 
         let selectedDataset = this.state.dataset;
 
-        if(itemName !== '') {
+        if (itemName !== '') {
 
             svg.selectAll(".dot")
-            .style("opacity","0")
-            .filter(function(d) { 
-                var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase(); 
-                var searchPattern = itemName.toLowerCase();
-                if(searchString.indexOf(searchPattern)!=-1)
-                    return true; 
-            })
-            .style("opacity","1")
-            .style("fill","yellow");
+                .style("opacity", "0")
+                .filter(function (d) {
+                    var searchString = d[SEARCH_PARAMS[selectedDataset]].toLowerCase();
+                    var searchPattern = itemName.toLowerCase();
+                    if (searchString.indexOf(searchPattern) != -1)
+                        return true;
+                })
+                .style("opacity", "1")
+                .style("fill", "yellow");
         }
     }
 
@@ -429,7 +433,7 @@ class MainController extends Component {
                                          style={{height: '100%', width: '30%'}}>
                                         <DropZone position={"yMax"} height={this.state.yMaxDropZoneHeight}
                                                   width={this.state.yMaxDropZoneWidth}
-                                                  dataset = {this.state.dataPointsyMax}
+                                                  dataset={this.state.dataPointsyMax}
                                                   addDataPointCallback={this.removeDataPointFromScatterCallback.bind(this)}
                                                   removeDataPointCallback={this.addDataPointToScatterCallback.bind(this)}
                                             /* currNodes = {[]} *//>
@@ -437,11 +441,11 @@ class MainController extends Component {
                                 </div>
                                 <div ref={'leftBar'} id={'leftBarChart'} style={{height: '55%'}}>
                                     {/* {this.state.leftBarHeight > 0 && this.state.leftBarWidth > 0 ? */}
-                                        <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
-                                                  barWidth={25}
-                                                  id={'leftBarChart'}
-                                                  dataObject = {this.state.customYWeights} /> 
-                                                  {/* : null} */}
+                                    <BarChart height={this.state.leftBarHeight} width={this.state.leftBarWidth}
+                                              barWidth={25}
+                                              id={'leftBarChart'}
+                                              dataObject={this.state.customYWeights}/>
+                                    {/* : null} */}
                                 </div>
                                 <div style={{height: '10%'}}>
                                     <div ref={'yMinDropZone'} className={'pull-right'}
@@ -479,7 +483,8 @@ class MainController extends Component {
                                                className="search-query form-control"
                                                placeholder="Search"/>
                                         <span className="input-group-btn">
-                                        <button className="btn btn-danger" type="button" onclick={this.onSearchScatter.bind(this)}>
+                                        <button className="btn btn-danger" type="button"
+                                                onclick={this.onSearchScatter.bind(this)}>
                                             <span className=" glyphicon glyphicon-search"></span>
                                         </button>
                                     </span>
@@ -488,12 +493,12 @@ class MainController extends Component {
                                 <div ref={'scatterPlot'} id={'scatterPlotId'} style={{height: '70%'}}>
                                     {this.state.dataset !== '' ?
                                         <ScatterPlot id={'scatterPlotId'}
-                                            dataPoints={this.state.dataPoints}
-                                            labels={this.state.selectedLabels}
-                                            width={this.state.scatterPlotWidth}
-                                            height={this.state.scatterPlotHeight}
-                                            searchString={this.state.searchString}
-                                            detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
+                                                     dataPoints={this.state.dataPoints}
+                                                     labels={this.state.selectedLabels}
+                                                     width={this.state.scatterPlotWidth}
+                                                     height={this.state.scatterPlotHeight}
+                                                     searchString={this.state.searchString}
+                                                     detailViewCallback={this.scatterOnMouseOverCallback.bind(this)}
                                         /> : null
                                     }
                                 </div>
@@ -520,7 +525,7 @@ class MainController extends Component {
                     <Tab key={2} eventKey={2} title="Compare">
                         <div>
                             {this.state.versions.length > 0 && this.state.dataset !== '' ?
-                                <Compare 
+                                <Compare
                                     savedInfo={this.state.savedInfo}
                                     versions={this.state.versions}
                                 /> : null
