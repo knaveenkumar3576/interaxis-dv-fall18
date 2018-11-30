@@ -59,7 +59,7 @@ class ScatterPlot extends React.Component {
         var data = this.props.dataPoints;
         var labels = this.props.labels;
 
-        var margin = {top: 30, right: 30, bottom: 100, left: 100},
+        var margin = {top: 30, right: 30, bottom: 30, left: 30},
             width = this.state.width - margin.left - margin.right,
             height = this.state.height - margin.top - margin.bottom;
 
