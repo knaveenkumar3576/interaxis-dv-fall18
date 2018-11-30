@@ -25,7 +25,6 @@ class BarChart extends React.Component {
         select(props.id).selectAll("*").remove();
 
         this.drawBars = this.drawBars.bind(this);
-
     }
 
     componentWillReceiveProps(props) {
@@ -49,7 +48,7 @@ class BarChart extends React.Component {
         Object.keys(dataObject).forEach((k) => {
             let obj = {
                 key: k,
-                value: parseInt(dataObject[k])
+                value: dataObject[k]
             }
             console.log("Object barchart: ");
             console.log(obj);
@@ -132,9 +131,9 @@ class BarChart extends React.Component {
             .attr("width", function (d, i) {
                 return Math.abs(totalScale(0) - totalScale(d.value));
             })
-            .attr("height", barWidth)
+            .attr("height", yScale.bandwidth())
             .style("fill", function (d) {
-                return d.value < 0 ? "red" : "blue";
+                return d.value < 0 ? "#ff5454" : "#3a85ff";
             });
 
         let text = g.selectAll("text")
@@ -142,13 +141,15 @@ class BarChart extends React.Component {
             .enter()
             .append("text")
             .attr("x", function(d, i) {
-                return (d.value < 0 ? totalScale(d.value) : totalScale(0));
+                // return (d.value < 0 ? totalScale(d.value) : totalScale(0));
+                return totalScale(0);
             })
             .attr("y", function (d, i) {
-                return yScale(i);
+                return yScale(i) + yScale.bandwidth() * 0.9;
             })
             .attr("fill", "black")
-            .style("font-size", 5)
+            .style("font-size", yScale.bandwidth())
+            // .style("font-size", 5)
             .text(function(d) {
                 return d.key;
             });
