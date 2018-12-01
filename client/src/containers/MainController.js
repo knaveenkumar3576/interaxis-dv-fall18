@@ -311,6 +311,7 @@ class MainController extends Component {
     }
 
     onRefreshCallback() {
+
         this.setState({
             selectedLabels: {
                 x: DEFAULT_FILTERS[this.state.dataset][0],
@@ -320,7 +321,10 @@ class MainController extends Component {
             dataPointsxMax: [],
             dataPointsyMin: [],
             dataPointsyMax: []
+        }, () => {
+            this.calculateCustomValues();
         });
+
     }
 
     onSearchScatter = (event) => {
