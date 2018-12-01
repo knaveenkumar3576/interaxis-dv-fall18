@@ -84,45 +84,6 @@ class MultiScatterPlot extends React.Component {
         var y2 = d3.scaleLinear()
             .range([height, 0]);
 
-        // var xMin1 = d3.min(data1, function (d) {
-        //     return d[labels1.x];
-        // });
-
-        // var yMin1 = d3.min(data1, function (d) {
-        //     return d[labels1.y];
-        // });
-
-        // var xMax1 = d3.max(data1, function (d) {
-        //     return d[labels1.x];
-        // });
-
-        // var yMax1 = d3.max(data1, function (d) {
-        //     return d[labels1.y];
-        // });
-
-        // var xMin2 = d3.min(data2, function (d) {
-        //     return d[labels2.x];
-        // });
-
-        // var yMin2 = d3.min(data2, function (d) {
-        //     return d[labels2.y];
-        // });
-
-        // var xMax2 = d3.max(data2, function (d) {
-        //     return d[labels2.x];
-        // });
-
-        // var yMax2 = d3.max(data2, function (d) {
-        //     return d[labels2.y];
-        // });
-
-        // x.domain(Math.min(xMin1, xMin2), Math.max(xMax1, xMax2));
-
-        // y.domain(Math.min(yMin1, yMin2), Math.max(yMax1, yMax2));
-
-        // console.log(x);
-        // console.log(y);
-
         x1.domain(d3.extent(data1, function (d) {
             return d[labels1.x];
         })).nice();
@@ -139,27 +100,6 @@ class MultiScatterPlot extends React.Component {
             return d[labels2.y];
         })).nice();
 
-
-        // svg.append("g")
-        //     .attr("class", "x axis")
-        //     .attr("transform", "translate(0," + height + ")")
-        //     .call(xAxis)
-        //     .append("text")
-        //     .attr("class", "label")
-        //     .attr("y", 25)
-        //     .attr("x", width / 2)
-        //     .style("text-anchor", "end")
-
-        // svg.append("g")
-        //     .attr("class", "y axis")
-        //     .call(yAxis)
-        //     .append("text")
-        //     .attr("class", "label")
-        //     .attr("y", height / 2)
-        //     .attr("transfsorm", "rotate(-90)")
-        //     .attr("dy", ".71em")
-        //     .style("text-anchor", "end")
-
         var dot_g = svg.append('g')
             .attr('class', 'lassoable');
 
@@ -172,11 +112,9 @@ class MultiScatterPlot extends React.Component {
             .attr("class", "dot1")
             .attr("r", 4)
             .attr("cx", function (d) {
-                // console.log("cx1 " + d[labels1.x]);
                 return x1(d[labels1.x]);
             })
             .attr("cy", function (d) {
-                // console.log("cy2 " + d[labels1.y]);
                 return y1(d[labels1.y]);
             })
             .style("fill", "red")
@@ -349,7 +287,6 @@ class MultiScatterPlot extends React.Component {
                 select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
                 select(this).style('cursor', 'auto');
             })
             .merge(dot1_g)
@@ -361,11 +298,9 @@ class MultiScatterPlot extends React.Component {
             .attr("class", "dot1")
             .attr("r", 4)
             .attr("cx", function (d) {
-                // console.log("cx2 " + d[labels1.x]);
                 return x1(d[labels1.x]);
             })
             .attr("cy", function (d) {
-                // console.log("cy2 " + d[labels1.y]);
                 return y1(d[labels1.y]);
             })
             .style("fill", "red");
@@ -397,7 +332,6 @@ class MultiScatterPlot extends React.Component {
                 select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
                 select(this).style('cursor', 'auto');
             })
             .merge(dot2_g)

@@ -85,8 +85,6 @@ class MainController extends Component {
 
     calculateCustomValues = () => {
 
-        console.log("Inside calculateCustomValues");
-
         let noOfDataPointsXMin = this.state.dataPointsxMin.length;
         let noOfDataPointsXMax = this.state.dataPointsxMax.length;
 
@@ -167,11 +165,6 @@ class MainController extends Component {
             customXWeights: customX,
             customYWeights: customY,
         });
-
-        console.log("Custom X Weights");
-        console.log(this.state.customXWeights);
-        console.log("Custom Y values");
-        console.log(this.state.customYWeights);
 
         this.setState({
             columns: newColumns,
@@ -318,6 +311,7 @@ class MainController extends Component {
     }
 
     onRefreshCallback() {
+
         this.setState({
             selectedLabels: {
                 x: DEFAULT_FILTERS[this.state.dataset][0],
@@ -327,7 +321,10 @@ class MainController extends Component {
             dataPointsxMax: [],
             dataPointsyMin: [],
             dataPointsyMax: []
+        }, () => {
+            this.calculateCustomValues();
         });
+
     }
 
     onSearchScatter = (event) => {
@@ -390,20 +387,24 @@ class MainController extends Component {
     addDataPointToScatterCallback(dataPoints, position) {
         switch (position) {
             case "xMin":
-                this.setState({dataPointsxMin: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsxMin: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "xMax":
-                this.setState({dataPointsxMax: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsxMax: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "yMin":
-                this.setState({dataPointsyMin: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsyMin: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "yMax":
-                this.setState({dataPointsyMax: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsyMax: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             default:
                 return false;
