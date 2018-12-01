@@ -38,30 +38,19 @@ class BarChart extends React.Component {
             });
         }
 
-        console.log("Props");
-        console.log(this.props);
-        console.log("Accessing data object");
-        console.log(this.props.dataObject);
         let dataObject = this.props.dataObject;
         let dataset = []
-        console.log(typeof (dataObject));
         Object.keys(dataObject).forEach((k) => {
             let obj = {
                 key: k,
                 value: dataObject[k]
             }
-            console.log("Object barchart: ");
-            console.log(obj);
             dataset.push(obj);
         });
 
         this.setState({
             dataset: dataset
         });
-
-        console.log("Dataset:");
-        console.log(this.state.dataset);
-
     }
 
     drawBars() {
@@ -112,7 +101,6 @@ class BarChart extends React.Component {
             .enter()
             .append("rect")
             .attr("class", function (d) {
-                // console.log("class: " + d + " " + d.value);
                 return d.value < 0 ? "negative" : "positive";
             })
             .attr("x", function (d, i) {
