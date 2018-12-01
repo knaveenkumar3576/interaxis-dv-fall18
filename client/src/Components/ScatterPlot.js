@@ -102,11 +102,6 @@ class ScatterPlot extends React.Component {
                 [width, height]
             ])
             .on("zoom", () => {
-                console.log("Zoom anonymous");
-                console.log(x);
-                console.log(y);
-                console.log(gX);
-                console.log(gY);
                 var new_x = d3.event.transform.rescaleX(x);
                 var new_y = d3.event.transform.rescaleY(y);
                 // update axes
@@ -227,18 +222,11 @@ class ScatterPlot extends React.Component {
             .on("dragstart", function (d, i) {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
-            .on("click", function(d, i) {
-                console.log("Clicked on dot");
-            })
             .on("mouseover", function (d, i) {
-                console.log("Mouse over ...");
-                // rect_ref.style("pointer-events", "none");
                 select(this).style('cursor', 'move');
                 that.detailViewCallback(i);
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
-                // rect_ref.style("pointer-events", "all");
                 select(this).style('cursor', 'auto');
             });
 
@@ -336,12 +324,10 @@ class ScatterPlot extends React.Component {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
             .on("mouseover", function (d, i) {
-                console.log("Mouse over ...");
                 that.detailViewCallback(i);
                 select(this).style('cursor', 'move');
             })
             .on("mouseout", function (d) {
-                console.log("Mouse out ...");
                 select(this).style('cursor', 'auto');
             })
             .merge(dot_g)

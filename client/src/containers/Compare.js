@@ -181,7 +181,6 @@ class Compare extends React.Component {
 
     changeData = (versioninfo, selectedIndex) => {
 
-        console.log(versioninfo);
         let csvFilePath = require("../data/" + versioninfo.dataset + ".csv");
 
         Papa.parse(csvFilePath, {
