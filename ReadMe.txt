@@ -1,0 +1,5 @@
+- Clone the entire repository(https://github.com/knaveenkumar3576/interaxis-dv-fall18)
+- Go to the directory client/
+- Run "npm install" to install all the packages needed for the project.
+- After installing the packages, run the application through "npm start"
+- A new window in your compatible browser "http://localhost:3000/" would be opened.
