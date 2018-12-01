@@ -390,20 +390,24 @@ class MainController extends Component {
     addDataPointToScatterCallback(dataPoints, position) {
         switch (position) {
             case "xMin":
-                this.setState({dataPointsxMin: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsxMin: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "xMax":
-                this.setState({dataPointsxMax: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsxMax: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "yMin":
-                this.setState({dataPointsyMin: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsyMin: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             case "yMax":
-                this.setState({dataPointsyMax: dataPoints});
-                this.calculateCustomValues();
+                this.setState({dataPointsyMax: dataPoints}, () => {
+                    this.calculateCustomValues();
+                });
                 break;
             default:
                 return false;
