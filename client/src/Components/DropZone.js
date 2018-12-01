@@ -37,8 +37,6 @@ class DropZone extends React.Component {
     // Create an empty SVG with a force layout with [no nodes (or) nodes sent from main controller if reloading previously saved data]
     componentDidMount() {
         let self = this;
-        console.log("REFS SVG: ");
-        console.log(self.refs.svg);
         let simulation = forceSimulation(self.state.nodes)
             .force('charge', forceManyBody().strength(70))
             .force('center', forceCenter(self.props.width / 2, self.props.height / 2))
@@ -56,9 +54,9 @@ class DropZone extends React.Component {
                         return 7;
                     })
                     .on("dblclick", function (d, i) {
-                        console.log("Double click on data point");
-                        console.log("Datapoint: ");
-                        console.log(d);
+                        // console.log("Double click on data point");
+                        // console.log("Datapoint: ");
+                        // console.log(d);
 
                         self.removeDataPoint(d);
                     })
@@ -93,19 +91,19 @@ class DropZone extends React.Component {
         let that = this.props;
         event.preventDefault();
         let self = this
-        console.log("Dropped ... Adding point ...");
+        // console.log("Dropped ... Adding point ...");
         // Add point to div
-        console.log("Dropped point: ");
-        console.log(event.dataTransfer.getData("data"));
+        // console.log("Dropped point: ");
+        // console.log(event.dataTransfer.getData("data"));
         /* extract the points "data" from event.dataTrasnfer object */
         let datapointjson = event.dataTransfer.getData("data");
-        console.log(datapointjson);
+        // console.log(datapointjson);
         let dataPoint = JSON.parse(datapointjson);
-        console.log(dataPoint);
+        // console.log(dataPoint);
         /* Add data point to the nodes array in the state of this component*/
-        console.log("Before adding " + self.props.position);
-        console.log(self.state.nodes.length);
-        console.log(self.state.nodes);
+        // console.log("Before adding " + self.props.position);
+        // console.log(self.state.nodes.length);
+        // console.log(self.state.nodes);
 
         // Ignore if duplicate point
         let idKeyString = "";
@@ -127,9 +125,9 @@ class DropZone extends React.Component {
         }
 
         self.setState({nodes: [...self.state.nodes, dataPoint]}, function() {
-            console.log("After adding " + self.props.position);
-            console.log(self.state.nodes.length);
-            console.log(self.state.nodes);
+            // console.log("After adding " + self.props.position);
+            // console.log(self.state.nodes.length);
+            // console.log(self.state.nodes);
 
             forceSimulation(self.state.nodes)
                 .force('charge', forceManyBody().strength(70))
@@ -149,9 +147,9 @@ class DropZone extends React.Component {
                         })
                         .on("dblclick", function (d, i) {
                             // event.preventDefault();
-                            console.log("Double click on data point");
-                            console.log("Datapoint: ");
-                            console.log(d);
+                            // console.log("Double click on data point");
+                            // console.log("Datapoint: ");
+                            // console.log(d);
 
                             self.removeDataPoint(d);
                         })
@@ -182,18 +180,18 @@ class DropZone extends React.Component {
                     // delete dataPoint.vy;
                 });
                 let success = self.props.addDataPointCallback(currDataPoints, self.props.position);
-                if (success) {
+                /* if (success) {
                     console.log("Success");
                 } else {
                     console.log("Failure");
-                }
+                } */
         });
     }
 
 
     removeDataPoint(dataPoint) {
         let self = this
-        console.log("Double Click ...");
+        // console.log("Double Click ...");
         let that = this.props;
         /* TODO: uniquely identify the data point */
         let idKeyString = "";
@@ -239,9 +237,9 @@ class DropZone extends React.Component {
                         })
                         .on("dblclick", function (d, i) {
                             // event.preventDefault();
-                            console.log("Double click on data point");
-                            console.log("Datapoint: ");
-                            console.log(d);
+                            // console.log("Double click on data point");
+                            // console.log("Datapoint: ");
+                            // console.log(d);
 
                             self.removeDataPoint(d);
                         })
@@ -267,17 +265,17 @@ class DropZone extends React.Component {
                 // delete dataPoint.vy;
                 // });
                 let success = self.props.removeDataPointCallback(currDataPoints, self.props.position);
-                if (success) {
-                    console.log("Success");
-                } else {
-                    console.log("Failure");
-                }
+                // if (success) {
+                //     console.log("Success");
+                // } else {
+                //     console.log("Failure");
+                // }
             });  
     }
 
     dragOverHandler(event) {
         event.preventDefault();
-        console.log("Drag over ...");
+        // console.log("Drag over ...");
         
     }
 
