@@ -85,8 +85,6 @@ class MainController extends Component {
 
     calculateCustomValues = () => {
 
-        console.log("Inside calculateCustomValues");
-
         let noOfDataPointsXMin = this.state.dataPointsxMin.length;
         let noOfDataPointsXMax = this.state.dataPointsxMax.length;
 
@@ -167,11 +165,6 @@ class MainController extends Component {
             customXWeights: customX,
             customYWeights: customY,
         });
-
-        console.log("Custom X Weights");
-        console.log(this.state.customXWeights);
-        console.log("Custom Y values");
-        console.log(this.state.customYWeights);
 
         this.setState({
             columns: newColumns,
