@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import * as d3 from 'd3';
 import './Chart.css';
 import {select} from "d3";
@@ -39,39 +38,6 @@ class ScatterPlot extends React.Component {
                 this.renderD3();
             });
         }
-
-        // var margin = {
-        //         top: 30,
-        //         right: 30,
-        //         bottom: 50,
-        //         left: 50
-        // },
-        // width = this.state.width - margin.left - margin.right,
-        // height = this.state.height - margin.top - margin.bottom;
-
-        // var labels = props.labels;
-        // var data = props.dataPoints;
-
-        // var x = d3.scaleLinear()
-        //     .range([0, width]);
-        // var y = d3.scaleLinear()
-        //     .range([height, 0]);
-        // x.domain(d3.extent(data, function (d) {
-        //     return d[labels.x];
-        // })).nice();
-        // y.domain(d3.extent(data, function (d) {
-        //     return d[labels.y];
-        // })).nice();
-        // var xAxis = d3.axisBottom(x);
-        // var yAxis = d3.axisLeft(y);
-
-        // this.setState({
-        //     x: x,
-        //     y: y,
-        //     xAxis: xAxis,
-        //     yAxis: yAxis
-        // })
-
     }
 
     render() {
@@ -102,11 +68,11 @@ class ScatterPlot extends React.Component {
                 [width, height]
             ])
             .on("zoom", () => {
-                console.log("Zoom anonymous");
-                console.log(x);
-                console.log(y);
-                console.log(gX);
-                console.log(gY);
+                // console.log("Zoom anonymous");
+                // console.log(x);
+                // console.log(y);
+                // console.log(gX);
+                // console.log(gY);
                 var new_x = d3.event.transform.rescaleX(x);
                 var new_y = d3.event.transform.rescaleY(y);
                 // update axes
@@ -215,7 +181,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 4)
+            .attr("r", 7)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })
@@ -224,9 +190,16 @@ class ScatterPlot extends React.Component {
             })
             .attr("draggable", "true")
             .style("fill", "red")
-            .on("dragstart", function (d, i) {
+            .on("dragstart", function(d, i) {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
+            // .call(d3.drag()
+            //     .on("start", function (d, i) {
+            //         console.log("Dragging...");
+            //         console.log(d);
+            //         d3.event.dataTransfer.setData("data", JSON.stringify(d));
+            //     })
+            // )
             .on("click", function(d, i) {
                 console.log("Clicked on dot");
             })
@@ -332,9 +305,21 @@ class ScatterPlot extends React.Component {
                 return y(d[labels.y]);
             })
             .style("fill", "red")
-            .on("dragstart", function (d, i) {
+            .on("dragstart", function(d, i) {
                 d3.event.dataTransfer.setData("data", JSON.stringify(d));
             })
+            // .call(d3.drag()
+            //     .on("start", function (d, i) {
+            //         console.log("Drag")
+            //         d3.event.dataTransfer.setData("data", JSON.stringify(d));
+            //     })
+            //     .on("drag", function(d, i) {
+            //         console.log("dragging..");
+            //     })
+            //     .on("end", function(d, i) {
+            //         console.log("end drag...");
+            //     })
+            // )
             .on("mouseover", function (d, i) {
                 console.log("Mouse over ...");
                 that.detailViewCallback(i);
@@ -351,7 +336,7 @@ class ScatterPlot extends React.Component {
                 return "dot_" + i;
             }) // added
             .attr("class", "dot")
-            .attr("r", 4)
+            .attr("r", 7)
             .attr("cx", function (d) {
                 return x(d[labels.x]);
             })

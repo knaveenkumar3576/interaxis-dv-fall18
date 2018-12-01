@@ -3,11 +3,6 @@ import {select} from 'd3-selection';
 import {scaleBand, scaleLinear} from 'd3-scale';
 import {min, max, domain, range} from 'd3-array';
 import {axisTop} from 'd3-axis';
-import {transition} from 'd3-transition';
-
-let svgStyle = {
-    backgoundColor: "black"
-};
 
 class BarChart extends React.Component {
 
@@ -59,8 +54,8 @@ class BarChart extends React.Component {
 
         let marginRight = width * 0.05, 
         marginLeft = width * 0.05,
-        marginTop = 15, marginBottom = 20,
-        height = this.state.height - marginTop;
+        marginTop = 15, marginBottom = 15,
+        height = this.state.height - marginTop - marginBottom;
 
         let minValue = min(this.state.dataset, function(d) {
             return d.value;
@@ -147,34 +142,5 @@ class BarChart extends React.Component {
         )
     }
 }
-
- /* dataset: [
-                {
-                    key: "hello",
-                    value: 0.5, 
-                }, {
-                    key: "world", 
-                    value: 0.5
-                }, {
-                    key: "Attribute 1",
-                    value: -0.35
-                }, {
-                    key: "barchart", 
-                    value: 0.35
-                }, {
-                    key: "foobars",
-                    value: -0.15
-                }, {
-                    key: "HP",
-                    value: 0.15
-                }, {
-                    key: "foo",
-                    value: -0.50
-                }, {
-                    key: "bar",
-                    value: 0.25
-                }
-            ],
-            */
 
 export default BarChart;
